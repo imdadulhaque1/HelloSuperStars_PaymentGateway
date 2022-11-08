@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     width: '100%',
     transform: [{translateY: 305}],
     marginLeft: '0%',
+    // marginBottom: '0%',
     // transform: [{translateX: 100}],
     height: 120,
     position: 'absolute',

@@ -12,7 +12,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
@@ -25,7 +25,18 @@ import UnderlineImage from '../GLOBAL/Reuseable/UnderlineImage';
 
 // create a component
 
-const LockPaymentModal = ({ lockModal, setLockModal }) => {
+const LockPaymentModal = ({
+  lockModal,
+  setLockModal,
+  isShowPaymentComp,
+  setIsShowPaymentComp,
+  parentData,
+  event_registration_id = null,
+  notification_id = null,
+  eventId = null,
+  modelName = null,
+  fee = null,
+}) => {
   const { setNotification } = useContext(AuthContext);
   const { axiosConfig } = useContext(AuthContext);
   const Navigation = useNavigation();
@@ -39,8 +50,8 @@ const LockPaymentModal = ({ lockModal, setLockModal }) => {
   const [modal, setModal] = useState(false);
 
   const onSubmit = data => {
+    console.log(data);
     let aditionalData = {
-      ...parentData,
       event_registration_id: event_registration_id
         ? event_registration_id
         : null,
@@ -48,19 +59,14 @@ const LockPaymentModal = ({ lockModal, setLockModal }) => {
       event_id: Number(eventId),
       model_name: modelName,
       fee: fee,
-      start_time: start_time,
-      end_time: end_time,
-      // room_id: event_type === 'livechat' ? firepadRef.key : '',
-      room_id: '',
     };
+    console.log(aditionalData);
     // setBuffer(true)
-
-
 
     axios
       .post(AppUrl.EventRegister, aditionalData, axiosConfig)
       .then(res => {
-        //console.log('res------',res)
+        console.log('res------', res);
         setBuffer(false);
         if (res.data.status === 200) {
           reset(data);
@@ -84,6 +90,7 @@ const LockPaymentModal = ({ lockModal, setLockModal }) => {
             buttonTitle: 'OK',
             message: 'Something Went Wrong',
           });
+          setIsShowPaymentComp(false);
           setModal(true);
         }
       })
@@ -148,12 +155,21 @@ const LockPaymentModal = ({ lockModal, setLockModal }) => {
                 </Pressable>
               </View>
               {/* <Text style={styles.fonts}>Payment Information</Text> */}
-              <Heading heading="Payment Information" />
+              <Heading heading="Choose payment Method" />
               <UnderlineImage />
 
               <ScrollView horizontal>
-                <TouchableOpacity>
-                  <Image source={imagePath.paypal} style={{ margin: 10 }} />
+                <TouchableOpacity onPress={() => onSubmit()}>
+                  <Image
+                    source={imagePath.paytm}
+                    style={{
+                      margin: 10,
+                      margin: 10,
+                      width: 100,
+                      height: 80,
+                      resizeMode: 'contain',
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Image source={imagePath.bkash} style={{ margin: 10 }} />

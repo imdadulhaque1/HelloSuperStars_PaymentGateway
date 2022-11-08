@@ -40,12 +40,13 @@ const MeetUp = ({route, navigation}) => {
         />
         {isShowPaymentComp ? (
           <RegisPaymentModal
-            eventType={data.meetup.meetup_type + 'Meetup'}
+            eventType="meetup"
             eventId={data.meetup.id}
             modelName="meetup"
             isShowPaymentComp={isShowPaymentComp}
             setIsShowPaymentComp={setIsShowPaymentComp}
             parentData={parentData}
+            fee={data.meetup.fee}
           />
         ) : (
           <></>

@@ -1,5 +1,5 @@
-import {View, Text, StyleSheet, ImageBackground} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 import VideoPlayer from 'react-native-video-player';
 // import Video from '../Video/Video';
 import InstructionComp from '../../GLOBAL/InstructionComp/InstructionComp';
@@ -8,24 +8,24 @@ import InstructionComp from '../../GLOBAL/InstructionComp/InstructionComp';
 import PaymentComp from '../../GLOBAL/PaymentComp/PaymentComp';
 import RegistrationComp from '../../QnA/RegistrationComp/Registration';
 
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import AppUrl from '../../../RestApi/AppUrl';
 import CostComp from '../../GLOBAL/CostComp/CostComp';
 import HeaderComp from '../../HeaderComp';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 // import CostComp from '../../GLOBAL/CostComp/CostComp';
-const RegisterUpCoAudition = ({route}) => {
+const RegisterUpCoAudition = ({ route }) => {
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [parentData, setParentData] = useState({});
-  const {data} = route.params;
+  const { data } = route.params;
   const slug = data?.audition?.slug;
   const [postContent, setPostContent] = useState({});
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState({});
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
 
   useEffect(() => {
     console.log(slug);
@@ -51,7 +51,7 @@ const RegisterUpCoAudition = ({route}) => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView style={{backgroundColor: '#282828'}}>
+    <ScrollView style={{ backgroundColor: '#282828' }}>
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.topCard}>
         <VideoPlayer
@@ -94,10 +94,10 @@ const RegisterUpCoAudition = ({route}) => {
             }}
             source={imagePath.background}
             resizeMode="cover">
-            <View style={{marginTop: 30}}>
+            <View style={{ marginTop: 30 }}>
               {/* <Image source={imagePath.sorry} style={{  justifyContent:'center', width: 300, height: 150 }} /> */}
               <Text
-                style={{color: '#FFAD00', textAlign: 'center', fontSize: 30}}>
+                style={{ color: '#FFAD00', textAlign: 'center', fontSize: 30 }}>
                 Already Registered
               </Text>
               {/* <Text style={{ color: 'white', textAlign: 'center' }}>
@@ -121,10 +121,11 @@ const RegisterUpCoAudition = ({route}) => {
             <RegisPaymentModal
               eventType="auditionRegistration"
               eventId={postContent.id}
-              modelName="AuditionParticipant"
+              modelName="audition"
               isShowPaymentComp={isShowPaymentComp}
               setIsShowPaymentComp={setIsShowPaymentComp}
               parentData={parentData}
+              fee={postContent?.fees}
             />
           ) : (
             <></>

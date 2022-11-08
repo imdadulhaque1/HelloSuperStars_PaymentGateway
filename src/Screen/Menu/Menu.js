@@ -79,18 +79,54 @@ let menuData = [
     routeName: 'refund',
   },
   {
-    id: 6,
-    icon: <MaterialIcons name="child-care" size={18} color="#ffaa00" />,
-    title: 'Kids Terms And Condition',
-    routeName: 'kids',
-  },
-  {
     id: 7,
     icon: (
       <MaterialIcons name="chat-bubble-outline" size={18} color="#ffaa00" />
     ),
     title: 'FaQ',
     routeName: 'faq',
+  },
+];
+let menuDataSettings = [
+  {
+    id: 1,
+    icon: <MaterialIcons name="person" size={18} color="#ffaa00" />,
+    title: 'Personal',
+    routeName: 'personalSetting',
+  },
+  {
+    id: 2,
+    icon: <MaterialIcons name="menu-book" size={18} color="#ffaa00" />,
+    title: 'Educational',
+    routeName: 'educationalSettings',
+  },
+  {
+    id: 3,
+    icon: <MaterialIcons name="work-outline" size={18} color="#ffaa00" />,
+    title: 'Employment',
+    routeName: 'employmentSettings',
+  },
+  {
+    id: 4,
+    icon: (
+      <MaterialCommunityIcons name="firework-off" size={18} color="#ffaa00" />
+    ),
+    title: 'Interest',
+    routeName: 'interestSettings',
+  },
+  {
+    id: 5,
+    icon: (
+      <MaterialCommunityIcons name="cash-refund" size={18} color="#ffaa00" />
+    ),
+    title: 'Security',
+    routeName: 'securitySettings',
+  },
+  {
+    id: 7,
+    icon: <MaterialIcons name="dangerous" size={18} color="#ffaa00" />,
+    title: 'Report',
+    routeName: 'reportSettings',
   },
 ];
 
@@ -175,21 +211,6 @@ const Menu = () => {
     setActivityLength(activities.activity_length);
     setMenuActivitList(activities);
   }, [activities]);
-
-  // const getMenuList = () => {
-  //   setLoder(true);
-  //   axios
-  //     .get(AppUrl.Menu, axiosConfig)
-  //     .then(res => {
-  //       setLoder(false);
-  //       setActivityLength(res.data.activity_length);
-  //       setMenuActivitList(res.data);
-  //       console.log('res.data---------', res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
 
   /**
    * get up comming all events
@@ -343,6 +364,18 @@ const Menu = () => {
       return Navigation.navigate(navigationStrings.REFUNDPOLICY);
     } else if (item.routeName === 'faq') {
       return Navigation.navigate(navigationStrings.FAQPOLICY);
+    } else if (item.routeName === 'personalSetting') {
+      return Navigation.navigate(navigationStrings.PERSONAL);
+    } else if (item.routeName === 'educationalSettings') {
+      return Navigation.navigate(navigationStrings.EDUCATIONAL);
+    } else if (item.routeName === 'employmentSettings') {
+      return Navigation.navigate(navigationStrings.EMPLOYEE);
+    } else if (item.routeName === 'interestSettings') {
+      return Navigation.navigate(navigationStrings.INTEREST);
+    } else if (item.routeName === 'securitySettings') {
+      return Navigation.navigate(navigationStrings.SECURITY);
+    } else if (item.routeName === 'reportSettings') {
+      return Navigation.navigate(navigationStrings.REPORT);
     }
   };
 
@@ -410,7 +443,7 @@ const Menu = () => {
             }}>
             <View style={{marginLeft: 7}}>
               <Text style={{color: 'white', fontSize: 18}}>
-                {useInfo?.first_name} {useInfo?.last_name}
+                {useInfo?.first_name}
               </Text>
               <Text style={{color: 'gray'}}>See your profile</Text>
             </View>
@@ -814,42 +847,24 @@ const Menu = () => {
                         </View>
                       </View>
                     )}
-                    {/* Meetup Events Carusel Iteam end */}
-
-                    {/* Wallet */}
-                    {/* <TouchableOpacity style={styles.Wallet}>
-
-                  <View style={{ flex: 2 }}>
-                    <Image source={imagePath.Wallet1} />
-                  </View>
-                  <View style={{ flex: 10 }}>
-                    <Text style={styles.TextW}>Wallet</Text>
-                    <Text style={styles.TextWT}>2120 diamond available</Text>
-                  </View>
-
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.Wallet}>
-
-                  <View style={{ flex: 2 }}>
-                    <Image source={imagePath.Audition1} />
-                  </View>
-                  <View style={{ flex: 10 }}>
-                    <Text style={styles.TextW}>Audition</Text>
-                    <Text style={styles.TextWT}>1 pending</Text>
-                  </View>
-
-                </TouchableOpacity> */}
                   </View>
                 </>
               )}
 
               {/* menu dropdown  */}
               <View>
-                <DropDown menuData={menuData} onSelect={onSelect} />
+                <DropDown
+                  title={'Terms & Policy'}
+                  titleIcon={'policy'}
+                  menuData={menuData}
+                  onSelect={onSelect}
+                />
               </View>
               {/* menu dropdown end  */}
 
-              <TouchableOpacity style={styles.menuTab}>
+              <TouchableOpacity
+                style={styles.menuTab}
+                onPress={() => Navigation.navigate(navigationStrings.SETTINGS)}>
                 <View style={styles.menuSubTab}>
                   <Text style>
                     <MaterialIcons

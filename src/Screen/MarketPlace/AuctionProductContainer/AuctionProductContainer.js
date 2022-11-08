@@ -41,7 +41,7 @@ const AuctionProductContainer = ({apiInPoint}) => {
   };
 
   return (
-    <View style={{paddingBottom: 100}}>
+    <View style={{paddingBottom: 200}}>
       <ScrollView
         style={{marginBottom: 95, backgroundColor: 'black'}}
         refreshControl={

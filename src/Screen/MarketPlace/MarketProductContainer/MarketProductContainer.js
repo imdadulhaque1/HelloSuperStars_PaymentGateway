@@ -40,7 +40,7 @@ const MarketProductContainer = ({apiInPoint}) => {
   return (
     <View>
       <ScrollView
-        style={{marginBottom: 95, backgroundColor: 'black'}}
+        style={{marginBottom: 95, backgroundColor: 'black', height: 700}}
         refreshControl={
           <RefreshControl
             refreshing={Refreshing}

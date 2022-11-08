@@ -39,6 +39,8 @@ const UserProfile = () => {
 
   const {useInfo, authContext, axiosConfig} = useContext(AuthContext);
   const [data, setData] = React.useState('posts');
+  const [purchasedPhotos, setPurchasedPhotos] = useState([]);
+  const [purchasedVideos, setPurchasedVideos] = useState([]);
 
   const [userActivites, setUserActivites] = useState([]);
 
@@ -86,6 +88,33 @@ const UserProfile = () => {
         if (res.data.status === 200) {
           setFanGrops(res.data?.fanGroup);
           setUserActivites(res.data?.userActivites);
+          console.log(res.data?.userActivites);
+        }
+      })
+      .catch(err => {
+        setBuffer(false);
+        console.log(err);
+      });
+    axios
+      .get(AppUrl.purchasedStarPhotos, axiosConfig)
+      .then(res => {
+        console.log(res.data);
+        setBuffer(false);
+        if (res.data.status === 200) {
+          setPurchasedPhotos(res.data?.photos);
+        }
+      })
+      .catch(err => {
+        setBuffer(false);
+        console.log(err);
+      });
+    axios
+      .get(AppUrl.purchasedStarVideos, axiosConfig)
+      .then(res => {
+        console.log(res.data);
+        setBuffer(false);
+        if (res.data.status === 200) {
+          setPurchasedVideos(res.data?.videos);
         }
       })
       .catch(err => {
@@ -366,7 +395,13 @@ const UserProfile = () => {
               </View>
 
               {useInfo && (
-                <Text style={styles.TextView2}>@hss_{useInfo?.id}</Text>
+                <Text
+                  style={styles.TextView2}
+                  onPress={() => {
+                    console.log(data);
+                  }}>
+                  @hss_{useInfo?.id}
+                </Text>
               )}
             </View>
           </View>
@@ -546,7 +581,18 @@ const UserProfile = () => {
               </View>
             </View>
           )}
-          {userActivites.length > 0 ? (
+
+          {data == 'photos' ? (
+            <ProfilePhotos
+              userActivites={userActivites}
+              starProPhotos={purchasedPhotos}
+            />
+          ) : data == 'videos' ? (
+            <ProfileVideos
+              userActivites={userActivites}
+              purchasedVideos={purchasedVideos}
+            />
+          ) : userActivites.length > 0 ? (
             <>
               {fanGrops &&
                 fanGrops.map((item, index) => (
@@ -569,10 +615,6 @@ const UserProfile = () => {
                 ))}
               {/* <ProfilePost userActivites={userActivites} /> */}
             </>
-          ) : data === 'photos' ? (
-            <ProfilePhotos userActivites={userActivites} />
-          ) : data === 'videos' ? (
-            <ProfileVideos userActivites={userActivites} />
           ) : (
             <View style={{height: 200, justifyContent: 'center'}}>
               <View>

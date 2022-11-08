@@ -22,6 +22,7 @@ import RenderHtml from 'react-native-render-html';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
+import noImage from '../../../Assets/Images/no-image.png';
 const Participate = props => {
   const product = props.product;
   console.log('product from props', product);

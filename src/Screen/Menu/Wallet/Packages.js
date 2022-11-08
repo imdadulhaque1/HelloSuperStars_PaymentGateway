@@ -20,6 +20,7 @@ const Packages = () => {
   const [packagesData, setPackagesData] = useState([])
   const [reactBundel, setreactBundel] = useState([])
   const [paymentView, setPaymentView] = useState(false)
+  const [singlePackage, setSinglePackage] = useState()
 
   useEffect(() => {
     getAllpackeges()
@@ -41,11 +42,12 @@ const Packages = () => {
   const [PackegeId, setPackegeId] = useState()
   const [PackegeType, setPackegeType] = useState()
   const [buyFor, setbuyFor] = useState()
-  const handelPaymentView = (id, type, buyFor) => {
+  const handelPaymentView = (item, type, buyFor) => {
     setPaymentView(true)
-    setPackegeId(id)
+    setPackegeId(item.id)
     setPackegeType(type)
     setbuyFor(buyFor)
+    setSinglePackage(item)
   }
 
 
@@ -73,16 +75,16 @@ const Packages = () => {
             {packagesData && !paymentView ?
               <>
                 {packagesData.map((item, index) =>
-                  <PackageItem key={index} data={item} handelPaymentView={() => handelPaymentView(item.id, 'packageBuy', 'regular')} type={'packageBuy'} />
+                  <PackageItem key={index} data={item} handelPaymentView={() => handelPaymentView(item, 'packageBuy', 'regular')} type={'packageBuy'} />
                 )}
                 {reactBundel.map((item, index) =>
-                  <PackageItem key={index} data={item} handelPaymentView={() => handelPaymentView(item.id, 'packageBuy', 'lovebundel')} type={'reactBundel'} />
+                  <PackageItem key={index} data={item} handelPaymentView={() => handelPaymentView(item, 'packageBuy', 'lovebundel')} type={'reactBundel'} />
                 )}
               </>
 
               :
 
-              <PaymentComp setPaymentView={setPaymentView} type={PackegeType} PackegeId={PackegeId} buyFor={buyFor} />
+              <PaymentComp setPaymentView={setPaymentView} type={PackegeType} PackegeId={PackegeId} buyFor={buyFor} singlePackage={singlePackage} />
             }
 
           </>

@@ -1,8 +1,10 @@
 //import liraries
-import React, {useState, useContext, useEffect} from 'react';
-import {Controller, useForm} from 'react-hook-form';
+import React, { useState, useContext, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
+  Alert,
   Image,
+  Linking,
   Modal,
   Pressable,
   ScrollView,
@@ -12,19 +14,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {AuthContext} from '../../Constants/context';
+import Toast from 'react-native-root-toast';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import UnderlineImage from '../GLOBAL/Reuseable/UnderlineImage';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AlertModal from './AlertModal';
 import LoaderComp from '../LoaderComp';
 import axios from 'axios';
 import AppUrl from '../../RestApi/AppUrl';
 import navigationStrings from '../../Constants/navigationStrings';
+import AllInOneSDKManager from 'paytm_allinone_react-native';
 // import Heading from '../Reuseable/Heading';
-
-import PaymentModal from './PaymentModal';
 import Heading from '../GLOBAL/Reuseable/Heading';
+import { useAxiosGet } from '../../CustomHooks/useAxiosGet';
+import { useStripePayment } from '../../CustomHooks/useStripePayment';
+import { useStripe } from '@stripe/stripe-react-native';
 
 // create a component
 
@@ -37,7 +42,7 @@ const RegisPaymentModal = ({
   modelName,
   isShowPaymentComp,
   setIsShowPaymentComp,
-  parentData,
+  parentData = null,
   event_registration_id = null,
   notification_id = null,
   fee = null,
@@ -51,18 +56,50 @@ const RegisPaymentModal = ({
   id = null,
   setPaymentComplete = null,
   greetingId = null,
+  setParentStep = null,
+  job = null,
+  setUnlocked = null,
 }) => {
-  const {setNotification} = useContext(AuthContext);
-  const {axiosConfig, setWaletInfo} = useContext(AuthContext);
+  const { setNotification } = useContext(AuthContext);
+  const { axiosConfig, setWaletInfo, getActivity } = useContext(AuthContext);
   const Navigation = useNavigation();
-  const [buffer, setBuffer] = useState(false);
+  const [regBuffer, setRegBuffer] = useState(false);
   const [walletInfo, setWalletInfo] = useState([]);
+
+  const [paytmDat, setPaytmDat] = useState({
+    token: '',
+    order_id: '',
+    mid: '',
+    amount: '',
+  });
+
+  const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(
+    AppUrl.getTokenPaytm + fee,
+  );
+
+  const {
+    stripeBuffer,
+    stripeError,
+    HandelStripePayment,
+    openPaymentSheet,
+    stripePaymentStatus,
+  } = useStripePayment({
+    amount: fee,
+    event_type: modelName,
+    event_id: eventId,
+  });
+
+  console.log(stripeError);
+
+  const [regComBuffer, setRegComBuffer] = useState(false);
+  const [modal, setModal] = useState(false);
   const getWalletInfo = () => {
     axios
       .get(AppUrl.auditionRegistrationWallet, axiosConfig)
       .then(res => {
         console.log(res);
         if (res.data.status === 200) {
+          console.log(res.data.userWallet);
           setWalletInfo(res.data.userWallet);
         }
       })
@@ -71,6 +108,21 @@ const RegisPaymentModal = ({
         setError(err);
       });
   };
+
+  useEffect(() => {
+    setPaytmDat({
+      token: resData?.Token_data?.body?.txnToken,
+      order_id: resData?.orderId,
+      mid: resData?.mid,
+      amount: resData?.amount,
+      callBackUrl: resData?.callBackUrl,
+    });
+    console.log(
+      'paytm token',
+      resData?.Token_data?.body?.txnToken + ' fee  :' + fee,
+    );
+  }, [resData]);
+
   useEffect(() => {
     getWalletInfo();
   }, []);
@@ -78,9 +130,8 @@ const RegisPaymentModal = ({
     control,
     handleSubmit,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
-  const [modal, setModal] = useState(false);
 
   // this modal object is for modal content
   const [modalObj, setModalObj] = useState({
@@ -90,7 +141,7 @@ const RegisPaymentModal = ({
   });
 
   const cardInfoSubmit = (data, type = null) => {
-    console.log(type);
+    console.log(eventId);
     const aditionalData = {
       ...parentData,
       event_registration_id: event_registration_id
@@ -118,18 +169,18 @@ const RegisPaymentModal = ({
         if (res.data.status === 200) {
           reset(data);
           setWaletInfo(res.data.waletInfo);
-          setModalObj({
-            modalType: 'success',
-            buttonTitle: 'OK',
-            message: 'Registration completed successfully !',
-          });
+          // setModalObj({
+          //   modalType: 'success',
+          //   buttonTitle: 'OK',
+          //   message: 'Registration completed successfully !',
+          // });
 
           setModal(true);
         }
       })
       .catch(err => {
         console.log(err);
-        setBuffer(false);
+        setRegBuffer(false);
         setModalObj({
           modalType: 'warning',
           buttonTitle: 'OK',
@@ -139,7 +190,6 @@ const RegisPaymentModal = ({
       });
   };
   const onSubmitLearning = (type, data = null) => {
-    console.log('payy');
     let additionalData = {
       ...parentData,
       event_registration_id: event_registration_id
@@ -163,7 +213,7 @@ const RegisPaymentModal = ({
       axios
         .post(AppUrl.EventRegister, finalData, axiosConfig)
         .then(res => {
-          setBuffer(false);
+          setRegBuffer(false);
           console.log(res.data);
           if (res.data.status === 200) {
             reset(data);
@@ -186,7 +236,7 @@ const RegisPaymentModal = ({
         })
         .catch(err => {
           console.log(err);
-          setBuffer(false);
+          setRegBuffer(false);
           setModalObj({
             modalType: 'warning',
             buttonTitle: 'OK',
@@ -211,7 +261,7 @@ const RegisPaymentModal = ({
       axios
         .post(AppUrl.walletQnaLearningRegister, data, axiosConfig)
         .then(res => {
-          setBuffer(false);
+          setRegBuffer(false);
           console.log(res.data);
           if (res.data.status === 200) {
             reset(data);
@@ -234,7 +284,7 @@ const RegisPaymentModal = ({
         })
         .catch(err => {
           console.log(err);
-          setBuffer(false);
+          setRegBuffer(false);
           setModalObj({
             modalType: 'warning',
             buttonTitle: 'OK',
@@ -253,6 +303,7 @@ const RegisPaymentModal = ({
     });
     setModal(true);
   };
+
   const onSubmit = (data, type = null) => {
     if (eventType === 'souvenir') {
       let data = {
@@ -264,6 +315,7 @@ const RegisPaymentModal = ({
         card_expire_date: '23-04-22',
         card_cvv: '123',
       };
+
       console.log(data);
       axios
         .post(AppUrl.SouvenirPayment, data, axiosConfig)
@@ -279,7 +331,7 @@ const RegisPaymentModal = ({
         })
         .catch(err => {
           console.log(err);
-          setBuffer(false);
+          setRegBuffer(false);
           setModalObj({
             modalType: 'warning',
             buttonTitle: 'OK',
@@ -292,10 +344,7 @@ const RegisPaymentModal = ({
       let Data = {
         videoId: modalPara[0],
         reactNum: modalPara[1],
-        cardHolderName: 'abc',
-        cardNumber: '123',
-        expireDate: '23-04-22',
-        ccv: 125,
+        fee: fee,
         type: type,
       };
       console.log(Data);
@@ -303,8 +352,8 @@ const RegisPaymentModal = ({
         .post(AppUrl.paymentLoveReact, Data, axiosConfig)
         .then(res => {
           //console.log('res------',res)
-          setBuffer(false);
-          console.log(res.data);
+          setRegBuffer(false);
+          console.log('after payment', res.data);
           if (res.data.status === 200) {
             setWaletInfo(res.data.waletInfo);
             reset(data);
@@ -329,7 +378,7 @@ const RegisPaymentModal = ({
         })
         .catch(err => {
           console.log(err);
-          setBuffer(false);
+          setRegBuffer(false);
           setModalObj({
             modalType: 'warning',
             buttonTitle: 'OK',
@@ -356,15 +405,15 @@ const RegisPaymentModal = ({
         ...aditionalData,
         ...data,
       };
-      // setBuffer(true)
-
+      // setRegBuffer(true)
+      // return console.log(finalData)
       console.log('finalData------------', finalData);
       console.log('AppUrl.EventRegister------------', AppUrl.EventRegister);
 
       axios
         .post(AppUrl.EventRegister, finalData, axiosConfig)
         .then(res => {
-          setBuffer(false);
+          setRegBuffer(false);
           if (res.data.status === 200) {
             reset(data);
             if (eventType == 'OfflineMeetup') {
@@ -392,7 +441,7 @@ const RegisPaymentModal = ({
         })
         .catch(err => {
           console.log(err);
-          setBuffer(false);
+          setRegBuffer(false);
           setModalObj({
             modalType: 'warning',
             buttonTitle: 'OK',
@@ -403,44 +452,195 @@ const RegisPaymentModal = ({
     }
   };
 
-  const modalButtonPress = () => {
-    setModal(false);
-    if (eventType == 'OfflineMeetup') {
-      Linking.openURL('http://www.africau.edu/images/default/sample.pdf');
-    } else if (event_registration_id !== null && notification_id !== null) {
-      //console.log('here---------')
-      axios
-        .get(AppUrl.CheckNotification, axiosConfig)
-        .then(res => {
-          setNotification(res?.data?.notifiction);
+  /**
+   * paytm payment
+   */
+  const payTmPayment = () => {
+    console.log('--------paytmDat', paytmDat);
+    if (!buffer) {
+      AllInOneSDKManager.startTransaction(
+        paytmDat.order_id,
+        paytmDat.mid,
+        paytmDat.token,
+        paytmDat.amount,
+        paytmDat.callBackUrl + paytmDat.order_id,
+        true,
+        false,
+        '',
+      )
+        .then(result => {
+          console.log('result back', result);
+          if (result.STATUS == 'TXN_SUCCESS') {
+            Toast.show('Payment successful', Toast.durations.SHORT);
+            paytmSuccess({
+              ...result,
+              modelName,
+              eventId,
+              souvenir_create_id: souvenirId ? souvenirId : 0,
+              souvenir_apply_id: id ? id : 0,
+              videoId: modalPara !== null ? modalPara[0] : 0,
+              reactNum: modalPara !== null ? modalPara[1] : 0,
+            });
+          }
+          if (eventType == 'videoFeed') {
+            setLiked(1);
+            setPaymentComplete(true);
+            return;
+          }
+          if (eventType == 'paidPhoto') {
+
+            setUnlocked(true);
+            setIsShowPaymentComp(false);
+            setModalObj({
+              modalType: 'success',
+              buttonTitle: 'OK',
+              message: 'Photo Purchase completed successfully !',
+            });
+
+            return;
+          }
+          if (eventType == 'marketplace') {
+            Navigation.navigate(navigationStrings.MARKETPLACE);
+            return;
+          }
+          setIsShowPaymentComp(false);
+
+          setModal(true);
+          Navigation.navigate(navigationStrings.HOME);
+          // }
         })
         .catch(err => {
-          console.log(err);
+          console.log('error message', err);
+          Toast.show('Payment failed', Toast.durations.SHORT);
         });
-      return Navigation.navigate(navigationStrings.NOTIFICATION);
-    } else if (eventType == 'auction') {
-      setIsShowPaymentComp(false);
-      fetchAllDataAfterPayment();
-    } else if (eventType === 'videoFeed') {
-      setIsShowPaymentComp(false);
-    } else if (eventType === 'souvenir') {
-      setIsShowPaymentComp(false);
-    } else if (eventType === 'learningSessionCertificate') {
-      setIsShowPaymentComp(false);
-      return;
     } else {
-      return Navigation.navigate(navigationStrings.HOME);
+      Toast.show('please wait...', Toast.durations.SHORT);
     }
   };
+
+  /**
+   *paytm payment success to backend
+   */
+  const paytmSuccess = data => {
+    console.log('payment data success');
+    axios
+      .post(AppUrl.paytmPaymentSuccess, data, axiosConfig)
+      .then(res => {
+        getActivity();
+        console.log('my data succes', res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  /**
+   * event reg live chat, learning session, meeetup, qna,souvenir,greetings
+   */
+  const eventReg = (type = null) => {
+    let aditionalData = {
+      event_registration_id: event_registration_id
+        ? event_registration_id
+        : null,
+      notification_id: notification_id ? notification_id : null,
+      event_id: Number(eventId),
+      model_name: modelName,
+      fee: fee,
+      start_time: start_time,
+      end_time: end_time,
+      // room_id: event_type === 'livechat' ? firepadRef.key : '',
+      room_id: '',
+    };
+    // return console.log('audition type', aditionalData)
+    axios
+      .post(AppUrl.EventRegister, aditionalData, axiosConfig)
+      .then(res => {
+        setRegComBuffer(false);
+        type == 'paytm' ? payTmPayment() : null;
+
+        getActivity();
+      })
+      .catch(err => {
+        console.log(err);
+        setRegBuffer(false);
+        setModalObj({
+          modalType: 'warning',
+          buttonTitle: 'OK',
+          message: 'Something Went Wrong',
+        });
+        setModal(true);
+      });
+  };
+
+  //form paytm icon click
+  const handelSubmitPaytm = () => {
+    if (!buffer) {
+      if (job == 'pay-again') {
+        return payTmPayment();
+      }
+      if (eventType === 'souvenir') {
+        return payTmPayment();
+      } else if (modelName === 'generalpost') {
+        console.log(modelName);
+        return payTmPayment();
+      } else if (eventType === 'videoFeed') {
+        return payTmPayment();
+      } else {
+        eventReg('paytm');
+      }
+    }
+  };
+
+
+  const videoFeedReactBuyStripe = () => {
+
+    let data = {
+      videoId: modalPara !== null ? modalPara[0] : 0,
+      reactNum: modalPara !== null ? modalPara[1] : 0,
+      modelName: modelName,
+      amount: fee
+    }
+    axios
+      .post(AppUrl.stripeVideoReactPayment, data, axiosConfig)
+      .then(res => {
+        setLiked(1);
+        setPaymentComplete(true);
+        // getActivity();
+        // console.log('my data succes', res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
+    if (eventType == 'videoFeed') {
+      if (stripePaymentStatus) {
+        setIsShowPaymentComp(false);
+        videoFeedReactBuyStripe();
+
+      }
+    }
+  }, [stripePaymentStatus])
+
+  //stripe click
+  const handelClickStripe = () => {
+    if (stripeBuffer) {
+      job != 'pay-again' ? eventReg() : null
+      openPaymentSheet()
+    } else {
+      Toast.show('Try agin', Toast.durations.SHORT);
+    }
+  };
+
   return (
     <>
-      <AlertModal
+      {/* <AlertModal
         modalObj={modalObj}
         modal={modal}
         setModal={setModal}
         buttoPress={modalButtonPress}
-      />
-      {buffer ? <LoaderComp /> : <></>}
+      /> */}
+      {regBuffer ? <LoaderComp /> : <></>}
       <Modal
         visible={isShowPaymentComp}
         transparent
@@ -450,7 +650,7 @@ const RegisPaymentModal = ({
         <View style={styles.centered_view}>
           <View style={styles.warning_modal}>
             <View style={styles.topCard}>
-              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 <Pressable onPress={() => setIsShowPaymentComp(false)}>
                   <Text
                     style={{
@@ -468,29 +668,45 @@ const RegisPaymentModal = ({
                   </Text>
                 </Pressable>
               </View>
-              <Heading heading="Payment Information" />
+              <Heading heading="Choose payment method dfdf" />
               <UnderlineImage />
 
               <ScrollView horizontal>
-                <TouchableOpacity>
-                  <Image source={imagePath.paypal} style={{margin: 10}} />
+                <TouchableOpacity onPress={() => handelSubmitPaytm()}>
+                  <Image
+                    source={imagePath.paytm}
+                    style={{
+                      margin: 10,
+                      width: 100,
+                      height: 80,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handelClickStripe()}>
+                  <Image
+                    source={imagePath.Stripe}
+                    style={{
+                      margin: 10,
+                      width: 100,
+                      height: 80,
+                      resizeMode: 'cover',
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Image source={imagePath.bkash} style={{margin: 10}} />
+                  <Image source={imagePath.payneeor} style={{ margin: 10 }} />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Image source={imagePath.payneeor} style={{margin: 10}} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image source={imagePath.bank} style={{margin: 10}} />
+                  <Image source={imagePath.bank} style={{ margin: 10 }} />
                 </TouchableOpacity>
               </ScrollView>
-              <Controller
+              {/* <Controller
                 control={control}
                 rules={{
                   required: true,
                 }}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text style={styles.formText}>Card Holder Name</Text>
                     <View style={styles.formText2}>
@@ -503,7 +719,7 @@ const RegisPaymentModal = ({
                         value={value}
                       />
                       {errors.card_holder_name && (
-                        <Text style={{color: 'red', marginLeft: 8}}>
+                        <Text style={{ color: 'red', marginLeft: 8 }}>
                           This field is required !
                         </Text>
                       )}
@@ -517,7 +733,7 @@ const RegisPaymentModal = ({
                 rules={{
                   required: true,
                 }}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <View>
                     <Text style={styles.formText}>Card Number {RoundName}</Text>
                     <View style={styles.formText2}>
@@ -530,7 +746,7 @@ const RegisPaymentModal = ({
                         placeholder="Enter Card Number"
                       />
                       {errors.card_number && (
-                        <Text style={{color: 'red', marginLeft: 8}}>
+                        <Text style={{ color: 'red', marginLeft: 8 }}>
                           This field is required !
                         </Text>
                       )}
@@ -538,22 +754,22 @@ const RegisPaymentModal = ({
                   </View>
                 )}
                 name="card_number"
-              />
+              /> */}
 
-              <View>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={[styles.formText, {width: '45%'}]}>Date</Text>
+              {/* <View>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={[styles.formText, { width: '45%' }]}>Date</Text>
                   <Text style={styles.formText}>CCTV</Text>
                 </View>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={[styles.formText2, {width: '45%'}]}>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={[styles.formText2, { width: '45%' }]}>
                     <TextInput
                       style={styles.textInputStyle}
                       placeholderTextColor="#fff"
                       placeholder=""
                     />
                   </View>
-                  <View style={[styles.formText2, {width: '45%'}]}>
+                  <View style={[styles.formText2, { width: '45%' }]}>
                     <TextInput
                       style={styles.textInputStyle}
                       placeholderTextColor="#fff"
@@ -561,10 +777,27 @@ const RegisPaymentModal = ({
                     />
                   </View>
                 </View>
-              </View>
+              </View> */}
 
               <View style={styles.textInputView}>
-                {/* this cheaking comes from Round  */}
+                {eventType === 'videoFeed' && (
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#FFAD00',
+                      width: '40%',
+                      borderRadius: 4,
+                      marginVertical: 15,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        paddingVertical: 8,
+                        color: '#292929',
+                      }}>
+                      Price: {fee}
+                    </Text>
+                  </TouchableOpacity>
+                )}
                 {RoundName === 5 || RoundName === 6 || RoundName === 7 ? (
                   <TouchableOpacity
                     style={{
@@ -577,14 +810,14 @@ const RegisPaymentModal = ({
                       setIsShowPaymentComp(false);
                       setModal(true);
                     }}>
-                    <Text
+                    {/* <Text
                       style={{
                         textAlign: 'center',
                         paddingVertical: 8,
                         color: '#292929',
                       }}>
                       Confirm Payment
-                    </Text>
+                    </Text> */}
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity
@@ -598,22 +831,23 @@ const RegisPaymentModal = ({
                       eventType === 'auditionRegistration'
                         ? cardInfoSubmit(onSubmit, 'card')
                         : eventType === 'learningSession'
-                        ? onSubmitLearning('card', onSubmit)
-                        : eventType === 'learningSessionCertificate'
-                        ? LearningCertificatePay()
-                        : onSubmit(onSubmit, 'card')
+                          ? onSubmitLearning('card', onSubmit)
+                          : eventType === 'learningSessionCertificate'
+                            ? LearningCertificatePay()
+                            : onSubmit(onSubmit, 'card')
                     }>
-                    <Text
+                    {/* <Text
                       style={{
                         textAlign: 'center',
                         paddingVertical: 8,
                         color: '#292929',
                       }}>
                       Confirm Payment
-                    </Text>
+                    </Text> */}
                   </TouchableOpacity>
                 )}
               </View>
+
               {eventType === 'auditionRegistration' && (
                 <View
                   style={{
@@ -642,7 +876,7 @@ const RegisPaymentModal = ({
                   {walletInfo?.auditions ? (
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FFAD00',
+                        backgroundColor: '#35b3f2',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -661,7 +895,7 @@ const RegisPaymentModal = ({
                     <TouchableOpacity
                       disabled={true}
                       style={{
-                        backgroundColor: '#AD850C',
+                        backgroundColor: '#35b3f2',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -706,7 +940,7 @@ const RegisPaymentModal = ({
                   {walletInfo?.love_points ? (
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FFAD00',
+                        backgroundColor: '#35b3f2',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -725,7 +959,7 @@ const RegisPaymentModal = ({
                     <TouchableOpacity
                       disabled={true}
                       style={{
-                        backgroundColor: '#AD850C',
+                        backgroundColor: '#71a4bd',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -772,7 +1006,7 @@ const RegisPaymentModal = ({
                   {walletInfo?.learning_session ? (
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FFAD00',
+                        backgroundColor: '#35b3f2',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -791,7 +1025,7 @@ const RegisPaymentModal = ({
                     <TouchableOpacity
                       disabled={true}
                       style={{
-                        backgroundColor: '#AD850C',
+                        backgroundColor: '#71a4bd',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -836,7 +1070,7 @@ const RegisPaymentModal = ({
                   {walletInfo?.greetings ? (
                     <TouchableOpacity
                       style={{
-                        backgroundColor: '#FFAD00',
+                        backgroundColor: '#35b3f2',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -855,7 +1089,197 @@ const RegisPaymentModal = ({
                     <TouchableOpacity
                       disabled={true}
                       style={{
-                        backgroundColor: '#AD850C',
+                        backgroundColor: '#71a4bd',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              {eventType === 'qna' && (
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <TouchableOpacity
+                    disabled={true}
+                    style={{
+                      backgroundColor: '#35b3f2',
+                      width: '40%',
+                      borderRadius: 4,
+                      marginVertical: 15,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        paddingVertical: 8,
+                        color: '#292929',
+                      }}>
+                      Available {walletInfo?.qna ? walletInfo?.qna : '00'}
+                    </Text>
+                  </TouchableOpacity>
+                  {walletInfo?.qna ? (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#35b3f2',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}
+                      onPress={() => onSubmitLearning('wallet')}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      disabled={true}
+                      style={{
+                        backgroundColor: '#71a4bd',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              {eventType === 'livechat' && (
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <TouchableOpacity
+                    disabled={true}
+                    style={{
+                      backgroundColor: '#35b3f2',
+                      width: '40%',
+                      borderRadius: 4,
+                      marginVertical: 15,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        paddingVertical: 8,
+                        color: '#292929',
+                      }}>
+                      Available{' '}
+                      {walletInfo?.live_chats ? walletInfo?.live_chats : '00'}
+                    </Text>
+                  </TouchableOpacity>
+                  {walletInfo?.live_chats ? (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#35b3f2',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}
+                      onPress={() => onSubmitLearning('wallet')}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      disabled={true}
+                      style={{
+                        backgroundColor: '#71a4bd',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
+              {eventType === 'meetup' && (
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-around',
+                  }}>
+                  <TouchableOpacity
+                    disabled={true}
+                    style={{
+                      backgroundColor: '#35b3f2',
+                      width: '40%',
+                      borderRadius: 4,
+                      marginVertical: 15,
+                    }}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        paddingVertical: 8,
+                        color: '#292929',
+                      }}>
+                      Available {walletInfo?.meetup ? walletInfo?.meetup : '00'}
+                    </Text>
+                  </TouchableOpacity>
+                  {walletInfo?.meetup ? (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: '#35b3f2',
+                        width: '40%',
+                        borderRadius: 4,
+                        marginVertical: 15,
+                      }}
+                      onPress={() => onSubmitLearning('wallet')}>
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          paddingVertical: 8,
+                          color: '#292929',
+                        }}>
+                        Use Wallet
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      disabled={true}
+                      style={{
+                        backgroundColor: '#71a4bd',
                         width: '40%',
                         borderRadius: 4,
                         marginVertical: 15,
@@ -876,7 +1300,7 @@ const RegisPaymentModal = ({
           </View>
         </View>
       </Modal>
-
+      {regComBuffer && <LoaderComp />}
       {/* <PaymentModal
       appeal={appeal}
       setAppeal={setAppeal}
@@ -910,9 +1334,9 @@ const styles = StyleSheet.create({
   lineImg: {
     marginVertical: 3,
   },
-  bannerRow: {alignItems: 'center', position: 'relative', paddingBottom: 15},
-  imgRow: {marginVertical: 2, width: '90%'},
-  imgRow2: {marginVertical: 2, position: 'absolute', top: '45%', left: '50%'},
+  bannerRow: { alignItems: 'center', position: 'relative', paddingBottom: 15 },
+  imgRow: { marginVertical: 2, width: '90%' },
+  imgRow2: { marginVertical: 2, position: 'absolute', top: '45%', left: '50%' },
   infoView: {
     flexDirection: 'row',
     justifyContent: 'center',

@@ -17,20 +17,20 @@ const styles = StyleSheet.create({
     // borderWidth: 3
   },
   MainCard: {
-    padding: 5,
+    // padding: 5,
     backgroundColor: '#343434',
     // borderTopLeftRadius: 10,
     // borderTopRightRadius: 10,
     flexDirection: 'row',
-    paddingHorizontal: 8,
-    paddingTop: 15,
+    paddingHorizontal: 3,
+    paddingTop: 5,
   },
   CardContent: {
-    padding: 5,
+    paddingVertical: 5,
     backgroundColor: '#343434',
     borderBottomLeftRadius: 5,
     borderBottomRightRadius: 5,
-    paddingHorizontal: 8,
+    paddingHorizontal: 5,
   },
   cardText: {
     color: 'white',
@@ -260,10 +260,10 @@ const styles = StyleSheet.create({
   // Upcoming Audition
 
   BannerCardImg: {
-    borderRadius: 5,
+    borderRadius: 0,
     overflow: 'hidden',
     width: '100%',
-    marginBottom: 10,
+
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
@@ -320,6 +320,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#dadada27',
   },
+  starCardImg2: {
+    paddingTop: 15,
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: '#dadada27',
+    zIndex: 10
+  },
 
   mainMeetUpViewA: {
     flexDirection: 'row',
@@ -336,16 +345,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 0,
     paddingVertical: 5,
-    marginVertical: 8,
+    marginHorizontal: 5,
+    marginVertical: 5,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#024E8C',
     flexDirection: 'row',
+    margin: 0
   },
 
   BannerCseText: {
-    color: '#FDDC00',
+    color: '#ffaa00',
     fontWeight: 'bold',
     paddingHorizontal: 8,
   },

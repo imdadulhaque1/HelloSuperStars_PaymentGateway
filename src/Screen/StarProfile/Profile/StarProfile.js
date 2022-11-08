@@ -22,6 +22,8 @@ import LiveChatDetails from '../LiveChat/LiveChatDetails';
 import ShowCase from '../ShowCase/ShowCase';
 import profileNavigatr from './profileNavigatr';
 import styles from './Styles';
+import Photos from '../TopNav/Photos';
+import VIdeos from '../TopNav/VIdeos';
 
 const StarProfile = ({route}) => {
   const [filterPost, setFilterPost] = useState(null);
@@ -36,6 +38,7 @@ const StarProfile = ({route}) => {
   const {axiosConfig} = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [postPage, setPostPage] = useState(1);
+  const [toggle, setToggle] = useState(false);
 
   const [modalObj, setModalObj] = useState({
     modalType: '',
@@ -63,7 +66,6 @@ const StarProfile = ({route}) => {
         setPostBuffer(false);
         if (res.data.status === 200) {
           setAllPost(res.data.posts);
-          console.log('post', res.data.posts);
           Toast.show('done', Toast.durations.SHORT);
           console.log('-----------------------------------');
           // console.log(allPost.filter(post => post.type == 'audition'));
@@ -121,7 +123,7 @@ const StarProfile = ({route}) => {
         buttonPress={modalOkBtn}
       />
       {buffer ? <LoaderComp /> : <></>}
-      <HeaderComp />
+      <HeaderComp backFunc={()=>navigation.goBack()} />
       <ScrollView style={{backgroundColor: 'black'}}>
         <View style={styles.topContainer}>
           <View style={styles.banner}>
@@ -200,8 +202,16 @@ const StarProfile = ({route}) => {
                 width: 80,
                 borderRadius: 10,
                 marginHorizontal: 5,
-              }}>
-              <Text style={{color: 'white'}}>Photos</Text>
+              }}
+              onPress={() => setProfileNavigate(profileNavigatr.PHOTOSTAR)}>
+              <Text
+                style={
+                  profileNavigate == profileNavigatr.PHOTOSTAR
+                    ? styles.active
+                    : {color: 'white'}
+                }>
+                Photos
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -211,8 +221,16 @@ const StarProfile = ({route}) => {
                 height: 30,
                 width: 80,
                 borderRadius: 10,
-              }}>
-              <Text style={{color: 'white'}}>Videos</Text>
+              }}
+              onPress={() => setProfileNavigate(profileNavigatr.VIDEOSTAR)}>
+              <Text
+                style={
+                  profileNavigate == profileNavigatr.VIDEOSTAR
+                    ? styles.active
+                    : {color: 'white'}
+                }>
+                Videos
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -256,28 +274,6 @@ const StarProfile = ({route}) => {
               </LinearGradient>
             </TouchableOpacity>
 
-            {/* <TouchableOpacity>
-              <LinearGradient
-                style={{ height: 90, width: 90, margin: 10, borderRadius: 10, justifyContent: 'center', alignItems: 'center' }}
-                colors={['#282828', '#282828']}>
-                <View >
-                  <View
-                    style={styles.topView}>
-                    <LinearGradient
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
-                      style={styles.iconView2}>
-                      <MaterialCommunityIcons name='post' size={30} color='black' />
-                    </LinearGradient>
-                  </View>
-
-                  <Text
-                    style={styles.TextView}>
-                    Post
-                  </Text>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity> */}
-
             {/* meet up */}
 
             <TouchableOpacity
@@ -291,11 +287,19 @@ const StarProfile = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                colors={['#282828', '#282828']}>
+                colors={
+                  profileNavigate === profileNavigatr.MEETUP
+                    ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                    : ['#282828', '#282828']
+                }>
                 <View>
                   <View style={styles.topView}>
                     <LinearGradient
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                      colors={
+                        profileNavigate === profileNavigatr.MEETUP
+                          ? ['#ffffff', '#ffffff']
+                          : ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                      }
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.MeetUp}
@@ -322,11 +326,19 @@ const StarProfile = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                colors={['#282828', '#282828']}>
+                colors={
+                  profileNavigate === profileNavigatr.AUDITION
+                    ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                    : ['#282828', '#282828']
+                }>
                 <View>
                   <View style={styles.topView}>
                     <LinearGradient
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                      colors={
+                        profileNavigate === profileNavigatr.AUDITION
+                          ? ['#ffffff', '#ffffff']
+                          : ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                      }
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.Auditions}
@@ -470,11 +482,20 @@ const StarProfile = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                colors={['#282828', '#282828']}>
+                // colors={['#282828', '#282828']}
+                colors={
+                  profileNavigate === profileNavigatr.LARNINGSESSION
+                    ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                    : ['#282828', '#282828']
+                }>
                 <View>
                   <View style={styles.topView}>
                     <LinearGradient
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                      colors={
+                        profileNavigate === profileNavigatr.LARNINGSESSION
+                          ? ['#ffffff', '#ffffff']
+                          : ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                      }
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.Learning}
@@ -489,7 +510,8 @@ const StarProfile = ({route}) => {
               </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setProfileNavigate(profileNavigatr.FANGROUP)}>
               <LinearGradient
                 style={{
                   height: 90,
@@ -499,11 +521,19 @@ const StarProfile = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                colors={['#282828', '#282828']}>
+                colors={
+                  profileNavigate === profileNavigatr.FANGROUP
+                    ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                    : ['#282828', '#282828']
+                }>
                 <View>
                   <View style={styles.topView}>
                     <LinearGradient
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                      colors={
+                        profileNavigate === profileNavigatr.FANGROUP
+                          ? ['#ffffff', '#ffffff']
+                          : ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                      }
                       style={styles.iconView2}>
                       <MaterialCommunityIcons
                         name="account-group"
@@ -535,6 +565,28 @@ const StarProfile = ({route}) => {
                   star={data.star}
                   filter="null"
                 />
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {profileNavigate == profileNavigatr.PHOTOSTAR ? (
+            <>
+              {postBuffer ? (
+                <CardSkeleton />
+              ) : (
+                <Photos starId={data?.star?.id} setToggle={toggle} />
+              )}
+            </>
+          ) : (
+            <></>
+          )}
+          {profileNavigate == profileNavigatr.VIDEOSTAR ? (
+            <>
+              {postBuffer ? (
+                <CardSkeleton />
+              ) : (
+                <VIdeos starId={data?.star?.id} setToggle={toggle} />
               )}
             </>
           ) : (
@@ -577,6 +629,20 @@ const StarProfile = ({route}) => {
               PostData={filterPost}
               star={data.star}
               filter="learningSession"
+            />
+          ) : (
+            <></>
+          )}
+          {/* FanGroup session  */}
+          {profileNavigate == profileNavigatr.FANGROUP ? (
+            <LiveChat
+              setBuffer={setBuffer}
+              setProfileNavigate={setProfileNavigate}
+              data={allPost}
+              setSelectedLiveChat={setSelectedLiveChat}
+              PostData={filterPost}
+              star={data.star}
+              filter="fangroup"
             />
           ) : (
             <></>

@@ -81,7 +81,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     right: 0,
     bottom: -45,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   DateColor: {
@@ -145,7 +145,7 @@ const ActivitiesCardStyle = StyleSheet.create({
 
   Join: {
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 9,
     top: 0,
     backgroundColor: 'gold',
     right: 0,
@@ -153,6 +153,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     alignItems: 'center',
     borderTopRightRadius: 14,
     borderBottomLeftRadius: 14,
+
   },
 
   JoinText: {

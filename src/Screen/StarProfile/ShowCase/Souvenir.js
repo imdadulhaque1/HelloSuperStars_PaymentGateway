@@ -16,12 +16,13 @@ import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp/LoaderComp';
 import styles from './styles';
+import Entypo from 'react-native-vector-icons/Entypo';
 
 const Souvenir = ({star}) => {
   const navigation = useNavigation();
   const [formImage, setFormImage] = useState({});
   const [document, setDocument] = useState(null);
-  const [souvinerInfo, setSouvinerInfo] = useState({});
+  const [souvinerInfo, setSouvinerInfo] = useState(null);
   const {socketData, axiosConfig} = useContext(AuthContext);
   const {
     control,
@@ -42,6 +43,8 @@ const Souvenir = ({star}) => {
     message: '',
     available: '',
   });
+
+  const [showPass, setShowPass] = useState(true);
 
   const fetchSouvenirInstruction = () => {
     setBuffer(true);
@@ -151,7 +154,7 @@ const Souvenir = ({star}) => {
     axios
       .post(AppUrl.SouvenirStore + `${star?.id}`, aditionalData, axiosConfig)
       .then(res => {
-        // console.log('res---------', res);
+        console.log('res---------', res);
         reset(data);
         setBuffer(false);
         if (res.data.status === 201) {
@@ -206,14 +209,14 @@ const Souvenir = ({star}) => {
 
       {buffer ? (
         <LoaderComp />
-      ) : (
+      ) : souvinerInfo !== null ? (
         <>
           <View style={styles.MaiNAS}>
             <Text style={styles.Instruction}>Souvenir Instructions</Text>
           </View>
           <View style={styles.MaiNASr}>
             <RenderHtmlComp description={souvinerInfo?.description} />
-            {souvinerInfo?.video != null ? (
+            {souvinerInfo?.video !== null ? (
               <VideoPlayer
                 video={{uri: `${AppUrl.MediaBaseUrl + souvinerInfo?.video}`}}
                 videoWidth={120}
@@ -227,9 +230,6 @@ const Souvenir = ({star}) => {
             ) : (
               <></>
             )}
-
-            {/* <VideoPlayer video={{ uri: 'http:///backend.hellosuperstars.com/assets/video/demoVedio1.mp4' }} videoWidth={100}
-              videoHeight={80} autoplay={true} pauseOnPress hideControlsOnStart resizeMode='contain' /> */}
 
             <Text style={styles.Bds}>Cost for the Souvenir:</Text>
           </View>
@@ -247,7 +247,13 @@ const Souvenir = ({star}) => {
             <View style={styles.MaiNAppL}>
               <View style={styles.WinnerES}>
                 <View style={{marginTop: 10, marginBottom: 10}}>
-                  <Text style={styles.ApplyR}>Country</Text>
+                  <Text
+                    style={styles.ApplyR}
+                    onPress={() => {
+                      console.log(souvinerInfo);
+                    }}>
+                    Country
+                  </Text>
                   <Controller
                     control={control}
                     rules={{
@@ -257,7 +263,7 @@ const Souvenir = ({star}) => {
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
-                        style={styles.inputY}
+                        style={styles.ApplyR}
                         selectedValue={pickerData.country}
                         onValueChange={(itemValue, itemIndex) => {
                           onChange(itemValue);
@@ -283,7 +289,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.country_id && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -299,7 +305,7 @@ const Souvenir = ({star}) => {
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
-                        style={styles.inputY}
+                        style={styles.ApplyR}
                         selectedValue={pickerData.state}
                         onValueChange={(itemValue, itemIndex) => {
                           onChange(itemValue);
@@ -325,7 +331,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.state_id && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -341,7 +347,7 @@ const Souvenir = ({star}) => {
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
-                        style={styles.inputY}
+                        style={styles.ApplyR}
                         selectedValue={pickerData.city}
                         onValueChange={(itemValue, itemIndex) => {
                           onChange(itemValue);
@@ -366,7 +372,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.city_id && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -393,7 +399,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.name && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -425,7 +431,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.email && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       {errors.email?.type === 'pattern'
                         ? 'Provide valid email'
                         : 'This field is required !'}
@@ -460,7 +466,7 @@ const Souvenir = ({star}) => {
                   />
                   {errors.mobile_no && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       {errors.mobile_no?.type === 'pattern'
                         ? 'Provide valid phone number'
                         : 'This field is required !'}
@@ -489,13 +495,13 @@ const Souvenir = ({star}) => {
                   />
                   {errors.area && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
                 <View style={{marginTop: 10, marginBottom: 10}}>
-                  <Text style={styles.ApplyR}>Short Discription</Text>
+                  <Text style={styles.ApplyR}>Short Description</Text>
                   <Controller
                     control={control}
                     rules={{
@@ -509,7 +515,7 @@ const Souvenir = ({star}) => {
                         multiline={true}
                         placeholderTextColor="#9e9e9e"
                         placeholder="Short Discription"
-                        style={styles.inputYB}
+                        style={styles.inputY}
                         row="5"
                       />
                     )}
@@ -517,78 +523,99 @@ const Souvenir = ({star}) => {
                   />
                   {errors.description && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                {document ? (
-                  <Image
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 100,
-                      height: 150,
-                      width: 150,
-                    }}
-                    source={{uri: document}}
-                  />
-                ) : (
-                  <Image
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderRadius: 100,
-                      height: 150,
-                      width: 150,
-                    }}
-                    source={noImage}
-                  />
-                )}
-                <Text style={styles.ApplyR}>Upload Your T-Shirt Photo</Text>
-                <TouchableOpacity
-                  style={styles.profileEditSection}
-                  onPress={() => {
-                    let options = {
-                      storageOptions: {
-                        path: 'images',
-                        mediaType: 'image',
-                      },
-                      includeBase64: true,
-                    };
-                    launchImageLibrary(options, response => {
-                      if (response.didCancel) {
-                        console.log('User cancelled image picker');
-                      } else if (response.error) {
-                        console.log('ImagePicker Error: ', response.error);
-                      } else if (response.customButton) {
-                        console.log(
-                          'User tapped custom button: ',
-                          response.customButton,
-                        );
-                        alert(response.customButton);
-                      } else {
-                        setDocument(response.assets[0].uri);
-                        setFormImage({
-                          uri: response.assets[0].uri,
-                          type: response.assets[0].type,
-                          name: response.assets[0].fileName,
-                          // data: response.data
-                          data: response.assets[0].base64,
-                        });
-                        // console.log(document)
-                      }
-                    });
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginHorizontal: 27,
+                    marginVertical: 20,
                   }}>
-                  <Text style={styles.inputYZ}>
-                    <MaterialCommunityIcons
-                      name="cloud-upload"
-                      color={'#488BFF'}
-                      size={30}
-                    />{' '}
-                    Upload{' '}
-                  </Text>
-                </TouchableOpacity>
+                  {document ? (
+                    <Image
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 100,
+                        height: 100,
+                        width: 100,
+                      }}
+                      source={{uri: document}}
+                    />
+                  ) : (
+                    <Image
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: 100,
+                        height: 100,
+                        width: 100,
+                      }}
+                      source={noImage}
+                    />
+                  )}
+                  <View>
+                    <Text style={styles.ApplyR}>Upload Your T-Shirt Photo</Text>
+                    <TouchableOpacity
+                      style={styles.profileEditSection}
+                      onPress={() => {
+                        let options = {
+                          storageOptions: {
+                            path: 'images',
+                            mediaType: 'image',
+                          },
+                          includeBase64: true,
+                        };
+                        launchImageLibrary(options, response => {
+                          if (response.didCancel) {
+                            console.log('User cancelled image picker');
+                          } else if (response.error) {
+                            console.log('ImagePicker Error: ', response.error);
+                          } else if (response.customButton) {
+                            console.log(
+                              'User tapped custom button: ',
+                              response.customButton,
+                            );
+                            alert(response.customButton);
+                          } else {
+                            setDocument(response.assets[0].uri);
+                            setFormImage({
+                              uri: response.assets[0].uri,
+                              type: response.assets[0].type,
+                              name: response.assets[0].fileName,
+                              // data: response.data
+                              data: response.assets[0].base64,
+                            });
+                            // console.log(document)
+                          }
+                        });
+                      }}>
+                      <Text
+                        style={{
+                          height: 38,
+                          marginHorizontal: 27,
+                          borderWidth: 0.5,
+                          padding: 10,
+                          fontSize: 13,
+                          color: '#B6B6B6',
+                          borderColor: 'gold',
+                          borderRadius: 80,
+                          width: 90,
+                        }}>
+                        <MaterialCommunityIcons
+                          name="cloud-upload"
+                          color={'#488BFF'}
+                          size={15}
+                        />{' '}
+                        Upload{' '}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
 
                 <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Password</Text>
@@ -598,23 +625,51 @@ const Souvenir = ({star}) => {
                       required: true,
                     }}
                     render={({field: {onChange, onBlur, value}}) => (
-                      <TextInput
-                        onBlur={onBlur}
-                        onChangeText={onChange}
-                        value={value}
-                        multiline
-                        placeholderTextColor="#9e9e9e"
-                        type="password"
-                        placeholder="Enter password"
-                        keyboardType="visible-password"
-                        style={styles.inputY}
-                      />
+                      <>
+                        <TextInput
+                          // onBlur={onBlur}
+                          // onChangeText={onChange}
+                          // value={value}
+                          // multiline
+                          // placeholderTextColor="#9e9e9e"
+                          // type="password"
+                          // placeholder="Enter password"
+                          // style={styles.inputY}
+                          // secureTextEntry={true}
+
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          placeholderTextColor="white"
+                          type="password"
+                          placeholder="Enter password"
+                          style={styles.inputY}
+                          // keyboardType="visible-password"
+                          secureTextEntry={showPass}
+                        />
+                        <TouchableOpacity
+                          style={{
+                            marginTop: '-7%',
+                            marginLeft: '85%',
+                          }}
+                          onPress={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <Entypo
+                              name="eye-with-line"
+                              size={20}
+                              color={'#ffaa00'}
+                            />
+                          ) : (
+                            <Entypo name="eye" size={20} color={'#ffaa00'} />
+                          )}
+                        </TouchableOpacity>
+                      </>
                     )}
                     name="password"
                   />
                   {errors.password && (
                     <Text
-                      style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -641,6 +696,21 @@ const Souvenir = ({star}) => {
             </TouchableOpacity>
           </View>
         </>
+      ) : (
+        <View style={{height: 200, justifyContent: 'center'}}>
+          <View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Image
+                source={imagePath.lazyDog}
+                style={{height: 100, width: 100}}
+              />
+            </View>
+
+            <Text style={{color: 'white', textAlign: 'center'}}>
+              Sorry No Data Available !
+            </Text>
+          </View>
+        </View>
       )}
     </>
   );

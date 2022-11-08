@@ -32,6 +32,14 @@ import Condition from '../../Screen/Menu/Privacy/Condition';
 import Refund from '../../Screen/Menu/Privacy/Refund';
 import FaQ from '../../Screen/Menu/Privacy/FaQ';
 import Greeting from '../../Screen/Greetings/Greeting';
+import Settings from '../../Screen/Menu/Settings/Settings';
+import PersonalInfo from '../../Screen/Menu/Settings/PersonalInfo';
+import EducationInfo from '../../Screen/Menu/Settings/EducationInfo';
+import AuctionDetails from '../../Screen/Auction/AuctionDetails';
+import Employment from '../../Screen/Menu/Settings/Employment';
+import InterestInfo from '../../Screen/Menu/Settings/InterestInfo';
+import SecurityInfo from '../../Screen/Menu/Settings/SecurityInfo';
+import ReportInfo from '../../Screen/Menu/Settings/ReportInfo';
 
 const MenuStack = createNativeStackNavigator();
 const MenuStackScreen = () => {
@@ -79,6 +87,11 @@ const MenuStackScreen = () => {
       <MenuStack.Screen
         name={navigationStrings.GREETINGS}
         component={Greeting}
+      />
+
+      <MenuStack.Screen
+        name={navigationStrings.AUCTIONDETAILS}
+        component={AuctionDetails}
       />
 
       {/* Audition */}
@@ -131,6 +144,36 @@ const MenuStackScreen = () => {
         component={Refund}
       />
       <MenuStack.Screen name={navigationStrings.FAQPOLICY} component={FaQ} />
+
+      <MenuStack.Screen
+        name={navigationStrings.SETTINGS}
+        component={Settings}
+      />
+      <MenuStack.Screen
+        name={navigationStrings.PERSONALINFO}
+        component={PersonalInfo}
+      />
+      <MenuStack.Screen
+        name={navigationStrings.EDUCATIONINFO}
+        component={EducationInfo}
+      />
+      <MenuStack.Screen
+        name={navigationStrings.EMPLOYMENTINFO}
+        component={Employment}
+      />
+      <MenuStack.Screen
+        name={navigationStrings.INTERESTINFO}
+        component={InterestInfo}
+      />
+      <MenuStack.Screen
+        name={navigationStrings.SECURITYINFO}
+        component={SecurityInfo}
+      />
+
+      <MenuStack.Screen
+        name={navigationStrings.REPORTINFO}
+        component={ReportInfo}
+      />
     </MenuStack.Navigator>
   );
 };

@@ -38,7 +38,6 @@ const ShowCase = data => {
         if (res.data.status === 200) {
           setView(showcaseNavigator.MARKETPLACE);
           setMarketPlaceToggle([res.data.starMarketplace]);
-          console.log(' hitted bro');
         } else {
           setModalObj({
             modalType: 'warning',
@@ -208,11 +207,11 @@ const ShowCase = data => {
           )}
           {/* {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>} */}
           {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>}
-          {view == showcaseNavigator.MARKETPLACE ? (
+          {/* {view == showcaseNavigator.MARKETPLACE ? (
             <MarketPlaceShowcase />
           ) : (
             <></>
-          )}
+          )} */}
           {view == showcaseNavigator.SOUVENIR ? (
             <Souvenir star={star} />
           ) : view == showcaseNavigator.MARKETPLACE &&

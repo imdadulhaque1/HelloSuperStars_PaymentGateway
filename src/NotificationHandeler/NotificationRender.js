@@ -119,7 +119,7 @@ const NotificationRender = () => {
    */
   const handelQnaNotification = () => {
     activities?.qna_activities?.map(item => {
-      let dateTime = item.qna_registration?.qna_date.split(' ');
+      let dateTime = item?.qna_registration?.qna_date?.split(' ');
       let scheduleTime = timeCount(
         dateTime[0],
         item.qna_registration?.qna_start_time,
@@ -177,7 +177,6 @@ const NotificationRender = () => {
     });
   };
 
-  console.log('live chat activity', activities.live_chat_activities);
   return <></>;
 };
 

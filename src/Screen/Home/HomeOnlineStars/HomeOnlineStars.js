@@ -11,7 +11,7 @@ import styles from './styles';
 
 export default function HomeOnlineStars() {
   const Navigation = useNavigation();
-  const { axiosConfig, socketData, socket } = useContext(AuthContext);
+  const { axiosConfig, socketData, socket, authContext } = useContext(AuthContext);
   const [loder, setLoder] = useState(true);
   const [starList, setStarList] = useState([]);
 
@@ -32,6 +32,7 @@ export default function HomeOnlineStars() {
       .catch(err => {
         setLoder(false);
         console.log(err);
+        authContext.signOut()
       });
   };
 

@@ -2,7 +2,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import axios from 'axios';
 import moment from 'moment';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {
   Dimensions,
@@ -33,11 +33,11 @@ import LockPaymentModal from '../../../MODAL/LockPaymentModal';
 import styles from './styles';
 import UpcomingAuditionsCard from './UpcomingAuditionsCard';
 import {timecoundFunc} from '../../../../CustomHelper/timecoundFunc';
+import RegisPaymentModal from '../../../MODAL/RegisPaymentModal';
 
 const PostCard = ({post, callform = null}) => {
-  console.log('post ', post);
   const {width} = useWindowDimensions();
-
+  const [photosUpdate, setUnlocked] = useState(false);
   const {useInfo, axiosConfig} = useContext(AuthContext);
 
   const Navigation = useNavigation();
@@ -50,7 +50,15 @@ const PostCard = ({post, callform = null}) => {
     JSON.parse(post?.user_like_id).length,
   );
   const windowWidth = Dimensions.get('window').width;
-  const [lockModal, setLockModal] = useState(false);
+  const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
+  const [post_id, setPostId] = useState(false);
+  const [fee, setFee] = useState('');
+  const [payment_status, setPaymentStatus] = useState([]);
+  const [refresh, serRefresh] = useState(true);
+  const makePayment = id => {
+    setPostId(id);
+    setIsShowPaymentComp(true);
+  };
 
   const postLock = true;
 
@@ -274,6 +282,21 @@ const PostCard = ({post, callform = null}) => {
       alert(error.message);
     }
   };
+  useEffect(() => {
+    post?.type === 'general' &&
+      axios
+        .get(`${AppUrl.postPaymentCheck}${post.general?.id}`, axiosConfig)
+        .then(res => {
+          console.log('paid post data', res.data);
+          if (res.data.status === 200) {
+            setPaymentStatus(res.data.payment_status);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          setError(err);
+        });
+  }, [photosUpdate]);
 
   return (
     <>
@@ -292,23 +315,25 @@ const PostCard = ({post, callform = null}) => {
                     borderWidth: 2,
                     borderRadius: 50,
                     padding: 1,
+                    zIndex: 9,
                   },
                 ]}
                 onPress={() => handleStarProfile(postContent?.my_superstar)}>
                 <Image
                   style={styles.starCardImg}
                   source={
-                    post?.fangroup.my_superstar?.image !== null
+                    post?.fangroup?.my_superstar?.image !== null
                       ? {
                           uri: `${
                             AppUrl.MediaBaseUrl +
-                            post?.fangroup.my_superstar?.image
+                            post?.fangroup?.my_superstar?.image
                           }`,
                         }
                       : 'https://media.istockphoto.com/vectors/default-image-icon-vector-missing-picture-page-for-website-design-or-vector-id1357365823?k=20&m=1357365823&s=612x612&w=0&h=ZH0MQpeUoSHM3G2AWzc8KkGYRg4uP_kuu0Za8GFxdFc='
                   }
                 />
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={[
                   styles.cardImg,
@@ -326,17 +351,18 @@ const PostCard = ({post, callform = null}) => {
                 <Image
                   style={styles.starCardImg}
                   source={
-                    post?.fangroup.another_superstar?.image !== null
+                    post?.fangroup?.another_superstar?.image !== null
                       ? {
                           uri: `${
                             AppUrl.MediaBaseUrl +
-                            post?.fangroup.another_superstar?.image
+                            post?.fangroup?.another_superstar?.image
                           }`,
                         }
                       : noImage
                   }
                 />
               </TouchableOpacity>
+
               <TouchableOpacity>
                 <Text style={styles.cardText}>{postContent?.group_name}</Text>
                 <Text style={styles.time}>
@@ -352,20 +378,26 @@ const PostCard = ({post, callform = null}) => {
                 <View style={styles.CardContent}>
                   <View>
                     <ImageBackground
+                      imageStyle={{borderRadius: 2}}
                       source={imagePath.BannerAu}
-                      style={styles.BannerCardImg}>
-                      <View style={styles.TextBanner}>
-                        <RenderHtml
-                          contentWidth={width}
-                          source={titleAudition}
-                        />
-                      </View>
+                      resizeMode={'stretch'}
+                      style={{
+                        marginVertical: 0,
+                        paddingVertical: 15,
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginBottom: 5,
+                      }}>
+                      <RenderHtml contentWidth={width} source={titleAudition} />
                     </ImageBackground>
+
                     <VideoPlayer
                       style={styles.BannerCardImg}
                       video={{
                         uri: `${AppUrl.MediaBaseUrl}${postContent?.video}`,
                       }}
+                      resizeMode={'stretch'}
                       videoWidth={1600}
                       videoHeight={900}
                       thumbnail={{
@@ -373,18 +405,62 @@ const PostCard = ({post, callform = null}) => {
                       }}
                       blurRadius={10}
                     />
-                    {/* <Text
+
+                    <View
                       style={{
-                        color: 'white',
-                        fontSize: 20,
-                        position: 'absolute',
-                        top: 210,
-                        left: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        borderColor: '#024E8C',
+                        padding: 15,
+                        borderBottomEndRadius: 10,
+                        borderBottomStartRadius: 10,
+                        backgroundColor: '#1A1A1A',
                       }}>
-                      {post?.type}
-                    </Text> */}
-                    <View style={styles.BannerCse}>
-                      <View style={{paddingVertical: 2}}>
+                      <View style={{marginRight: 5}}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: 13,
+                            paddingHorizontal: 3,
+                            paddingTop: 2,
+                          }}>
+                          FROM {dateMonthConverter(postContent?.start_date)} -{' '}
+                          {dateMonthConverter(postContent?.end_date)}
+                        </Text>
+                      </View>
+                      <View style={{marginRight: 5}}>
+                        <TouchableOpacity
+                          onPress={() => handlePress('audition')}>
+                          <LinearGradient
+                            style={styles.meetupBtn}
+                            colors={[
+                              '#F1A817',
+                              '#F5E67D',
+                              '#FCB706',
+                              '#DFC65C',
+                            ]}>
+                            <Animatable.Text
+                              animation="pulse"
+                              easing="ease-out"
+                              iterationCount="infinite"
+                              style={{
+                                color: '#000',
+                                fontSize: 12,
+                                backgroundColor: '#fff',
+                                opacity: 0.7,
+                                paddingHorizontal: 2,
+                                borderRadius: 10,
+                              }}>
+                              Register Now
+                            </Animatable.Text>
+                          </LinearGradient>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    {/* <View style={styles.BannerCse}>
+                      <View style={{ paddingVertical: 2 }}>
                         <Text
                           style={{
                             color: 'white',
@@ -393,7 +469,7 @@ const PostCard = ({post, callform = null}) => {
                             paddingHorizontal: 3,
                             paddingTop: 2,
                           }}>
-                          <View style={{paddingVertical: 2}}>
+                          <View style={{ paddingVertical: 2 }}>
                             <Text
                               style={{
                                 color: 'white',
@@ -429,13 +505,20 @@ const PostCard = ({post, callform = null}) => {
                               animation="pulse"
                               easing="ease-out"
                               iterationCount="infinite"
-                              style={{color: 'black', fontSize: 12}}>
+                              style={{
+                                color: '#000',
+                                fontSize: 12,
+                                backgroundColor: '#fff',
+                                opacity: 0.7,
+                                paddingHorizontal: 2,
+                                borderRadius: 10,
+                              }}>
                               Register Now
                             </Animatable.Text>
                           </LinearGradient>
                         </TouchableOpacity>
                       </View>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
 
@@ -539,7 +622,7 @@ const PostCard = ({post, callform = null}) => {
             )}
             {post?.type == 'general' ? (
               <View>
-                {postContent?.type == 'paid' ? (
+                {postContent?.type == 'paid' && payment_status === null ? (
                   <View>
                     {postContent?.image ? (
                       <View>
@@ -556,12 +639,17 @@ const PostCard = ({post, callform = null}) => {
                         />
                         {/* For lock image */}
                         <TouchableOpacity
-                          onPress={() => setLockModal(true)}
+                          onPress={() => {
+                            setFee(postContent?.fee);
+                            makePayment(postContent?.id);
+                          }}
                           style={styles.lockImageBtn}>
-                          <Image
-                            source={imagePath.lock}
-                            style={styles.lockImage}
-                          />
+                          {payment_status === null ? (
+                            <Image
+                              source={imagePath.lock}
+                              style={styles.lockImage}
+                            />
+                          ) : null}
                         </TouchableOpacity>
                       </View>
                     ) : (
@@ -573,17 +661,25 @@ const PostCard = ({post, callform = null}) => {
                           videoWidth={1600}
                           videoHeight={900}
                           thumbnail={{
-                            uri: 'https://www.newagebd.com/files/records/news/202103/132871_199.jpg',
+                            uri: postContent?.thumbnail
+                              ? AppUrl.MediaBaseUrl + postContent?.thumbnail
+                              : 'https://www.newagebd.com/files/records/news/202103/132871_199.jpg',
                           }}
                           blurRadius={10}
                         />
                         <TouchableOpacity
-                          onPress={() => setLockModal(true)}
+                          onPress={() => {
+                            setFee(postContent?.fee);
+                            console.log(postContent);
+                            makePayment(postContent?.id);
+                          }}
                           style={styles.lockImageBtn}>
-                          <Image
-                            source={imagePath.lock}
-                            style={styles.lockImage}
-                          />
+                          {payment_status === null ? (
+                            <Image
+                              source={imagePath.lock}
+                              style={styles.lockImage}
+                            />
+                          ) : null}
                         </TouchableOpacity>
                       </>
                     )}
@@ -1033,7 +1129,20 @@ const PostCard = ({post, callform = null}) => {
         </View>
       </Animatable.View>
 
-      <LockPaymentModal lockModal={lockModal} setLockModal={setLockModal} />
+      {isShowPaymentComp ? (
+        <RegisPaymentModal
+          eventType="generalpost"
+          modelName="generalpost"
+          isShowPaymentComp={isShowPaymentComp}
+          setIsShowPaymentComp={setIsShowPaymentComp}
+          eventId={post_id}
+          fee={fee}
+          setUnlocked={setUnlocked}
+        />
+      ) : (
+        <></>
+      )}
+      {/* <RegisPaymentModal lockModal={lockModal} setLockModal={setLockModal} /> */}
     </>
   );
 };
