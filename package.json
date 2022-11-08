@@ -24,6 +24,7 @@
     "@videosdk.live/react-native-sdk": "^0.0.35",
     "axios": "^0.27.2",
     "lottie-react-native": "^5.1.4",
+    "paytm_allinone_react-native": "^1.1.1",
     "react": "17.0.2",
     "react-hook-form": "^7.34.2",
     "react-native": "0.68.0",
