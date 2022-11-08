@@ -20,15 +20,7 @@ const styles = StyleSheet.create({
     height: 65,
     margin: '15%',
   },
-  postImageX: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: '#343434',
-    resizeMode: 'stretch',
-  },
+
 
   linearGradient: {
     width: '100%',
@@ -125,6 +117,13 @@ const styles = StyleSheet.create({
   },
 
   // Auction Product Card
+  AuctionMaiN: {
+    marginBottom: 25,
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: '#222222',
+    height: 400,
+  },
   MaiN: {
     marginBottom: 25,
     padding: 12,
@@ -157,9 +156,10 @@ const styles = StyleSheet.create({
   },
 
   postImageX: {
-    marginTop: 10,
+    
     width: 130.5,
-    height: 130,
+    height: '100%',
+    resizeMode:'stretch',
   },
 
   PriceRow: {

@@ -1,23 +1,31 @@
 class AppUrl {
-  static BaseUrl = 'https://backend.hellosuperstars.com/api/';
-  static MediaBaseUrl = 'https://backend.hellosuperstars.com/';
+  static BaseUrl = 'https://backendA.hellosuperstars.com/api/';
+  static MediaBaseUrl = 'https://backendA.hellosuperstars.com/';
 
-  // static SoketUrl = 'http://192.168.0.104:3005/';
+  // static SoketUrl = 'http://192.168.0.107:3005/';
   // static SoketUrl = 'http://localhost:3005';
   static SoketUrl = 'https://socket.hellosuperstars.com/';
 
   // static BaseUrl =
-  //   'http://192.168.0.104/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
+  //   'http://10.10.10.142/HelloSuperStarsBackend-2/public/api/';
   // static MediaBaseUrl =
-  //   'http://192.168.0.104/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
+  //   'http://10.10.10.142/HelloSuperStarsBackend-2/public/';
 
   // static demo instruction = 'http://your pc ip/project name on www-htdocs folder/public/';
-
+  static virtualTour = this.BaseUrl + 'mobile/getVirtualTourVideo';
   static UserLogin = this.BaseUrl + 'login';
   static VerifyUser = this.BaseUrl + 'verify_user';
   static CreateUser = this.BaseUrl + 'register';
   static UserInfo = this.BaseUrl + 'user_info';
   static UserActivityData = this.BaseUrl + 'user/activitiesData';
+  static userPersonalData = this.BaseUrl + 'user/personal/list/check';
+  static userEducationalData = this.BaseUrl + 'user/educational/list/check';
+  static userEmploymentData = this.BaseUrl + 'user/employment/list/check';
+  static userEmploymentDataSubmit = this.BaseUrl + 'user/employment/store';
+  static userEducationalDataSubmit = this.BaseUrl + 'user/educational/store';
+  static userPersonalDataSubmit = this.BaseUrl + 'user/personal-data/store';
+  static passwordChange = this.BaseUrl + 'user/password/changes';
+
   static categoryAdd = this.BaseUrl + 'user/selected/category/store';
 
   static OtpVerification = this.BaseUrl + 'otp_verify';
@@ -50,6 +58,10 @@ class AppUrl {
     this.BaseUrl + 'learning-assinment-upload';
 
   //star profile
+  static starPhotos = this.BaseUrl + 'star_photos/'; //star_id
+  static starVideos = this.BaseUrl + 'star_videos/'; //star_id
+  // static postPaymentCheck = this.BaseUrl + 'user/generalPost/payment/check';
+
   static LiveChatEventByStarId =
     this.BaseUrl + 'user/getAllLiveChatEventByStar/';
   static EventRegister = this.BaseUrl + 'user/event-register';
@@ -67,8 +79,12 @@ class AppUrl {
   static ViewCity = this.BaseUrl + 'user/marketplace/city/';
   static MarketplaceOrderUpdate =
     this.BaseUrl + 'user/mobile-app/marketplace-update/';
+  static OrderStore = this.BaseUrl + 'user/marketplace/order/store';
   static getPDF = this.BaseUrl + 'mobile/getInvoice/data';
   // Auction
+
+  static userMaxBid = this.BaseUrl + 'user/maxbid/auction/'; //${auctionId}
+  static AuctionAcquire = this.BaseUrl + 'user/aquired/auction';
   static AuctionBiddingProduct = this.BaseUrl + 'user/bidding/auction/product';
   static AuctionAllPost = this.BaseUrl + 'auction-product/all';
   static AuctionLiveBidding = this.BaseUrl + 'user/liveBidding/auction/';
@@ -83,7 +99,14 @@ class AppUrl {
 
   //
   static LearningSessionResult = this.BaseUrl + 'learning-session/result/';
-
+  /**
+   * paid post
+   */
+  static postPaymentCheck = this.BaseUrl + 'user/generalPost/payment/check/'; //post id
+  static postPaymentCheckStarProfile =
+    this.BaseUrl + 'user/generalPost/payment/check';
+  static purchasedStarPhotos = this.BaseUrl + 'user/purchasedPhotos';
+  static purchasedStarVideos = this.BaseUrl + 'user/purchasedVideos';
   // greetings
   static RegistrationChecker = this.BaseUrl + 'user/registration_checker/';
   static GreetingStarStatus = this.BaseUrl + 'user/greetings_star_status/';
@@ -186,6 +209,44 @@ class AppUrl {
 
   //downlod ticket
   static DownlodMeetUpTicket = this.BaseUrl + 'offlineMeetup/ticketDownload/'; //event id
+
+  /**
+   * for paytm start
+   */
+
+  static getTokenPaytm = this.BaseUrl + 'txn-token-mobile/'; //amount
+  static paytmPaymentSuccess = this.BaseUrl + 'paytm-payment-success';
+
+
+
+  /**
+   * stripe mobile payment
+   */
+  static stripeMobilePayment = this.BaseUrl + 'stripe-make-mobile-payment'; //amount
+  static stripeVideoReactPayment = this.BaseUrl + 'stripe-stripe-video-react'; //amount
+
+  /**
+   * get oxygen video
+   */
+  static getOxygen = this.BaseUrl + 'user/audition/getOxygen/videos';
+  static OxygenReplyUpload =
+    this.BaseUrl + 'mobile/audition/getOxygenReply/video';
+
+  /**
+   * loveReact
+   */
+  static videoFeedLoveReact =
+    this.BaseUrl + 'user/audition/videofeed/loveReact';
+
+  /**
+   * Terms & Condition APIS
+   */
+  static aboutUs = this.BaseUrl + 'aboutus';
+  static policy = this.BaseUrl + 'policy';
+  static faq = this.BaseUrl + 'faq';
+  static productPurchase = this.BaseUrl + 'product-purchase';
+  static termsCondition = this.BaseUrl + 'terms-condition';
+  static refund = this.BaseUrl + 'refund';
 }
 
 export default AppUrl;

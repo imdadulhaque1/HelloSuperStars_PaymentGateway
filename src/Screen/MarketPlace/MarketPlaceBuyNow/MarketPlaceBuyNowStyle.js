@@ -329,11 +329,11 @@ const styles = StyleSheet.create({
   },
   PriceDollarText: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 13,
   },
   PriceDollarTextB: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   LiveBidding: {
@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
   },
 
   Increment1: {
-    flex: 7,
+    flex: 4,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -622,20 +622,20 @@ const styles = StyleSheet.create({
   TextEr: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 16,
   },
 
   TextColorS: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 20,
     paddingVertical: 4,
   },
 
   Plus: {
     backgroundColor: 'green',
-    width: 45,
-    height: 45,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
@@ -643,8 +643,8 @@ const styles = StyleSheet.create({
 
   Minus: {
     backgroundColor: 'red',
-    width: 45,
-    height: 45,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
@@ -654,17 +654,18 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: 'bold',
     color: 'white',
-    marginTop: -8,
+    marginTop: -14,
   },
 
   PulsText: {
     fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
+    marginTop: -7,
   },
 
   Increment2: {
-    flex: 7,
+    flex: 4,
     marginTop: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -684,7 +685,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   BuyText: {
-    fontSize: 30,
+    fontSize: 22,
     fontWeight: 'bold',
     paddingVertical: 4,
     color: 'black',

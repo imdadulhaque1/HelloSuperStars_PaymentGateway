@@ -59,7 +59,7 @@ const OrderStatus = ({route, navigation}) => {
   const totalPrice = event?.total_price;
   const description = event?.marketplace?.description;
   const descriptionHTML = {
-    html: `<div style='color:#e6e6e6; '>${description}</div>`,
+    html: `<div style='color:#e6e6e6;'>${description}</div>`,
   };
   const progress = event?.status;
   const imageURl = event?.marketplace?.image;
@@ -122,52 +122,119 @@ const OrderStatus = ({route, navigation}) => {
                 resizeMode="stretch"
               />
 
-              <View style={{width: '100%', marginVertical: 25}}>
-                <Text style={styles.inputText}>Owner {ownerName}</Text>
-
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 5,
+                }}>
+                <View style={{width: '20%'}}>
+                  <Text style={{color: '#fff'}}>Owner:</Text>
+                </View>
                 <View
                   style={{
-                    display: 'flex',
+                    marginLeft: 10,
                     flexDirection: 'row',
-                    justifyContent: 'center',
+
+                    width: '78%',
                   }}>
-                  <View>
-                    <Text style={styles.desc}>Description </Text>
-                  </View>
-                  <View style={{width: '80%'}}>
-                    <RenderHtml contentWidth={width} source={descriptionHTML} />
-                  </View>
-                </View>
-
-                <Text style={styles.price}>Price {totalPrice}</Text>
-                {/* <Text style={styles.inputBorder}>{address}</Text> */}
-
-                <Text style={styles.inputText}>
-                  {event?.status == 3 ? <>Delivered </> : <>Ordered </>}
-                  {moment(event?.created_at).format('LL')}
-                </Text>
-
-                <Text style={styles.inputText}>
-                  Status
-                  {event?.status == 1 ? (
-                    <> Ordered</>
-                  ) : event?.status == 2 ? (
-                    <> Received</>
-                  ) : event?.status == 3 ? (
-                    <> Out for Delivery</>
-                  ) : (
-                    <> Delivered</>
-                  )}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.downloadContainer}
-                  onPress={downloadInvoice}>
-                  <Text style={{color: '#fe7013'}}>
-                    <FontAwesome5 name={'download'} style={styles.customIcon} />{' '}
-                    Download Invoice
+                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                    {ownerName}
                   </Text>
-                </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 5,
+                }}>
+                <View style={{width: '20%', justifyContent: 'center'}}>
+                  <Text style={{color: '#fff'}}>Description:</Text>
+                </View>
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flexDirection: 'row',
+
+                    width: '78%',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#fff',
+                      flexWrap: 'wrap',
+                    }}>
+                    <RenderHtml contentWidth={width} source={descriptionHTML} />
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 5,
+                }}>
+                <View style={{width: '20%'}}>
+                  <Text style={{color: '#fff'}}>Price:</Text>
+                </View>
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flexDirection: 'row',
+
+                    width: '78%',
+                  }}>
+                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                    {totalPrice}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 5,
+                }}>
+                <View style={{width: '20%'}}>
+                  <Text style={{color: '#fff'}}>
+                    {event?.status == 3 ? <>Delivered: </> : <>Ordered: </>}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flexDirection: 'row',
+
+                    width: '78%',
+                  }}>
+                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                    {moment(event?.created_at).format('LL')}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginVertical: 5,
+                }}>
+                <View style={{width: '20%'}}>
+                  <Text style={{color: '#fff'}}>Status:</Text>
+                </View>
+                <View
+                  style={{
+                    marginLeft: 10,
+                    flexDirection: 'row',
+
+                    width: '78%',
+                  }}>
+                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                    {event?.status == 1 ? (
+                      <> Ordered</>
+                    ) : event?.status == 2 ? (
+                      <> Received</>
+                    ) : event?.status == 3 ? (
+                      <> Out for Delivery</>
+                    ) : (
+                      <> Delivered</>
+                    )}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>

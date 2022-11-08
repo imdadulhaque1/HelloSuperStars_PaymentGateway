@@ -12,12 +12,16 @@ import {AuthContext} from '../../../Constants/context';
 import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp/LoaderComp';
 import styles from './MarketPlaceShipingCompStyle';
+import {calendarFormat} from 'moment/moment';
 
 const MarketPlaceShipingComp = ({
   marketplaceOrder,
   passChildData,
   setParentData,
   setParentStep,
+  amount = null,
+  slug = null,
+  tax = null,
 }) => {
   // console.log('MarketPlaceShipingComp------eventId------', eventId);
   // console.log('MarketPlaceShipingComp------setParentData------', setParentData);
@@ -42,6 +46,9 @@ const MarketPlaceShipingComp = ({
   const [allCountry, setAllCountry] = useState([]);
   const [allState, setAllState] = useState([]);
   const [allCity, setAllCity] = useState([]);
+  const [hasError, setHasError] = useState(false);
+  const [area, setArea] = useState(null);
+  const [phone, setPhone] = useState(null);
 
   // this modal object is for modal content
   const [modalObj, setModalObj] = useState({
@@ -54,6 +61,10 @@ const MarketPlaceShipingComp = ({
   const data = {
     counntry: password,
   };
+
+  useEffect(() => {
+    console.log('htis hello marake palcae', marketplaceOrder);
+  }, []);
 
   const handlePress = () => {
     if (password == null || password == '') {
@@ -69,16 +80,35 @@ const MarketPlaceShipingComp = ({
     }
   };
 
-  const onSubmit = data => {
-    let aditionalData = {
-      ...data,
+  const onSubmit = () => {
+    if (
+      !pickerData.city ||
+      !pickerData.country ||
+      !pickerData.state ||
+      !area ||
+      !phone
+    ) {
+      setHasError(true);
+      return;
+    }
+    const data = {
+      country_id: pickerData.country,
+      state_id: pickerData.state,
+      city_id: pickerData.city,
+      area: area,
+      phone: phone,
+      items: marketplaceOrder.items, //number
+      unit_price: marketplaceOrder.unit_price,
+      delivery_charge: marketplaceOrder.delivery_charge,
+      tax: tax,
+      marketplace_slug: slug,
     };
-    // console.log('aditionalData-----------', aditionalData);
+    console.log('data-----------', data);
     // console.log('AppUrl.MarketplaceOrderUpdate + marketplaceOrder?.id-----------', AppUrl.MarketplaceOrderUpdate + marketplaceOrder?.id);
     axios
       .post(
         AppUrl.MarketplaceOrderUpdate + marketplaceOrder?.id,
-        aditionalData,
+        data,
         axiosConfig,
       )
       .then(res => {
@@ -94,8 +124,8 @@ const MarketPlaceShipingComp = ({
               available: '',
             });
             setModal(true);
+
             setParentStep(2);
-            setIsShowPaymentComp(true);
           } else if (res.data.message == 'Not Enough Product') {
             setModalObj({
               modalType: 'warning',
@@ -116,6 +146,7 @@ const MarketPlaceShipingComp = ({
 
   const modalButtonPress = () => {
     setModal(false);
+    setIsShowPaymentComp(true);
     passChildData(forParentIsShowPaymentModal);
     setParentData(data);
   };
@@ -181,6 +212,42 @@ const MarketPlaceShipingComp = ({
       country: marketplaceOrder?.country_id,
     });
   }, []);
+  const handleShippingSave = () => {
+    console.log(pickerData);
+    if (
+      !pickerData.city ||
+      !pickerData.country ||
+      !pickerData.state ||
+      !area ||
+      !phone
+    ) {
+      setHasError(true);
+      return;
+    }
+    const data = {
+      country_id: pickerData.country,
+      state_id: pickerData.state,
+      city_id: pickerData.city,
+      area: area,
+      phone: phone,
+      items: marketplaceOrder.items, //number
+      unit_price: marketplaceOrder.unit_price,
+      delivery_charge: marketplaceOrder.delivery_charge,
+      tax: tax,
+      marketplace_slug: slug,
+    };
+    axios
+      .post(AppUrl.OrderStore + marketplaceOrder?.id, data, axiosConfig)
+      .then(res => {
+        console.log('res from order store', res.data);
+        if (res.data.status === 200) {
+          setIsShowPaymentComp(true);
+        }
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
+  };
 
   return (
     <>
@@ -233,7 +300,7 @@ const MarketPlaceShipingComp = ({
                   )}
                   name="country"
                 />
-                {errors.country && (
+                {!pickerData.country && hasError && (
                   <Text
                     style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
                     This field is required !
@@ -275,7 +342,7 @@ const MarketPlaceShipingComp = ({
                   )}
                   name="state"
                 />
-                {errors.state && (
+                {!pickerData.state && hasError && (
                   <Text
                     style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
                     This field is required !
@@ -316,7 +383,7 @@ const MarketPlaceShipingComp = ({
                   )}
                   name="city"
                 />
-                {errors.city && (
+                {!pickerData.city && hasError && (
                   <Text
                     style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
                     This field is required !
@@ -333,8 +400,8 @@ const MarketPlaceShipingComp = ({
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextInput
                       onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
+                      onChangeText={setArea}
+                      value={area}
                       multiline
                       placeholderTextColor="#9e9e9e"
                       placeholder="Area"
@@ -343,7 +410,7 @@ const MarketPlaceShipingComp = ({
                   )}
                   name="area"
                 />
-                {errors.area && (
+                {!area && hasError && (
                   <Text
                     style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
                     This field is required !
@@ -362,8 +429,8 @@ const MarketPlaceShipingComp = ({
                   render={({field: {onChange, onBlur, value}}) => (
                     <TextInput
                       onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
+                      onChangeText={setPhone}
+                      value={phone}
                       multiline
                       placeholderTextColor="#9e9e9e"
                       placeholder="Contact Number"
@@ -372,7 +439,7 @@ const MarketPlaceShipingComp = ({
                   )}
                   name="phone"
                 />
-                {errors.phone && (
+                {!phone && hasError && (
                   <Text
                     style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
                     This field is required !
@@ -385,7 +452,8 @@ const MarketPlaceShipingComp = ({
                   justifyContent: 'center',
                 }}>
                 <TouchableOpacity
-                  onPress={handleSubmit(onSubmit)}
+                  // onPress={handleSubmit(onSubmit)}
+                  onPress={() => onSubmit()}
                   style={[
                     {
                       backgroundColor: '#ffad00',
@@ -411,6 +479,7 @@ const MarketPlaceShipingComp = ({
               isShowPaymentComp={isShowPaymentComp}
               setIsShowPaymentComp={setIsShowPaymentComp}
               event_registration_id={marketplaceOrder && marketplaceOrder?.id}
+              fee={marketplaceOrder.total_price}
               // parentData={parentData}
             />
           </>

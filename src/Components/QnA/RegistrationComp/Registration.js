@@ -136,7 +136,39 @@ const RegistrationComp = ({
             setModal(true);
             setBuffer(false);
           });
-      } else if (modelName === 'auditionRegistration') {
+      } else if (modelName === 'paidPhoto') {
+        axios
+          .post(AppUrl.VerifyUser, data, axiosConfig)
+          .then(res => {
+            if (res.data.status === 401) {
+              setModalObj({
+                modalType: 'warning',
+                buttonTitle: 'OK',
+                message: res.data.message ? res.data.message : '',
+              });
+              setModal(true);
+              setBuffer(false);
+            } else if (res.data.status === 200) {
+              setBuffer(false);
+              setModalObj({
+                modalType: 'success',
+                buttonTitle: 'OK',
+                message: 'Password matched',
+              });
+              setModal(true);
+              setForParentIsShowPaymentModal(true);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+            setModalObj({
+              modalType: 'warning',
+              buttonTitle: 'OK',
+              message: 'Something Went Wrong',
+            });
+            setModal(true);
+            setBuffer(false);
+          });
       } else {
         axios
           .post(AppUrl.VerifyToRegisterEvent, data, axiosConfig)
@@ -320,7 +352,8 @@ const RegistrationComp = ({
                   style={styles.textInputStyle}
                   placeholderTextColor="#9e9e9e"
                   editable={false}
-                  value={useInfo.first_name + ' ' + useInfo.last_name}
+                  // value={useInfo.first_name + ' ' + useInfo.last_name}
+                  value={useInfo.first_name}
                 />
               </View>
             </View>

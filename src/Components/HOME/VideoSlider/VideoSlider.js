@@ -27,6 +27,8 @@ import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './Styles';
 import RNFS from 'react-native-fs';
+import LinearGradient from 'react-native-linear-gradient';
+import Toast from 'react-native-root-toast';
 const VideoSlider = ({
   currentIndex,
   index,
@@ -34,7 +36,9 @@ const VideoSlider = ({
   loadVideos,
   liked,
   setLiked,
+  paidLoveReact,
 }) => {
+  console.log('paidLoveReact', paidLoveReact);
   const vedioRef = useRef(null);
   const [like, setLike] = useState(false);
   const [likeFlash, setLikeFlash] = useState(false);
@@ -44,6 +48,11 @@ const VideoSlider = ({
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [videoComment, setVideoComment] = useState('');
   const [paymentComplete, setPaymentComplete] = useState(false);
+  const [videoUpload, setVideoUpload] = useState({
+    uri: null,
+    type: null,
+    base64: null,
+  });
 
   let halfWidth = windowWidth / 2 - 20;
 
@@ -174,6 +183,27 @@ const VideoSlider = ({
     }).then(video => {
       console.log(video.path);
       setVideoComment(video.path);
+      RNFS.readFile(video.path, 'base64').then(res => {
+        const data = {
+          base64: res,
+          type: video.mime,
+          oxy_audition_id: item.audition_id,
+          oxy_round_info_id: item.round_info_id,
+          oxy_video_id: item.id,
+          oxy_user_id: item.user_id,
+        };
+        console.log(data);
+        axios
+          .post(AppUrl.OxygenReplyUpload, data, axiosConfig)
+          .then(res => {
+            console.log(res);
+            Toast.show('Comment uploaded', Toast.durations.SHORT);
+          })
+          .catch(err => {
+            Toast.show(err.message, Toast.durations.SHORT);
+            console.log(err);
+          });
+      });
     });
   };
 
@@ -181,14 +211,34 @@ const VideoSlider = ({
     ImagePicker.openPicker({
       mediaType: 'video',
     }).then(video => {
-      console.log('selected video from gallery===> ', video.path);
       setVideoComment(video.path);
+      RNFS.readFile(video.path, 'base64').then(res => {
+        const data = {
+          base64: res,
+          type: video.mime,
+          oxy_audition_id: item.audition_id,
+          oxy_round_info_id: item.round_info_id,
+          oxy_video_id: item.id,
+          oxy_user_id: item.user_id,
+        };
+        console.log(data);
+        axios
+          .post(AppUrl.OxygenReplyUpload, data, axiosConfig)
+          .then(res => {
+            console.log(res);
+            if (res.status === 200) {
+              console.log(res);
+              Toast.show('Comment uploaded', Toast.durations.SHORT);
+            }
+          })
+          .catch(err => {
+            Toast.show(err.message, Toast.durations.SHORT);
+            console.log(err);
+          });
+      });
     });
   };
 
-  RNFS.readFile(videoComment, 'base64').then(res => {
-    console.log('========>baseData video===> ', res);
-  });
   //================ comment video upload functionality end here ===================
 
   return (
@@ -305,148 +355,145 @@ const VideoSlider = ({
         <></>
       )}
 
-      <View style={styles.LeftSideBar}>
-        {/* <Text style={{ color: '#FFFFFF' }}>Gift</Text> */}
+      {!item.hasOwnProperty('status') && (
+        <View
+          style={
+            paidLoveReact.length === 0
+              ? {
+                  top: '47%',
+                  position: 'absolute',
+                  backgroundColor: 'rgba(31, 31, 31, 0.473)',
+                  transform: [{translateX: -halfWidth}],
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }
+              : paidLoveReact.length === 1
+              ? {
+                  top: '43%',
+                  position: 'absolute',
+                  backgroundColor: 'rgba(31, 31, 31, 0.473)',
+                  transform: [{translateX: -halfWidth}],
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }
+              : styles.LeftSideBar
+          }>
+          {/* <Text style={{ color: '#FFFFFF' }}>Gift</Text> */}
 
-        <TouchableOpacity
-          style={{height: 50, marginTop: 5}}
-          onPress={() => {
-            pressLike(1000);
-            console.log('free');
-            handleReact([item?.id, 1]);
-          }}>
-          {/* <Image source={imagePath.GiftIcon1} height={50} width={50} /> */}
+          <TouchableOpacity
+            style={{height: 50, marginTop: 5}}
+            onPress={() => {
+              pressLike(1000);
+              console.log('free');
+              handleReact([item?.id, 1]);
+            }}>
+            {/* <Image source={imagePath.GiftIcon1} height={50} width={50} /> */}
 
-          {item?.total_react?.some(i => i.react_num == 1) ? (
-            <Icon name="heart" size={30} color="red" />
-          ) : (
-            <AntDesign name="hearto" size={30} color="red" />
-          )}
-          {/* <Icon name="heart" size={30} color="red" /> */}
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>Free</Text>
-        </TouchableOpacity>
+            {item?.total_react?.some(i => i.react_num == 1) ? (
+              <Icon name="heart" size={30} color="red" />
+            ) : (
+              <AntDesign name="hearto" size={30} color="red" />
+            )}
+            {/* <Icon name="heart" size={30} color="red" /> */}
+            <Text style={{color: '#FFFFFF', textAlign: 'center'}}>Free</Text>
+          </TouchableOpacity>
+          {paidLoveReact?.map(reactItem => {
+            return (
+              <TouchableOpacity
+                style={{height: 50, marginTop: 5}}
+                onPress={() => {
+                  let array = [item?.id, reactItem?.loveReact, reactItem?.fee];
+                  const checking = item?.total_react?.some(
+                    item => item.react_num == reactItem?.loveReact,
+                  );
 
-        {/* 5 */}
-        <TouchableOpacity
-          style={{height: 50, marginTop: 5}}
-          onPress={() => {
-            pressLike(2500, 5);
-            console.log('5');
-            let array = [item?.id, 5];
-            const checking = item?.total_react?.some(
-              item => item.react_num == 5,
+                  var value = {
+                    array,
+                    checking,
+                  };
+                  handleModal(value);
+                }}>
+                {/* <Image source={imagePath.GiftIcon1} height={50} width={50} /> */}
+
+                {item?.total_react?.some(
+                  i => i.react_num == reactItem?.loveReact,
+                ) ? (
+                  <Icon name="heart" size={30} color="red" />
+                ) : (
+                  <AntDesign name="hearto" size={30} color="red" />
+                )}
+
+                <Text style={{color: '#FFFFFF', textAlign: 'center'}}>
+                  {reactItem?.loveReact}
+                </Text>
+              </TouchableOpacity>
             );
-
-            var value = {
-              array,
-              checking,
-            };
-            handleModal(value);
-          }}>
-          {/* <Image source={imagePath.GiftIcon1} height={50} width={50} /> */}
-
-          {item?.total_react?.some(i => i.react_num == 5) ? (
-            <Icon name="heart" size={30} color="red" />
-          ) : (
-            <AntDesign name="hearto" size={30} color="red" />
-          )}
-
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>05</Text>
-        </TouchableOpacity>
-
-        {/* 10  */}
-
-        <TouchableOpacity
-          style={{height: 50, marginTop: 15}}
-          onPress={() => {
-            pressLike(2500, 10);
-            console.log('10');
-            let array = [item?.id, 10];
-            const checking = item?.total_react?.some(
-              item => item.react_num == 10,
-            );
-
-            var value = {
-              array,
-              checking,
-            };
-            handleModal(value);
-          }}>
-          {/* <Image source={imagePath.GiftIcon2} height={50} width={50} /> */}
-          {item?.total_react?.some(i => i.react_num == 10) ? (
-            <Icon name="heart" size={30} color="red" />
-          ) : (
-            <AntDesign name="hearto" size={30} color="red" />
-          )}
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>10</Text>
-        </TouchableOpacity>
-
-        {/* 20 */}
-
-        <TouchableOpacity
-          style={{height: 50, marginTop: 15}}
-          onPress={() => {
-            pressLike(2500, 20);
-            let array = [item?.id, 20];
-            const checking = item?.total_react?.some(
-              item => item.react_num == 20,
-            );
-
-            var value = {
-              array,
-              checking,
-            };
-            handleModal(value);
-          }}>
-          {/* <Image source={imagePath.GiftIcon3} height={50} width={50} /> */}
-          {item?.total_react?.some(i => i.react_num == 20) ? (
-            <Icon name="heart" size={30} color="red" />
-          ) : (
-            <AntDesign name="hearto" size={30} color="red" />
-          )}
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>20</Text>
-        </TouchableOpacity>
-      </View>
+          })}
+        </View>
+      )}
 
       <View style={styles.RightSideBar}>
-        <View
-          style={{height: 50, marginTop: 10}}
-          // onPress={() => pressLike(1000)}
-        >
-          {item?.total_react?.some(
-            i =>
-              i.react_num == 1 ||
-              i.react_num == 5 ||
-              i.react_num == 10 ||
-              i.react_num == 20,
-          ) ? (
-            <Icon name="heart" size={30} color="red" />
-          ) : (
-            <AntDesign name="hearto" size={30} color="red" />
-          )}
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>
-            {item?.get_total_react?.reduce((prev, curr) => {
-              return prev + curr.react_num;
-            }, 0)}
-          </Text>
-        </View>
-        {/* <View style={{height: 50, marginTop: 10}}>
-          <AntDesign name="message1" size={30} color="#FFFFFF" />
-          <Text style={{ color: '#FFFFFF' }}>2.5 K</Text>
-        </View> */}
-        <TouchableOpacity style={{height: 50, marginTop: 30}} onPress={onShare}>
-          <FontAwesome name="paper-plane" size={30} color="#1291f8" />
-          <Text style={{color: '#FFFFFF', textAlign: 'center'}}>00</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{height: 50, marginTop: 30}}
-          onPress={handleUpload}>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <Foundation name="comment-video" size={35} color="#ffaa00" />
-          </View>
-          <Text style={{color: '#FFFFFF', fontSize: 8}}>Comment</Text>
-        </TouchableOpacity>
+        {!item.hasOwnProperty('status') && (
+          <>
+            <View
+              style={{height: 50, marginTop: 10}}
+              // onPress={() => pressLike(1000)}
+            >
+              {item?.total_react?.some(
+                i =>
+                  i.react_num == 1 ||
+                  i.react_num == 5 ||
+                  i.react_num == 10 ||
+                  i.react_num == 20,
+              ) ? (
+                <Icon name="heart" size={30} color="red" />
+              ) : (
+                <AntDesign name="hearto" size={30} color="red" />
+              )}
+              <Text style={{color: '#FFFFFF', textAlign: 'center'}}>
+                {item?.get_total_react?.reduce((prev, curr) => {
+                  return prev + curr.react_num;
+                }, 0)}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={{height: 50, marginTop: 30}}
+              onPress={onShare}>
+              <FontAwesome name="paper-plane" size={30} color="#1291f8" />
+              <Text style={{color: '#FFFFFF', textAlign: 'center'}}>00</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        {item.hasOwnProperty('status') && (
+          <Animatable.View
+            animation="pulse"
+            iterationCount="infinite"
+            duration={1000}>
+            <TouchableOpacity
+              style={{height: 50, marginTop: 0}}
+              onPress={handleUpload}>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <Animatable.Text
+                  animation="pulse"
+                  easing="ease-out"
+                  iterationCount="infinite"
+                  style={{color: '#FFFFFF', fontSize: 12}}>
+                  <Foundation name="comment-video" size={35} color="#ffaa00" />
+                </Animatable.Text>
+              </View>
+              {/* <Animatable.Text
+                animation="pulse"
+                easing="ease-out"
+                iterationCount="infinite"
+                style={{color: '#FFFFFF', fontSize: 12}}>
+                Comment
+              </Animatable.Text> */}
+              <Text style={{color: '#FFFFFF', fontSize: 12}}>Oxygen</Text>
+            </TouchableOpacity>
+          </Animatable.View>
+        )}
       </View>
 
       <View style={styles.CommentSection}>
@@ -477,6 +524,41 @@ const VideoSlider = ({
             {item.user.first_name} {item.user.last_name}
           </Text>
         </View>
+
+        {item.hasOwnProperty('status') && (
+          <View style={{marginBottom: 20, paddingTop: 3}}>
+            <LinearGradient
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              colors={['#ffa825', '#ffce48', '#ab6616']}
+              style={{
+                marginTop: 10,
+                borderRadius: 5,
+              }}>
+              <View
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Animatable.Text
+                  animation="pulse"
+                  easing="ease-out"
+                  iterationCount="infinite"
+                  style={{color: '#FFFFFF', fontSize: 12}}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: 'black',
+                      marginTop: 3,
+                    }}>
+                    OXYGEN VIDEO
+                  </Text>
+                </Animatable.Text>
+              </View>
+            </LinearGradient>
+          </View>
+        )}
       </View>
       {isShowPaymentComp ? (
         <RegisPaymentModal
@@ -485,6 +567,7 @@ const VideoSlider = ({
           isShowPaymentComp={isShowPaymentComp}
           setIsShowPaymentComp={setIsShowPaymentComp}
           modalPara={modalPara}
+          fee={modalPara[2]}
           setLiked={setLiked}
           setPaymentComplete={setPaymentComplete}
         />

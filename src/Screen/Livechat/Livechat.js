@@ -69,7 +69,7 @@ const Livechat = ({route, navigation}) => {
 
         {isShowPaymentComp ? (
           <RegisPaymentModal
-            eventType="LiveChat"
+            eventType="livechat"
             eventId={data.livechat.id}
             modelName="livechat"
             isShowPaymentComp={isShowPaymentComp}

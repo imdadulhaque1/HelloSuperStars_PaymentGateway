@@ -76,6 +76,7 @@ const MarketPlaceBuyNow = ({route}) => {
         if (res.data.status === 200) {
           if (res.data.isHavePaymentUncompletedOrder == true) {
             setMarketplaceOrder(res.data.marketplaceOrder);
+            console.log(res.data.marketplaceOrder);
             setStep(2);
 
             // if (res.data?.marketplaceOrder?.phone == null) {
@@ -96,7 +97,7 @@ const MarketPlaceBuyNow = ({route}) => {
   };
   const handleBuyNow = async () => {
     if (count !== 0) {
-      inputData = {
+      const inputData = {
         items: count,
         marketplace_id: product?.id,
         total_price: amount,
@@ -105,9 +106,10 @@ const MarketPlaceBuyNow = ({route}) => {
       axios
         .post(AppUrl.MarketplaceOrderStore, inputData, axiosConfig)
         .then(res => {
-          // console.log('res---------', res);
+          console.log('res---------', res);
           if (res.data.status === 200) {
             if (res.data.message == 'Order Stored Successfully') {
+              setMarketplaceOrder(res.data.marketplaceOrder);
               setModalObj({
                 modalType: 'success',
                 buttonTitle: 'Ok',
@@ -129,6 +131,7 @@ const MarketPlaceBuyNow = ({route}) => {
           }
         })
         .catch(err => {
+          console.log('buy product problem', err.message);
           setBuffer(false);
           console.log(err);
         });
@@ -278,7 +281,7 @@ const MarketPlaceBuyNow = ({route}) => {
                   <View style={{flex: 2}}>
                     <Image source={imagePath.BoxA} />
                   </View>
-                  <View style={{flex: 4}}>
+                  <View style={{flex: 7}}>
                     <Text style={styles.TextEr}>Your quantity</Text>
                   </View>
                   <View style={styles.Increment1}>
@@ -306,7 +309,7 @@ const MarketPlaceBuyNow = ({route}) => {
                   <View style={{flex: 2}}>
                     <Image source={imagePath.PriceTag} />
                   </View>
-                  <View style={{flex: 4}}>
+                  <View style={{flex: 8}}>
                     <Text style={styles.TextEr}>Total Price</Text>
                   </View>
                   <View style={styles.Increment2}>
@@ -336,10 +339,15 @@ const MarketPlaceBuyNow = ({route}) => {
           ) : (
             <>
               <MarketPlaceShipingComp
-                marketplaceOrder={marketplaceOrder}
+                marketplaceOrder={
+                  marketplaceOrder === null ? product : marketplaceOrder
+                }
                 passChildData={setIsShowPaymentComp}
                 setParentData={setParentData}
                 setParentStep={setStep}
+                amount={amount}
+                slug={product.slug}
+                tax={product?.tax}
               />
             </>
           )}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as React from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 import {AuthContext} from '../../../Constants/context';
@@ -35,23 +35,40 @@ function AuctionTab(props) {
         </View>
 
         <ScrollView>
-          {productInfo.map(item => {
-            console.log(item);
-            return (
-              <AuctionProductCard
-                setView={props.setView}
-                name={item.title}
-                productImg={item.product_image}
-                price={item.base_price}
-                ownerImg={item.star.image}
-                owerName={item.star.first_name + ' ' + item.star.last_name}
-                key={item.id}
-                productDetails={item}
-                buttonText="Participate"
-                setProduct={props.setProduct}
-              />
-            );
-          })}
+          {productInfo.length > 0 ? (
+            productInfo.map(item => {
+              console.log(item);
+              return (
+                <AuctionProductCard
+                  setView={props.setView}
+                  name={item.title}
+                  productImg={item.product_image}
+                  price={item.base_price}
+                  ownerImg={item.star.image}
+                  owerName={item.star.first_name + ' ' + item.star.last_name}
+                  key={item.id}
+                  productDetails={item}
+                  buttonText="Participate"
+                  setProduct={props.setProduct}
+                />
+              );
+            })
+          ) : (
+            <View style={{height: 170, justifyContent: 'center'}}>
+              <View>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Image
+                    source={imagePath.lazyDog}
+                    style={{height: 100, width: 100}}
+                  />
+                </View>
+
+                <Text style={{color: 'white', textAlign: 'center'}}>
+                  Sorry No Data Available !
+                </Text>
+              </View>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </View>

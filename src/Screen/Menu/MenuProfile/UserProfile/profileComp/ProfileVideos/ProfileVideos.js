@@ -10,19 +10,39 @@ import AppUrl from '../../../../../../RestApi/AppUrl';
 import VideoPlayer from 'react-native-video-player';
 import imagePath from '../../../../../../Constants/imagePath';
 
-const ProfileVideos = ({userActivites}) => {
+const ProfileVideos = ({userActivites, purchasedVideos = null}) => {
   const Navigation = useNavigation();
   const [videoList, setVideoList] = useState([]);
   console.log(userActivites);
+  console.log('purchasedVideos', purchasedVideos);
 
   useEffect(() => {
     setVideoList(
       userActivites.filter(
         item =>
-          item.type === 'greeting' && item.greeting_registration.status > 2,
+          item.type === 'greeting' && item.greeting_registration?.status > 2,
       ),
     );
   }, []);
+  const renderPaidProfileVideo = ({item}) => {
+    return (
+      <>
+        <VideoPlayer
+          video={{
+            uri: `${AppUrl.MediaBaseUrl + item[0]?.video}`,
+          }}
+          pauseOnPress
+          fullScreenOnLongPress
+          videoWidth={1600}
+          videoHeight={900}
+          thumbnail={{
+            uri: `https://www.newagebd.com/files/records/news/202103/132871_199.jpg`,
+          }}
+          blurRadius={1}
+        />
+      </>
+    );
+  };
 
   const renderVideo = (data, index) => {
     return (
@@ -47,7 +67,7 @@ const ProfileVideos = ({userActivites}) => {
             videoWidth={1600}
             videoHeight={1000}
             thumbnail={{
-              uri: `${AppUrl.MediaBaseUrl + data.item?.greeting.banner}`,
+              uri: `${AppUrl.MediaBaseUrl + data.item?.greeting?.banner}`,
             }}
             blurRadius={1}
           />
@@ -65,12 +85,21 @@ const ProfileVideos = ({userActivites}) => {
   return (
     <>
       <View style={{margin: 7}}>
-        {videoList.length > 0 ? (
-          <FlatGrid
-            itemDimension={160}
-            data={videoList}
-            renderItem={renderVideo}
-          />
+        {videoList.length > 0 || purchasedVideos ? (
+          <>
+            <FlatGrid
+              itemDimension={160}
+              data={videoList}
+              renderItem={renderVideo}
+            />
+
+            <FlatGrid
+              spacing={15}
+              itemDimension={300}
+              data={purchasedVideos}
+              renderItem={renderPaidProfileVideo}
+            />
+          </>
         ) : (
           <View style={{height: 300, justifyContent: 'center'}}>
             <View>

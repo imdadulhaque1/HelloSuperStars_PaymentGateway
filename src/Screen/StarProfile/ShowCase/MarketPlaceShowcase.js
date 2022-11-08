@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as React from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import {AuthContext} from '../../../Constants/context';
 import AppUrl from '../../../RestApi/AppUrl';
@@ -43,42 +43,59 @@ function MarketPlaceShowcase({star}, props) {
           <View style={styles.container}>
             <SafeAreaView>
               <View style={styles.row1}>
-                {Data.length > 0 ? (
-                  <LinearGradient
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
-                    colors={[
-                      '#FFAD00',
-                      '#FFD273',
-                      '#E19A04',
-                      '#FACF75',
-                      '#E7A725',
-                      '#FFAD00',
-                    ]}
-                    style={{borderRadius: 15}}>
-                    <Text style={styles.AuctionT}>MarketPlace</Text>
-                  </LinearGradient>
-                ) : (
-                  <></>
-                )}
+                <LinearGradient
+                  start={{x: 0, y: 0}}
+                  end={{x: 1, y: 0}}
+                  colors={[
+                    '#FFAD00',
+                    '#FFD273',
+                    '#E19A04',
+                    '#FACF75',
+                    '#E7A725',
+                    '#FFAD00',
+                  ]}
+                  style={{borderRadius: 15}}>
+                  <Text style={styles.AuctionT}>MarketPlace</Text>
+                </LinearGradient>
               </View>
 
               <ScrollView>
-                {Data.map(item => {
-                  return (
-                    <MarketplaceProductCard
-                      setView={props.setView}
-                      name={item.title}
-                      productImg={item.image}
-                      price={item.unit_price}
-                      ownerImg={item.superstar.image}
-                      owerName={item.superstar.first_name}
-                      product={item}
-                      key={item.id}
-                      buttonText="Buy Now"
-                    />
-                  );
-                })}
+                {Data.length > 0 ? (
+                  Data.map(item => {
+                    return (
+                      <MarketplaceProductCard
+                        setView={props.setView}
+                        name={item.title}
+                        productImg={item.image}
+                        price={item.unit_price}
+                        ownerImg={item.superstar.image}
+                        owerName={item.superstar.first_name}
+                        product={item}
+                        key={item.id}
+                        buttonText="Buy Now"
+                      />
+                    );
+                  })
+                ) : (
+                  <View style={{height: 200, justifyContent: 'center'}}>
+                    <View>
+                      <View
+                        style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Image
+                          source={imagePath.lazyDog}
+                          style={{height: 100, width: 100}}
+                        />
+                      </View>
+
+                      <Text style={{color: 'white', textAlign: 'center'}}>
+                        Sorry No Data Available !
+                      </Text>
+                    </View>
+                  </View>
+                )}
               </ScrollView>
             </SafeAreaView>
           </View>

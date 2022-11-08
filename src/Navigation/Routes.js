@@ -67,7 +67,7 @@ const Routes = () => {
       const loginStatus = await AsyncStorage.getItem('loginStaus');
       if (loginStatus !== null) {
         let data = JSON.parse(loginStatus);
-        console.log(data.userInfo);
+        console.log('user info', data.userInfo);
         setUserInfo(data);
         setLoginStatus(data);
       }
@@ -97,7 +97,6 @@ const Routes = () => {
       .get(AppUrl.WaletInfo, axiosConfig)
       .then(res => {
         setWaletInfo(res.data.userWallet);
-        console.log('wallet', res.data.userWallet);
       })
       .catch(err => {
         console.log(err);
@@ -110,21 +109,31 @@ const Routes = () => {
       .get(AppUrl.Menu, axiosConfig)
       .then(res => {
         setActivities(res.data);
-        console.log('activity data', res.data);
       })
       .catch(err => {
         console.log(err);
       });
   };
 
+  /**
+   *paytm payment success to backend
+   */
+  const paytmSuccess = data => {
+    console.log('payment data', data);
+    axios
+      .post(AppUrl.paytmPaymentSuccess, data, axiosConfig)
+      .then(res => {
+        console.log('my data succes', res.data);
+      })
+      .catch(err => {});
+  };
+
   //notification
 
   const updateNotification = () => {
-    console.log('totalNotificationCount calling');
     axios
       .get(AppUrl.totalNotificationCount, axiosConfig)
       .then(res => {
-        console.log('totalNotificationCount', res.data);
         if (res.data.status === 200) {
           setTotalNotification(res.data.totalNotification);
         }
@@ -237,6 +246,8 @@ const Routes = () => {
         totalNotification,
         setTotalNotification,
         updateNotification,
+        paytmSuccess,
+        setUserInfo,
       }}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>

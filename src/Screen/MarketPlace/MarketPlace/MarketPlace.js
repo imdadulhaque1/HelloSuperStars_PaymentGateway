@@ -157,6 +157,7 @@ function MarketPlace({ route = null }) {
               </LinearGradient>
             </View>
             <ScrollView>
+
               {marketPlaceNavigate === marketPlaceNavigatr.MARKETPLACE ? (
                 <MarketProductContainer
                   apiInPoint={AppUrl.MarketplaceAllPost}
@@ -169,6 +170,8 @@ function MarketPlace({ route = null }) {
               ) : (
                 <></>
               )}
+
+
             </ScrollView>
           </SafeAreaView>
         </View>

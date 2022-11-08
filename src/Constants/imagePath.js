@@ -118,9 +118,11 @@ export default {
 
   // payment images
   paypal: require('../Assets/Icons/paypal.png'),
+  paytm: require('../Assets/Icons/paytm.png'),
   payneeor: require('../Assets/Icons/payoneer.png'),
   bank: require('../Assets/Icons/worldBank.png'),
   bkash: require('../Assets/Icons/Bkash.jpg'),
+  Stripe: require('../Assets/Icons/paymentStripe.png'),
 
   //live chat image
   LiveChatImage: require('../Assets/Images/sakibLiveVedio.png'),

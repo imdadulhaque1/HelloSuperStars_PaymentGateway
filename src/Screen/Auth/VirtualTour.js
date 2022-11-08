@@ -1,7 +1,8 @@
 //import liraries
 
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -9,11 +10,13 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import VideoPlayer from 'react-native-video-player';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import imagePath from '../../Constants/imagePath';
+import AppUrl from '../../RestApi/AppUrl';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 // create a component
@@ -21,10 +24,47 @@ const VirtualTour = ({route}) => {
   const navigation = useNavigation();
   const [playing, setPlaying] = useState(false);
   const {music, setMusic} = route.params;
-
+  const [youtubeId, setYoutubeID] = useState(null);
+  const [localVideo, setLocalVideo] = useState(null);
   useEffect(() => {
     music && music.stop();
+    axios
+      .get(AppUrl.virtualTour)
+      .then(res => {
+        if (res.data.status == 200) {
+          console.log('link', res?.data?.videoInfo?.link);
+          console.log('video', res?.data?.videoInfo?.video);
+          if (res?.data?.videoInfo.link !== null) {
+            return setYoutubeID(YouTubeGetID(res?.data?.videoInfo?.link));
+          }
+          setLocalVideo(res?.data?.videoInfo?.video);
+          console.log(res?.data?.videoInfo?.video);
+        }
+        console.log('link', res?.data?.videoInfo?.link);
+        console.log('video', res?.data?.videoInfo?.video);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
+
+  //get video id for mobile
+  function YouTubeGetID(url) {
+    var ID = '';
+    url = url
+      .replace(/(>|<)/gi, '')
+      .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    if (url[2] !== undefined) {
+      ID = url[2].split(/[^0-9a-z_\-]/i);
+      ID = ID[0];
+    } else {
+      ID = url;
+      console.log(ID);
+    }
+
+    return ID;
+  }
+
   const onStateChange = useCallback(state => {
     if (state === 'ended') {
       setPlaying(false);
@@ -41,7 +81,14 @@ const VirtualTour = ({route}) => {
       resizeMode="cover"
       style={styles.container}>
       <View style={{alignItems: 'center', marginTop: 50}}>
-        <Image source={imagePath.logo} style={windowWidth>500?{height: 150, width: 150}:{height: 100, width: 100}} />
+        <Image
+          source={imagePath.logo}
+          style={
+            windowWidth > 500
+              ? {height: 150, width: 150}
+              : {height: 100, width: 100}
+          }
+        />
       </View>
 
       <View
@@ -53,13 +100,33 @@ const VirtualTour = ({route}) => {
           marginTop: 100,
         }}>
         <View style={{padding: 5}}>
-          <YoutubePlayer
-        
-            height={windowWidth>500?500:280}
-            play={true}
-            videoId={'ZbsYZ1K7xKc'}
-            onChangeState={onStateChange}
-          />
+          {!localVideo && youtubeId ? (
+            <YoutubePlayer
+              height={windowWidth > 500 ? 500 : 280}
+              play={true}
+              videoId={youtubeId}
+              onChangeState={onStateChange}
+            />
+          ) : !youtubeId && localVideo ? (
+            <VideoPlayer
+              video={{
+                uri: `${AppUrl.MediaBaseUrl}${localVideo}`,
+              }}
+              videoWidth={windowWidth > 500 ? 500 : 280}
+              videoHeight={162}
+              thumbnail={{
+                uri: `${imagePath.logo}`,
+              }}
+            />
+          ) : (
+            <YoutubePlayer
+              height={windowWidth > 500 ? 500 : 280}
+              play={true}
+              videoId={'ZbsYZ1K7xKc'}
+              onChangeState={onStateChange}
+            />
+          )}
+
           <View style={{alignItems: 'flex-end'}}>
             <TouchableOpacity
               style={{

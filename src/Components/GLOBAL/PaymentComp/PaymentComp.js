@@ -9,7 +9,7 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styles from './Styles';
 // import imagePath from '../../../Constants/imagePath';
 
@@ -25,36 +25,123 @@ import AlertModal from '../../MODAL/AlertModal';
 import imagePath from '../../../Constants/imagePath';
 import UnderlineImage from '../Reuseable/UnderlineImage';
 import Toast from 'react-native-root-toast';
-const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentView, PackegeId = null, buyFor }) => {
-  const { axiosConfig, setWaletInfo } = useContext(AuthContext);
+import { useAxiosGet } from '../../../CustomHooks/useAxiosGet';
+import AllInOneSDKManager from 'paytm_allinone_react-native';
+import { useStripePayment } from '../../../CustomHooks/useStripePayment';
+
+const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentView, PackegeId = null, buyFor, singlePackage = null }) => {
+  const { axiosConfig, setWaletInfo, paytmSuccess } = useContext(AuthContext);
   const Navigation = useNavigation()
-  const [buffer, setBuffer] = useState(false)
+  const [packageBuffer, setPackageBuffer] = useState(false)
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [modal, setModal] = useState(false);
+  const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(AppUrl.getTokenPaytm + singlePackage?.price)
 
+  const { stripeBuffer, stripeError, HandelStripePayment, openPaymentSheet, stripePaymentStatus } = useStripePayment({
+    amount: singlePackage?.price,
+    event_type: buyFor,
+    event_id: PackegeId,
+    redirect: false
+  })
   // this modal object is for modal content 
   const [modalObj, setModalObj] = useState({
     modalType: '',
     buttonTitle: '',
     message: ''
   });
+  const [paytmDat, setPaytmDat] = useState({
+    'token': "",
+    'order_id': "",
+    'mid': "",
+    'amount': ""
+  })
 
+  useEffect(() => {
+    HandelGetData()
+  }, [PackegeId])
+
+  useEffect(() => {
+    setPaytmDat({
+      'token': resData?.Token_data?.body?.txnToken,
+      'order_id': resData?.orderId,
+      'mid': resData?.mid,
+      'amount': resData?.amount,
+      'callBackUrl': resData?.callBackUrl
+    })
+    console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + singlePackage?.price)
+
+  }, [resData])
+
+  /**
+   * payment by paytm
+   */
+  const payTmPayment = () => {
+
+    if (!buffer) {
+      AllInOneSDKManager.startTransaction(
+        paytmDat.order_id,
+        paytmDat.mid,
+        paytmDat.token,
+        paytmDat.amount,
+        paytmDat.callBackUrl + paytmDat.order_id,
+        true,
+        false,
+        ""
+      ).then((result) => {
+        if (result.STATUS == "TXN_SUCCESS") {
+          Toast.show(
+            'Payment success',
+            Toast.durations.SHORT,
+          );
+          handelBuyPackage()
+          paytmSuccess({
+            ...result,
+            modelName: buyFor,
+            eventId: PackegeId,
+          })
+        }
+
+      }).catch((err) => {
+        console.log('payment error', err.message)
+        Toast.show(
+          'Payment failed',
+          Toast.durations.SHORT,
+        );
+      });
+
+    } else {
+      Toast.show(
+        'please wait...',
+        Toast.durations.SHORT,
+      );
+    }
+
+
+
+  }
+
+
+
+  useEffect(() => {
+    // alert(buyFor + " " + PackegeId)
+    console.log(singlePackage.price)
+  }, [PackegeId])
   // buy package
-  const handelBuyPackage = (data) => {
+  const handelBuyPackage = () => {
 
     let PackageData = {
-      'card_holder_name': data.card_holder_name,
+      'card_holder_name': "",
       'packages_id': PackegeId,
-      'card_no': data.card_number,
+      'card_no': "",
       'card_expire_date': '648726842',
       'card_cvv': '84923804',
       'type': buyFor
 
     }
-    setBuffer(true)
+    setPackageBuffer(true)
     axios.post(AppUrl.BuyPackages, PackageData, axiosConfig).then(res => {
       console.log('payment responce ', res)
-      setBuffer(false)
+      setPackageBuffer(false)
       if (res.data.status === 200) {
         setWaletInfo(res.data.waletInfo)
         setModal(true)
@@ -68,7 +155,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         setPaymentView(false)
       }
     }).catch((err) => {
-      setBuffer(false)
+      setPackageBuffer(false)
       setModalObj({
         modalType: 'warning',
         buttonTitle: 'OK',
@@ -86,11 +173,11 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
       'event_id': eventId,
       'model_name': modelName
     }
-    setBuffer(true)
+    setPackageBuffer(true)
 
     axios.post(AppUrl.EventRegister, aditionalData, axiosConfig).then(res => {
       // console.log(res.data)
-      setBuffer(false)
+      setPackageBuffer(false)
 
       if (res.data.status === 200) {
 
@@ -119,7 +206,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         setModal(true)
       }
     }).catch((err) => {
-      setBuffer(false)
+      setPackageBuffer(false)
       setModalObj({
         modalType: 'warning',
         buttonTitle: 'OK',
@@ -150,12 +237,26 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
     }
   }
 
+  //stripe payment 
+  const stripePaymentClick = () => {
+    if (stripeBuffer) {
+      openPaymentSheet()
+    } else {
+      Toast.show('Try agin', Toast.durations.SHORT);
+    }
+  }
+
+  useEffect(() => {
+    if (stripePaymentStatus) {
+      handelBuyPackage()
+    }
+  }, [stripePaymentStatus])
 
 
   return (
     <>
       <AlertModal modalObj={modalObj} modal={modal} setModal={setModal} buttoPress={modalButtonPress} />
-      {buffer ?
+      {packageBuffer ?
         <LoaderComp />
         :
         <></>
@@ -164,11 +265,11 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         <Text style={styles.fonts}>Payment Information</Text>
         <UnderlineImage />
         <ScrollView horizontal>
-          <TouchableOpacity>
-            <Image source={imagePath.paypal} style={{ margin: 10 }} />
+          <TouchableOpacity onPress={() => payTmPayment()} >
+            <Image source={imagePath.paytm} style={{ margin: 10, width: 100, height: 80 }} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={imagePath.bkash} style={{ margin: 10 }} />
+          <TouchableOpacity onPress={() => stripePaymentClick()}>
+            <Image source={imagePath.Stripe} style={{ margin: 10, width: 100, height: 80 }} />
           </TouchableOpacity>
           <TouchableOpacity>
             <Image source={imagePath.payneeor} style={{ margin: 10 }} />
@@ -177,7 +278,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
             <Image source={imagePath.bank} style={{ margin: 10 }} />
           </TouchableOpacity>
         </ScrollView>
-        <Controller
+        {/* <Controller
           control={control}
           rules={{
             required: true,
@@ -246,7 +347,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
               />
             </View>
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.textInputView}>
 

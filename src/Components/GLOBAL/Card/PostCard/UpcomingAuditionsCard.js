@@ -82,135 +82,164 @@ export default function UpcomingAuditionsCard(props) {
     return monthName + ' ' + day;
   };
 
-  return post.map((item, index) => {
-    return (
-      <View>
-        <View style={styles.CardRow}>
-          <View style={styles.CardContent}>
-            <View style={{position: 'relative'}}>
-              <ImageBackground
-                source={imagePath.BannerAu}
-                style={styles.BannerCardImg}>
-                <View style={styles.TextBanner}>
-                  <RenderHtml
-                    contentWidth={width}
-                    source={{
-                      html: `<div style='color:#F6EA45; display: inline; font-size: 18px; font-weight: 'bold'>${item?.audition?.title}</div>`,
-                    }}
-                    style={{color: 'red'}}
-                  />
-                </View>
-              </ImageBackground>
-              <VideoPlayer
-                style={styles.BannerCardImg}
-                video={{
-                  uri: `${AppUrl.MediaBaseUrl}${item?.audition?.video}`,
-                }}
-                videoWidth={1600}
-                videoHeight={900}
-                thumbnail={{
-                  uri: `${AppUrl.MediaBaseUrl}${item?.audition?.banner}`,
-                }}
-                blurRadius={10}
-              />
-              <View style={styles.BannerCse}>
-                <View style={{paddingVertical: 2}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: 18,
-                      paddingHorizontal: 3,
-                      paddingTop: 2,
-                    }}>
-                    <View style={{paddingVertical: 2}}>
-                      <Text
+  return (
+    <View>
+      {post.length > 0 ? (
+        post.map((item, index) => {
+          return (
+            <View>
+              <View style={styles.CardRow}>
+                <View style={styles.CardContent}>
+                  <View style={{position: 'relative'}}>
+                    <ImageBackground
+                      source={imagePath.BannerAu}
+                      style={styles.BannerCardImg}>
+                      <View style={styles.TextBanner}>
+                        <RenderHtml
+                          contentWidth={width}
+                          source={{
+                            html: `<div style='color:#F6EA45; display: inline; font-size: 18px; font-weight: 'bold'>${item?.audition?.title}</div>`,
+                          }}
+                          style={{color: 'red'}}
+                        />
+                      </View>
+                    </ImageBackground>
+                    <VideoPlayer
+                      style={styles.BannerCardImg}
+                      video={{
+                        uri: `${AppUrl.MediaBaseUrl}${item?.audition?.video}`,
+                      }}
+                      videoWidth={1600}
+                      videoHeight={900}
+                      thumbnail={{
+                        uri: `${AppUrl.MediaBaseUrl}${item?.audition?.banner}`,
+                      }}
+                      blurRadius={10}
+                    />
+                    <View style={styles.BannerCse}>
+                      <View style={{paddingVertical: 2}}>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            fontSize: 18,
+                            paddingHorizontal: 3,
+                            paddingTop: 2,
+                          }}>
+                          <View style={{paddingVertical: 2}}>
+                            <Text
+                              style={{
+                                color: 'white',
+                                fontWeight: 'bold',
+                                fontSize: 15,
+                                paddingHorizontal: 3,
+                                paddingTop: 2,
+                              }}>
+                              FROM{' '}
+                              {dateMonthConverter(item.audition?.start_date)} -{' '}
+                              {dateMonthConverter(item.audition?.end_date)}
+                            </Text>
+                          </View>
+                        </Text>
+                      </View>
+
+                      <View
                         style={{
-                          color: 'white',
-                          fontWeight: 'bold',
-                          fontSize: 15,
-                          paddingHorizontal: 3,
-                          paddingTop: 2,
+                          justifyContent: 'flex-end',
+                          marginHorizontal: 10,
+                          marginVertical: 5,
                         }}>
-                        FROM {dateMonthConverter(item.audition?.start_date)} -{' '}
-                        {dateMonthConverter(item.audition?.end_date)}
+                        <TouchableOpacity
+                          onPress={() => {
+                            return Navigation.navigate(
+                              navigationStrings.AUDITIONREGISTER,
+                              {
+                                data: item,
+                              },
+                            );
+                          }}>
+                          <LinearGradient
+                            style={styles.meetupBtn}
+                            colors={[
+                              '#F1A817',
+                              '#F5E67D',
+                              '#FCB706',
+                              '#DFC65C',
+                            ]}>
+                            <Animatable.Text
+                              animation="pulse"
+                              easing="ease-out"
+                              iterationCount="infinite"
+                              style={{color: '#fff', fontSize: 12}}>
+                              Register Now
+                            </Animatable.Text>
+                          </LinearGradient>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View style={styles.BannerCse}>
+                    <View>
+                      <Text style={styles.BannerCseText}>With :</Text>
+                    </View>
+                    {item.audition?.assigned_judges?.map(judge => {
+                      return (
+                        <>
+                          <View style={styles.SText}>
+                            <Image
+                              style={styles.starCardImg}
+                              source={{
+                                uri: `${
+                                  AppUrl.MediaBaseUrl + judge?.user?.image
+                                }`,
+                              }}
+                            />
+                          </View>
+                        </>
+                      );
+                    })}
+                  </View>
+
+                  <View style={styles.cardInfo}>
+                    <View style={{flexDirection: 'row', marginTop: 5}}>
+                      <Text style={styles.infoText}>
+                        <Icon name="heart" color={'red'} size={12} />
+                      </Text>
+                      <Text style={{marginLeft: 4, color: '#d9d9d9'}}>
+                        {likeCount}
                       </Text>
                     </View>
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    justifyContent: 'flex-end',
-                    marginHorizontal: 10,
-                    marginVertical: 5,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      return Navigation.navigate(
-                        navigationStrings.AUDITIONREGISTER,
-                        {
-                          data: item,
-                        },
-                      );
-                    }}>
-                    <LinearGradient
-                      style={styles.meetupBtn}
-                      colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-                      <Animatable.Text
-                        animation="pulse"
-                        easing="ease-out"
-                        iterationCount="infinite"
-                        style={{color: '#fff', fontSize: 12}}>
-                        Register Now
-                      </Animatable.Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.BannerCse}>
-              <View>
-                <Text style={styles.BannerCseText}>With :</Text>
-              </View>
-              {item.audition?.assigned_judges?.map(judge => {
-                return (
-                  <>
-                    <View style={styles.SText}>
-                      <Image
-                        style={styles.starCardImg}
-                        source={{
-                          uri: `${AppUrl.MediaBaseUrl + judge?.user?.image}`,
-                        }}
-                      />
+                    <View style={{flexDirection: 'row'}}>
+                      <View style={{marginTop: 7}}>
+                        <Icon name="paper-plane" color={'#03a5fc'} size={12} />
+                      </View>
+                      <View>
+                        <Text style={styles.infoText}>{postShare} Share</Text>
+                      </View>
                     </View>
-                  </>
-                );
-              })}
+                  </View>
+                </View>
+              </View>
+            </View>
+          );
+        })
+      ) : (
+        <View style={{height: 200, justifyContent: 'center'}}>
+          <View>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Image
+                source={imagePath.lazyDog}
+                style={{height: 100, width: 100}}
+              />
             </View>
 
-            <View style={styles.cardInfo}>
-              <View style={{flexDirection: 'row', marginTop: 5}}>
-                <Text style={styles.infoText}>
-                  <Icon name="heart" color={'red'} size={12} />
-                </Text>
-                <Text style={{marginLeft: 4, color: '#d9d9d9'}}>
-                  {likeCount}
-                </Text>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{marginTop: 7}}>
-                  <Icon name="paper-plane" color={'#03a5fc'} size={12} />
-                </View>
-                <View>
-                  <Text style={styles.infoText}>{postShare} Share</Text>
-                </View>
-              </View>
-            </View>
+            <Text style={{color: 'white', textAlign: 'center'}}>
+              Sorry No Data Available !
+            </Text>
           </View>
         </View>
-      </View>
-    );
-  });
+      )}
+    </View>
+  );
 }

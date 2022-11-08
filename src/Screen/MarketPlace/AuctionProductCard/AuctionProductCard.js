@@ -1,7 +1,9 @@
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
+  Dimensions,
   Image,
+  ScrollView,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -16,8 +18,9 @@ import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import styles from './AuctionProductCardStyle';
 
+const {width} = Dimensions.get('window');
+
 const AuctionProductCard = ({data}) => {
-  console.log(data);
   const Navigation = useNavigation();
   const {width} = useWindowDimensions();
   const source = {
@@ -38,25 +41,29 @@ const AuctionProductCard = ({data}) => {
   };
   const randerFlatListItem = ({index}) => {
     return (
-      <Image
-        source={
-          data?.product_image == null
-            ? imagePath.Foot
-            : {
-                uri: `${AppUrl.MediaBaseUrl + data?.product_image}`,
-              }
-        }
-        key={index}
-        style={styles.postImageX}
-      />
+      <>
+        <Image
+          source={
+            data?.product_image == null
+              ? imagePath.Foot
+              : {
+                  uri: `${AppUrl.MediaBaseUrl + data?.product_image}`,
+                }
+          }
+          key={index}
+          style={styles.postImageX}
+        />
+      </>
     );
   };
   return (
-    <>
+    <ScrollView style={{}}>
       <View style={styles.MaiN}>
         <View style={styles.mainView}>
           <View style={{flexDirection: 'row', margin: 10}}>
-            <View style={{width: '40%', height: '100%'}}>
+            <View style={{width: '40%', borderWidth: 1, borderColor: 'gray'}}>
+              {/* <Image style={{height:'100%',resizeMode:'stretch'}}  source={{uri:'https://static.vecteezy.com/system/resources/thumbnails/002/041/725/original/motion-of-opened-book-on-desk-static-shot-free-video.jpg'}} /> */}
+
               <SwiperFlatList
                 autoplay
                 autoplayDelay={5}
@@ -64,6 +71,14 @@ const AuctionProductCard = ({data}) => {
                 data={[1, 2, 3, 4]}
                 renderItem={randerFlatListItem}
               />
+
+              {/* <SwiperFlatList
+                autoplay
+                autoplayDelay={5}
+                autoplayLoop
+                data={[1, 2, 3, 4]}
+                renderItem={randerFlatListItem}
+              /> */}
             </View>
             <View style={styles.mainView2}>
               <Text style={{color: 'white', fontSize: 18}}>{data.title}</Text>
@@ -145,7 +160,7 @@ const AuctionProductCard = ({data}) => {
           </View>
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 };
 

@@ -22,6 +22,7 @@ import VoiceMessage from '../../Screen/VoiceMessage/VoiceMessage';
 import Souvenir from './../../Screen/StarProfile/ShowCase/Souvenir';
 import UpcomingAuditionsCard from '../../Components/GLOBAL/Card/PostCard/UpcomingAuditionsCard';
 import RegisterUpCoAudition from '../../Components/AUDITION/UpcomingAudition/RegisterUpCoAudition';
+import AuctionDetails from '../../Screen/Auction/AuctionDetails';
 const HomeStack = createNativeStackNavigator();
 
 export function HomeStackScreen() {

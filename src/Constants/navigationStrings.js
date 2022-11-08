@@ -60,6 +60,7 @@ export default {
   //marketplace
   BUYMARKETPLACEPRODUCT: 'BuyMarketPlaceProduct',
   //auction
+  AUCTIONDETAILS: 'AuctionDetails',
   AUCTIONPARTICIPATENOW: 'AuctionParticipateNow',
   // livechat
   MESSAGESTAR: 'MessageStar',
@@ -96,4 +97,13 @@ export default {
   CONDITIONPOLICY: 'Condition',
   REFUNDPOLICY: 'Refund',
   FAQPOLICY: 'FaQ',
+
+  //Settings
+  SETTINGS: 'Settings',
+  PERSONALINFO: 'personalInfo',
+  EDUCATIONINFO: 'EducationInfo',
+  EMPLOYMENTINFO: 'Employmentinfo',
+  INTERESTINFO: 'Interestinfo',
+  SECURITYINFO: 'Securityinfo',
+  REPORTINFO: 'ReportInfo',
 };

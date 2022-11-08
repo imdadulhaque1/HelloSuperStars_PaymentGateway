@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -11,19 +11,19 @@ import {
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import HeaderComp from '../../../Components/HeaderComp';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import styles from './Styles';
 import CountDown from 'react-native-countdown-component';
-import { FlatGrid } from 'react-native-super-grid';
+import {FlatGrid} from 'react-native-super-grid';
 import moment from 'moment';
 const Learning = () => {
   const width = Dimensions.get('window').width;
   const navigation = useNavigation();
   const [auditions, setAuditions] = useState([]);
-  const { useInfo, axiosConfig } = useContext(AuthContext);
+  const {useInfo, axiosConfig} = useContext(AuthContext);
 
   const [lastTime, setLastTime] = useState(true);
   const [auditionComplete, setAuditionComplete] = useState(false);
@@ -54,19 +54,19 @@ const Learning = () => {
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.container}>
         <SafeAreaView style={styles.ActiveNew}>
-          <View style={{ position: 'relative' }}>
+          <View style={{position: 'relative'}}>
             <Image source={imagePath.BgLane} style={styles.LaneBg} />
             <Text style={styles.LaneText} onPress={console.log(auditions)}>
               Auditions
             </Text>
           </View>
 
-          <View style={{ height: '100%' }}>
+          <View style={{height: '100%'}}>
             {/*================== Card  Start here==================  */}
             {auditions.length > 0 ? (
               auditions.map((audition, index) => {
                 return (
-                  <View style={{ height: '38%' }}>
+                  <View style={{height: '38%'}}>
                     <TouchableOpacity
                       style={styles.LagEr}
                       onPress={() => {
@@ -99,7 +99,7 @@ const Learning = () => {
                         style={width > 500 ? styles.ImgLanB : styles.ImgLan}
                       />
                       {remainingTime(audition.audition.start_date) != 0 &&
-                        !isComplete(audition.audition.end_date) ? (
+                      !isComplete(audition.audition.end_date) ? (
                         <Text
                           style={
                             width > 500 ? styles.LearnTextB : styles.LearnText
@@ -143,7 +143,7 @@ const Learning = () => {
                               borderColor: '#FFAD00',
                               borderRadius: 20,
                             }}
-                            digitTxtStyle={{ color: '#FFAD00' }}
+                            digitTxtStyle={{color: '#FFAD00'}}
                             timeLabelStyle={{
                               color: 'black',
                               fontWeight: 'bold',

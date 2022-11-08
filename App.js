@@ -2,14 +2,23 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Routes from './src/Navigation/Routes';
 import { Provider as PaperProvider } from 'react-native-paper';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
-    <PaperProvider>
-      <Routes />
-    </PaperProvider>
+    <StripeProvider
+      publishableKey="pk_test_51LtSJLGiXzKYuOYkQjOQcod5ZhxNxnsyIezQUgDHHC5BPSr1JVrOeCrBUwdG1owKJEzFjh9V9CsXtRB9RTzEtaU200Kr8oNp8P"
+      merchantIdentifier="merchant.com.hellosuperstars"
+    >
+
+      <PaperProvider>
+        <Routes />
+      </PaperProvider>
+
+    </StripeProvider>
+
   );
 }
 

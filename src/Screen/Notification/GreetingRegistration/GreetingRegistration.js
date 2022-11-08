@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -9,9 +9,9 @@ import {
 } from 'react-native';
 import AppUrl from '../../../RestApi/AppUrl';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import {Controller, useForm} from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import VideoPlayer from 'react-native-video-player';
 import HeaderComp from '../../../Components/HeaderComp';
 // import InformationComp from '../../../GLOBAL/Components/InformationComp/InformationComp';
@@ -24,7 +24,7 @@ import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 
 import Heading from '../../../Components/GLOBAL/Reuseable/Heading';
 import UnderlineImage from '../../../Components/GLOBAL/Reuseable/UnderlineImage';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import styles from './Styles2';
 import InformationComp from '../../../Components/GLOBAL/InformationComp/InformationComp';
@@ -33,7 +33,7 @@ import RegistrationComp from '../../../Components/QnA/RegistrationComp/Registrat
 // import InformationComp from '../../../Components/GLOBAL/InformationComp/InformationComp';
 // import InformationComp from '../../../Components/GLOBAL/InformationComp/InformationComp';
 
-const GreetingRegistration = ({route}) => {
+const GreetingRegistration = ({ route }) => {
   const navigation = useNavigation();
   const [post, setPost] = useState({});
   const [postRegistration, setPostRegistration] = useState({});
@@ -43,12 +43,12 @@ const GreetingRegistration = ({route}) => {
   );
 
   // const { notification_id } = route.params.notification_id;
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
   const [modal, setModal] = useState(false);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
@@ -148,10 +148,10 @@ const GreetingRegistration = ({route}) => {
               <View style={styles.greetingsRequest}>
                 <Heading heading="Greetings Request" />
                 <UnderlineImage />
-                <View style={{margin: 13}}>
+                <View style={{ margin: 13 }}>
                   {post?.video != null ? (
                     <VideoPlayer
-                      video={{uri: `${AppUrl.MediaBaseUrl + post?.video}`}}
+                      video={{ uri: `${AppUrl.MediaBaseUrl + post?.video}` }}
                       videoWidth={120}
                       videoHeight={70}
                       thumbnail={post.greetingStar}
@@ -165,7 +165,7 @@ const GreetingRegistration = ({route}) => {
                         resizeMode="stretch"
                       />
                       <Image
-                        style={{position: 'absolute', left: '48%', top: '40%'}}
+                        style={{ position: 'absolute', left: '48%', top: '40%' }}
                         source={imagePath.greetingsPauseCircle}
                       />
                     </>
@@ -183,14 +183,14 @@ const GreetingRegistration = ({route}) => {
 
               <View style={styles.greetingsRequest}>
                 {postRegistration?.name === null ||
-                postRegistration?.greeting_context === null ? (
+                  postRegistration?.greeting_context === null ? (
                   <>
                     <Heading heading="Registration Information" />
                     <UnderlineImage />
-                    <View style={{margin: 13, color: 'white'}}>
-                      <View style={{marginTop: 10, marginBottom: 10}}></View>
-                      <View style={{marginTop: 10, marginBottom: 10}}>
-                        <Text style={{marginBottom: 8, color: 'white'}}>
+                    <View style={{ margin: 13, color: 'white' }}>
+                      <View style={{ marginTop: 10, marginBottom: 10 }}></View>
+                      <View style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Text style={{ marginBottom: 8, color: 'white' }}>
                           Name of persion
                         </Text>
                         <Controller
@@ -198,7 +198,7 @@ const GreetingRegistration = ({route}) => {
                           rules={{
                             required: true,
                           }}
-                          render={({field: {onChange, onBlur, value}}) => (
+                          render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                               onBlur={onBlur}
                               onChangeText={onChange}
@@ -222,8 +222,8 @@ const GreetingRegistration = ({route}) => {
                           </Text>
                         )}
                       </View>
-                      <View style={{marginTop: 10, marginBottom: 10}}>
-                        <Text style={{marginBottom: 8, color: 'white'}}>
+                      <View style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Text style={{ marginBottom: 8, color: 'white' }}>
                           Greeting context
                         </Text>
                         <Controller
@@ -231,7 +231,7 @@ const GreetingRegistration = ({route}) => {
                           rules={{
                             required: true,
                           }}
-                          render={({field: {onChange, onBlur, value}}) => (
+                          render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                               onBlur={onBlur}
                               onChangeText={onChange}
@@ -255,8 +255,8 @@ const GreetingRegistration = ({route}) => {
                           </Text>
                         )}
                       </View>
-                      <View style={{marginTop: 10, marginBottom: 10}}>
-                        <Text style={{marginBottom: 8, color: 'white'}}>
+                      <View style={{ marginTop: 10, marginBottom: 10 }}>
+                        <Text style={{ marginBottom: 8, color: 'white' }}>
                           Additional message (Optional)
                         </Text>
                         <Controller
@@ -264,7 +264,7 @@ const GreetingRegistration = ({route}) => {
                           rules={{
                             required: false,
                           }}
-                          render={({field: {onChange, onBlur, value}}) => (
+                          render={({ field: { onChange, onBlur, value } }) => (
                             <TextInput
                               onBlur={onBlur}
                               onChangeText={onChange}
@@ -357,6 +357,7 @@ const GreetingRegistration = ({route}) => {
                       }
                       notification_id={notificationId}
                       greetingId={postRegistration?.id}
+                      fee={post?.cost}
                     />
                   </>
                 )}

@@ -45,7 +45,6 @@ const TabRoutes = () => {
     updateNotification,
   } = useContext(AuthContext);
   updateNotification();
-  console.log('total Notification', totalNotification);
 
   useEffect(() => {
     checkNotification();

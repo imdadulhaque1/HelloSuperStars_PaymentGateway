@@ -21,7 +21,6 @@ const MenuActivities = ({
   const navigation = useNavigation();
 
   const [check, setCheck] = React.useState(false);
-  console.log('menuActivitList------------', menuActivitList);
   const [greetingActivities, setGreetingActivities] = useState(0);
   const filteredActivities = menuActivitList.greeting_activities.filter(
     item => {
