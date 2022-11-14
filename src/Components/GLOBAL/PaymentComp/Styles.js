@@ -5,6 +5,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
+  payment_icon: {
+    borderRadius: 10,
+    padding: 5,
+    width: 135,
+    height: 75,
+    resizeMode: 'cover',
+    marginBottom: 20
+  },
   topCard: {
     backgroundColor: '#282828',
     margin: 8,

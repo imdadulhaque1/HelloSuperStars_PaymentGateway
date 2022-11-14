@@ -11,30 +11,11 @@ import VideoSliderContainer from '../Screen/VideoSlider/VideoSliderContainer';
 import {HomeStackScreen} from './HomeStack/HomeStackScreen';
 import {MarketPlaceStackScreen} from './MarketPlaceStack/MarketPlaceStackScreen';
 import MenuStackScreen from './MenuStack/MenuStackScreen';
+import MenuStackScreenV2 from './MenuStackV2/MenuStackScreenV2';
 import {NotificationStackScreen} from './NotificationStack/NotificationStackScreen';
 
 const Tab = createBottomTabNavigator();
-// const HomeStack = createNativeStackNavigator();
 
-// function HomeStackScreen() {
-//   return (
-//     <HomeStack.Navigator screenOptions={{ headerShown:false }}>
-//       <HomeStack.Screen name={navigationStrings.HOME} component={Home} />
-//       <HomeStack.Screen name={navigationStrings.MEETUP} component={MeetUp} />
-//     </HomeStack.Navigator>
-//   );
-// }
-
-// const MenuStack = createNativeStackNavigator();
-
-// function MenuStackScreen() {
-//   return (
-//     <MenuStack.Navigator screenOptions={{ headerShown:false }}>
-//       <MenuStack.Screen name={navigationStrings.MENU} component={Menu} />
-//       <MenuStack.Screen name={'UserProfile'} component={UserProfile} />
-//     </MenuStack.Navigator>
-//   );
-// }
 
 const TabRoutes = () => {
   const {
@@ -212,7 +193,9 @@ const TabRoutes = () => {
         }}
       />
 
-      <Tab.Screen
+      {/* =============old menu stack==========  */}
+
+      {/* <Tab.Screen
         name={navigationStrings.MENUSTACK}
         component={MenuStackScreen}
         options={{
@@ -243,8 +226,50 @@ const TabRoutes = () => {
             );
           },
         }}
+      /> */}
+
+
+<Tab.Screen
+        name={navigationStrings.MENUSTACKSCREENV2}
+        component={MenuStackScreenV2}
+        options={{
+          tabBarIcon: ({focused}) => {
+            return (
+              <>
+                {focused ? (
+                  <Animatable.View
+                    animation="pulse"
+                    iterationCount="infinite"
+                    style={focused ? styles.activeTab : styles.menuTab}>
+                    <MaterialCommunityIcons
+                      name="format-list-bulleted"
+                      color={focused ? '#FFAD00' : 'white'}
+                      size={24}
+                    />
+                  </Animatable.View>
+                ) : (
+                  <View style={focused ? styles.activeTab : styles.menuTab}>
+                    <MaterialCommunityIcons
+                      name="format-list-bulleted"
+                      color={focused ? '#FFAD00' : 'white'}
+                      size={24}
+                    />
+                  </View>
+                )}
+              </>
+            );
+          },
+        }}
       />
+
+
     </Tab.Navigator>
+
+
+
+
+
+
   );
 };
 const styles = StyleSheet.create({

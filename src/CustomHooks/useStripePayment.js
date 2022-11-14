@@ -10,7 +10,7 @@ import navigationStrings from "../Constants/navigationStrings";
 
 export const useStripePayment = (data) => {
 
-
+    const [reciveData, setReciveData] = useState(data)
     const { axiosConfig } = useContext(AuthContext)
     const [stripeError, setStripeError] = useState(null)
     const [stripeBuffer, setStripeBuffer] = useState()
@@ -71,12 +71,14 @@ export const useStripePayment = (data) => {
             Toast.show(error.message, Toast.durations.SHORT);
         } else {
             setStripePaymentStatus(true)
+
             // Navigation.navigate(navigationStrings.HOME)
             //Alert.alert('Success', 'Your order is confirmed!');
-            if (data.event_type != 'videoFeed') {
-
-                data.redirect == false ? null : Navigation.navigate(navigationStrings.HOME);
+            if (reciveData.event_type !== 'videoFeed') {
+                // data.redirect == false ? null :
+                Navigation.navigate(navigationStrings.HOME);
             }
+
             Toast.show('Payment added', Toast.durations.SHORT);
 
         }

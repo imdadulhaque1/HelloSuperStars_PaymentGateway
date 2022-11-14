@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
+import React, { useContext, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Dimensions,
   Image,
@@ -11,10 +11,10 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import BidCongratulationModal from '../../../Components/MODAL/BidCongratulationModal';
 import ProductProcessModal from '../../../Components/MODAL/ProductProcessModal';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import styles from './styles';
 import moment from 'moment';
@@ -22,11 +22,11 @@ import RenderHtml from 'react-native-render-html';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
-import noImage from '../../../Assets/Images/no-image.png';
+import noImage from '../../../Assets/Images/no-image1.png';
 const Participate = props => {
   const product = props.product;
   console.log('product from props', product);
-  const {socketData, axiosConfig} = useContext(AuthContext);
+  const { socketData, axiosConfig } = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [isShowResult, setIsShowResult] = useState(false);
   const [winner, setWinner] = useState([]);
@@ -34,12 +34,12 @@ const Participate = props => {
   const [bidHistory, setBidHistory] = useState([]);
   const [instruction, setInstruction] = useState([]);
   const [auctionApply, setAuctionApply] = useState();
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const {
     control,
     handleSubmit,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
   const source = {
     html: `<div style='color:#e6e6e6'>${product ? product?.details : ''}</div>`,
@@ -100,24 +100,24 @@ const Participate = props => {
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
     setSecond(seconds);
   }, 1000);
-  const randerProductImageFlatListItem = ({index}) => {
+  const randerProductImageFlatListItem = ({ index }) => {
     return (
       <Image
-        style={{height: 200, width: width - 20}}
+        style={{ height: 200, width: width - 20 }}
         source={
           product?.product_image == null
             ? imagePath.Foot
             : {
-                uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
-              }
+              uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
+            }
         }
         key={index}
       />
     );
   };
-  const randerLiveBidFlatListItem = ({item, index}) => {
+  const randerLiveBidFlatListItem = ({ item, index }) => {
     return (
-      <View style={{marginRight: 8}}>
+      <View style={{ marginRight: 8 }}>
         <View style={styles.LiveBCarB}>
           <View style={styles.PriceLive}>
             <Image
@@ -125,8 +125,8 @@ const Participate = props => {
                 item?.user?.image == null
                   ? noImage
                   : {
-                      uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
-                    }
+                    uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
+                  }
               }
               style={styles.BidUser}
             />
@@ -245,7 +245,7 @@ const Participate = props => {
         .then(res => {
           if (res.data.status === 200) {
             reset(data);
-            socketData.emit('joinBiddingRoom', {room: product?.id});
+            socketData.emit('joinBiddingRoom', { room: product?.id });
             socketData.emit('sendLiveBidding', product?.id);
             socketData.on('getLiveBidding', sdata => {
               // console.log("data from socket", sdata);
@@ -277,7 +277,7 @@ const Participate = props => {
   };
 
   useEffect(() => {
-    socketData.emit('joinBiddingRoom', {room: product?.id});
+    socketData.emit('joinBiddingRoom', { room: product?.id });
     socketData.emit('sendLiveBidding', product?.id);
     socketData.on('getLiveBidding', sdata => {
       // console.log("data from socket", sdata);
@@ -291,11 +291,11 @@ const Participate = props => {
 
   return (
     <>
-      <View style={{marginHorizontal: 8}}>
+      <View style={{ marginHorizontal: 8 }}>
         <View style={styles.rowX}>
           <LinearGradient
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             colors={[
               '#FFAD00',
               '#FFD273',
@@ -304,7 +304,7 @@ const Participate = props => {
               '#E7A725',
               '#FFAD00',
             ]}
-            style={{borderRadius: 50}}>
+            style={{ borderRadius: 50 }}>
             <Text style={styles.AuctionT}>Auction</Text>
           </LinearGradient>
         </View>
@@ -312,8 +312,8 @@ const Participate = props => {
         <View style={styles.MaiN}>
           <Text style={styles.PText}>Bidding End Time</Text>
           <LinearGradient
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
             colors={[
               '#FFAD00',
               '#FFD273',
@@ -389,7 +389,7 @@ const Participate = props => {
           <Text style={styles.FootSt}>
             Auction at {moment(product?.created_at).format('DD MMMM YYYY')}
           </Text>
-          <View style={{width: '100%'}}>
+          <View style={{ width: '100%' }}>
             <RenderHtml contentWidth={width} source={source} />
           </View>
           <View style={styles.BtnBox}>
@@ -436,14 +436,14 @@ const Participate = props => {
           <>
             <View style={styles.MaiN}>
               <Text style={styles.LiveBidding}>Bid Now</Text>
-              <View style={{marginHorizontal: 12, marginTop: 8}}>
+              <View style={{ marginHorizontal: 12, marginTop: 8 }}>
                 <Text style={styles.LiveBiddingP}>Price Your Bid</Text>
                 <Controller
                   control={control}
                   rules={{
                     required: true,
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -471,7 +471,7 @@ const Participate = props => {
                   rules={{
                     required: true,
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -498,8 +498,8 @@ const Participate = props => {
                 )}
                 <TouchableOpacity onPress={handleSubmit(onSubmit)}>
                   <LinearGradient
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     colors={[
                       '#FFAD00',
                       '#FFD273',
@@ -593,11 +593,10 @@ const Participate = props => {
                                   source={
                                     winner?.user?.image !== null
                                       ? {
-                                          uri: `${
-                                            AppUrl.MediaBaseUrl +
-                                            winner?.user?.image
+                                        uri: `${AppUrl.MediaBaseUrl +
+                                          winner?.user?.image
                                           }`,
-                                        }
+                                      }
                                       : noImage
                                   }
                                   style={
@@ -691,19 +690,19 @@ const Participate = props => {
                       disabled={nowDate < resultPublishDate ? true : false}
                       onPress={() => setIsShowResult(true)}>
                       <LinearGradient
-                        start={{x: 0, y: 0}}
-                        end={{x: 1, y: 0}}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
                         colors={
                           nowDate < resultPublishDate
                             ? ['#343333', '#343333']
                             : [
-                                '#FFAD00',
-                                '#FFD273',
-                                '#E19A04',
-                                '#FACF75',
-                                '#E7A725',
-                                '#FFAD00',
-                              ]
+                              '#FFAD00',
+                              '#FFD273',
+                              '#E19A04',
+                              '#FACF75',
+                              '#E7A725',
+                              '#FFAD00',
+                            ]
                         }
                         style={styles.LinerBGA}>
                         <Text
@@ -723,12 +722,12 @@ const Participate = props => {
             ) : (
               <>
                 <View style={styles.MaiN}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={{width: '50%'}}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ width: '50%' }}>
                       <TouchableOpacity onPress={handleApplyButton}>
                         <LinearGradient
-                          start={{x: 0, y: 0}}
-                          end={{x: 1, y: 0}}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
                           colors={[
                             '#FFAD00',
                             '#FFD273',
@@ -745,12 +744,12 @@ const Participate = props => {
                       </TouchableOpacity>
                     </View>
 
-                    <View style={{width: '50%'}}>
+                    <View style={{ width: '50%' }}>
                       <TouchableOpacity
                         onPress={() => navigation.navigate('Home')}>
                         <LinearGradient
-                          start={{x: 0, y: 0}}
-                          end={{x: 1, y: 0}}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
                           colors={[
                             '#FFAD00',
                             '#FFD273',

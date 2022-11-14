@@ -14,7 +14,11 @@ const PackageDetails = ({
   return (
     <View style={{position: 'relative', marginBottom: 10}}>
       <LinearGradient
-        colors={['#C2C2C2', LiniarColor]}
+        colors={[ '#FFAD00',
+                    '#FFD273',
+                    '#FACF75',
+                    '#E7A725',
+                    '#FFAD00',]}
         style={{margin: 15, borderRadius: 15, paddingVertical: 10}}>
         <View>
           <Text

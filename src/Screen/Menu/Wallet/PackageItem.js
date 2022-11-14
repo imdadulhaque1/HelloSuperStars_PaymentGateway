@@ -18,9 +18,12 @@ const PackageItem = ({data, handelPaymentView, type}) => {
         <View style={{position: 'relative', marginBottom: 10}}>
           <LinearGradient
             colors={[
-              '#C2C2C2',
-              `${data?.color_code !== null ? data?.color_code : '#cc2900'}`,
-            ]}
+                    '#FFAD00',
+                    '#FFD273',
+                    '#FACF75',
+                    '#E7A725',
+                    '#FFAD00',
+                  ]}
             style={{margin: 15, borderRadius: 15, paddingVertical: 10}}>
             <View style={{flexDirection: 'row'}}>
               <View style={styles.cardGrid}>

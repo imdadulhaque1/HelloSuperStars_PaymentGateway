@@ -24,7 +24,8 @@ import VideoPlayer from 'react-native-video-player';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
-
+import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
+import Toast from 'react-native-root-toast';
 const Result = ({route}) => {
   const {
     roundName,
@@ -35,12 +36,13 @@ const Result = ({route}) => {
     roundId,
     roundInformation,
   } = route.params;
-  console.log('params', route.params);
   const Navigation = useNavigation();
   const [show, setShow] = useState(false);
   const {axiosConfig} = useContext(AuthContext);
 
   const [customShow, setCustomShow] = useState(false);
+  const [isPaymentComplete, setIsPaymentComplete] = useState(true);
+  const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
 
   const [appeal, setAppeal] = useState(false);
   const [apply, setApply] = useState(false);
@@ -55,14 +57,19 @@ const Result = ({route}) => {
 
   const [isAppealedForThisRound, setIsAppealedForThisRound] = useState(false);
   const [appealedRegistration, setAppealedRegistration] = useState(null);
+  const [certificateFee, setCertificateFee] = useState([]);
+  const [roundInfo, setRoundInfo] = useState(null);
 
   const [videoType, setVideoType] = useState('general');
+  useEffect(() => {
+    axios
+      .get(`${AppUrl.roundInstruction}${auditionId}/${roundId}`, axiosConfig)
+      .then(res => {
+        setRoundInfo(res.data.roundInfo);
+      });
+  }, []);
   const downloadCertificate = () => {
-    console.log('download');
-    console.log(
-      `${AppUrl.downloadAuditionCertificate}${auditionId}/${roundId}`,
-    );
-    console.log(roundId);
+    console.log(AppUrl.downloadAuditionCertificate + auditionId + roundId);
     axios
       .get(
         `${AppUrl.downloadAuditionCertificate}${auditionId}/${roundId}`,
@@ -94,6 +101,9 @@ const Result = ({route}) => {
           setAppealVideoList(res?.data?.appeal_videos);
           setMarkTracking(res?.data?.auditionRoundMarkTracking);
           setAppealMarkTracking(res?.data?.appealAuditionRoundMarkTracking);
+          setIsPaymentComplete(res?.data?.isPaymentCompleted);
+          setCertificateFee(res?.data?.certificateFee?.fee);
+          console.log('res?.data?.certificateFee ', res?.data);
         }
       })
       .catch(err => {
@@ -116,7 +126,6 @@ const Result = ({route}) => {
       .get(AppUrl.isAppealRound + auditionId + '/' + roundId, axiosConfig)
       .then(res => {
         if (res?.data?.status === 200) {
-          console.log('----____checkAppealAPI____-------', res?.data);
           setIsAppealedForThisRound(res?.data?.isAppealedForThisRound);
           if (res?.data?.isAppealedForThisRound == true) {
             setAppealedRegistration(res?.data?.appealedRegistration);
@@ -134,21 +143,22 @@ const Result = ({route}) => {
   const handleGeneralVideo = () => {
     setVideoType('general');
   };
-  if (show) {
+  const handleAppealRegister = () => {
+    console.log('------------appealing-----------');
+    setShow(true);
     const data = {
       audition_id: auditionId,
       round_info_id: roundId,
     };
     axios.post(AppUrl.AppealRegistration, data, axiosConfig).then(res => {
       console.log(res.data);
-      console.log('res?.data=========', res?.data);
       if (res?.data?.status === 200) {
       } else if (res?.data?.status === 422) {
         setErrorList(res?.data?.validation_errors);
       } else {
       }
     });
-  }
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: '#000000'}}>
@@ -184,10 +194,13 @@ const Result = ({route}) => {
                   style={styles.fonts}
                   onPress={() => {
                     console.log('-----------------');
-                    console.log(markTracking);
+                    console.log('-----------------markTracking', markTracking);
                     console.log(videoList);
                     console.log(appealVideoList);
-                    console.log(appealMarkTracking);
+                    console.log(
+                      '-----------------appealMarkTracking',
+                      appealMarkTracking,
+                    );
 
                     console.log('------------------');
 
@@ -221,53 +234,52 @@ const Result = ({route}) => {
                 </View>
               </View>
             )}
-            {isAppealedForThisRound && markTracking.wining_status === 0 && (
-              <View style={{marginTop: 20}}>
-                <View style={styles.topCard}>
-                  <Text
-                    style={styles.fonts}
-                    onPress={() => {
-                      console.log('-----------------');
-                      console.log(markTracking);
-                      console.log(videoList);
-                      console.log(appealVideoList);
-                      console.log(appealMarkTracking);
-
-                      console.log('------------------');
-
-                      console.log('Appealed Register', appealedRegistration);
-                    }}>
-                    Your Appeal uploaded videos
-                  </Text>
-                  <UnderlineImage />
-                  <View style={styles.VideoT}>
-                    {appealVideoList.map((item, index) => {
-                      return (
-                        <>
-                          <View style={{width: '30%'}}>
-                            <VideoPlayer
-                              video={{
-                                uri: `${AppUrl.MediaBaseUrl + item.video}`,
-                              }}
-                              videoWidth={100}
-                              videoHeight={100}
-                              autoplay={false}
-                              pauseOnPress
-                              hideControlsOnStart
-                              resizeMode="stretch"
-                              thumbnail={imagePath.AuditionTitleBanner}
-                            />
-                          </View>
-                        </>
-                      );
-                    })}
+            {isAppealedForThisRound &&
+              markTracking.wining_status === 0 &&
+              appealVideoList.length > 0 && (
+                <View style={{marginTop: 20}}>
+                  <View style={styles.topCard}>
+                    <Text
+                      style={styles.fonts}
+                      onPress={() => {
+                        // console.log('-----------------');
+                        // console.log(markTracking);
+                        // console.log(videoList);
+                        // console.log(appealVideoList);
+                        // console.log(appealMarkTracking);
+                        // console.log('------------------');
+                        // console.log('Appealed Register', appealedRegistration);
+                      }}>
+                      Your Appeal uploaded videos
+                    </Text>
+                    <UnderlineImage />
+                    <View style={styles.VideoT}>
+                      {appealVideoList.map((item, index) => {
+                        return (
+                          <>
+                            <View style={{width: '30%'}}>
+                              <VideoPlayer
+                                video={{
+                                  uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                                }}
+                                videoWidth={100}
+                                videoHeight={100}
+                                autoplay={false}
+                                pauseOnPress
+                                hideControlsOnStart
+                                resizeMode="stretch"
+                                thumbnail={imagePath.AuditionTitleBanner}
+                              />
+                            </View>
+                          </>
+                        );
+                      })}
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
+              )}
 
-            {/* Not Qualified */}
-            {!appeal ? (
+            {markTracking ? (
               <>
                 <View style={styles.Card}>
                   <View>
@@ -277,12 +289,15 @@ const Result = ({route}) => {
                     />
                   </View>
                   <View>
-                    {isAppealedForThisRound &&
-                    markTracking.wining_status === 0 ? (
-                      <Text style={styles.Input}>Your appeal marks</Text>
-                    ) : (
-                      <Text style={styles.Input}>Your total marks</Text>
-                    )}
+                    <Text style={styles.Input}>
+                      {markTracking?.type === 'general'
+                        ? 'Your Total Mark'
+                        : markTracking?.type === 'wildcard'
+                        ? 'Your Total Video Feed Vote'
+                        : appealedRegistration != null
+                        ? 'Your Appeal Mark'
+                        : 'Your Total Mark'}
+                    </Text>
                   </View>
 
                   {appealMarkTracking?.avg_mark >= 0 ? (
@@ -298,215 +313,123 @@ const Result = ({route}) => {
                   )}
 
                   <View style={{}}>
-                    {roundName === 8 ? (
-                      <View
-                        style={{
-                          backgroundColor: '#000000',
+                    <View
+                      style={{
+                        backgroundColor: '#000000',
 
-                          justifyContent: 'center',
-                          alignItems: 'center',
+                        justifyContent: 'center',
+                        alignItems: 'center',
 
-                          fontWeight: 'bold',
-                          textAlign: 'center',
-                          width: 110,
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        width: 110,
 
-                          paddingHorizontal: 5,
-                          paddingVertical: 6,
-                          fontSize: 13,
-                          height: 40,
-                        }}>
-                        {markTracking?.wining_status === 1 ? (
-                          <Text style={{color: '#E19A04'}}>
-                            Congratulation!!!
+                        paddingHorizontal: 5,
+                        paddingVertical: 6,
+                        fontSize: 13,
+                        height: 40,
+                      }}>
+                      {markTracking?.wining_status === 1 &&
+                      markTracking?.type === 'general' ? (
+                        <>
+                          {/* <Text style={{color: '#E19A04'}}>
+                          Congratulation!!!
+                        </Text> */}
+                          <Text style={styles.winingCard}>
+                            You are Qualified {'\n'}for the next Round
                           </Text>
-                        ) : (
-                          <Text style={{color: '#E19A04'}}>Sorry!!!</Text>
-                        )}
-                      </View>
-                    ) : markTracking?.wining_status === 1 ||
-                      appealMarkTracking?.wining_status === 1 ? (
-                      <Text style={styles.winingCard}>
-                        You are Qualified {'\n'}for the next Round
-                      </Text>
-                    ) : (
-                      <Text style={styles.Input2}>
-                        You are not Qualified {'\n'}for the next Round
-                      </Text>
-                    )}
+                        </>
+                      ) : markTracking?.wining_status === 1 &&
+                        markTracking?.type === 'wildcard' ? (
+                        <>
+                          <Text style={styles.winingCard}>
+                            You are Qualified {'\n'}for via wildcard
+                          </Text>
+                        </>
+                      ) : markTracking?.wining_status === 1 &&
+                        markTracking?.type === 'oxygen' ? (
+                        <>
+                          <Text style={styles.winingCard}>
+                            You are Qualified {'\n'}for via Oxygen
+                          </Text>
+                        </>
+                      ) : markTracking?.wining_status === 0 &&
+                        markTracking?.type === 'rejected' ? (
+                        <>
+                          <Text style={styles.Input2}>
+                            You are not Qualified {'\n'}for the next Round
+                          </Text>
+                        </>
+                      ) : (
+                        <>
+                          <Text style={styles.Input2}>
+                            You are not Qualified {'\n'}for the next Round
+                          </Text>
+                        </>
+                      )}
+                    </View>
                   </View>
                 </View>
-                {/* Not able to appeal  */}
-
-                {roundName === 8 ? null : appealedRegistration !== null ? (
-                  appealMarkTracking?.wining_status === 1 ||
-                  markTracking?.wining_status === 1 ? (
+                {markTracking?.wining_status === 1 ? (
+                  isPaymentComplete ? (
                     <TouchableOpacity
                       style={{backgroundColor: '#000000'}}
-                      onPress={
-                        roundInformation.round_type === 1
-                          ? () => setCustomShow(true)
-                          : () => setShow(true)
-                      }>
+                      onPress={() => {
+                        downloadCertificate();
+                      }}>
                       <LinearGradient
                         colors={['#FFAD00', '#E19A04', '#FACF75']}
                         style={styles.CardA}>
                         <Text style={styles.CardTex}>
-                          {roundInformation.round_type === 1
-                            ? markTracking?.wining_status === 1 ||
-                              appealMarkTracking?.wining_status === 1
-                              ? 'Apply for Certificate'
-                              : 'abc'
-                            : appealMarkTracking?.wining_status === 1
-                            ? 'Request for certificate'
-                            : appealMarkTracking === null &&
-                              'Result is not published yet'}
+                          Download Your Certificate
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
                   ) : (
-                    <Text style={{color: 'white', textAlign: 'center'}}>
-                      Already appealed in this round
-                    </Text>
-                  )
-                ) : (
-                  // Able to appeal
-
-                  roundInformation.appeal === 1 && (
                     <TouchableOpacity
                       style={{backgroundColor: '#000000'}}
-                      onPress={
-                        roundInformation.round_type === 1
-                          ? () => setCustomShow(true)
-                          : markTracking?.wining_status === 1 ||
-                            appealMarkTracking?.wining_status === 1
-                          ? () => {
-                              downloadCertificate();
-                            }
-                          : () => setShow(true)
-                      }>
+                      onPress={() => {
+                        certificateFee
+                          ? setIsShowPaymentComp(true)
+                          : Toast.show(
+                              'Certificate not ready yet',
+                              Toast.durations.SHORT,
+                            );
+                      }}>
                       <LinearGradient
                         colors={['#FFAD00', '#E19A04', '#FACF75']}
                         style={styles.CardA}>
                         <Text style={styles.CardTex}>
-                          {markTracking?.wining_status === 1
-                            ? 'Download Your Certificate'
-                            : markTracking === null
-                            ? 'Result is not published yet'
-                            : 'Appeal Request'}
+                          Apply for Certificate
                         </Text>
                       </LinearGradient>
                     </TouchableOpacity>
                   )
-                )}
-              </>
-            ) : (
-              <>
-                <View style={styles.Card}>
-                  <View>
-                    <Image
-                      source={imagePath.Rectangle4}
-                      style={styles.AudiImgCard}
-                    />
-                  </View>
-                  <View>
-                    <Text style={styles.Input}>Your total marks</Text>
-                  </View>
-                  <View>
-                    <TextInput
-                      type=""
-                      name=""
-                      style={styles.Input1}
-                      placeholder="80"
-                      placeholderTextColor={'white'}
-                    />
-                  </View>
-
-                  <View>
-                    <Text style={styles.Input3}>
-                      You are Qualified {'\n'}for the next Round
-                    </Text>
-                  </View>
-                </View>
-
-                {apply ? (
-                  <>
-                    {/* Home Page 41 */}
-                    <TouchableOpacity>
-                      <LinearGradient
-                        colors={['#79EC66', '#79EC66', '#79EC66']}
-                        style={styles.CardA}>
-                        <Text style={styles.CardTex}>
-                          Certificate Request Pending
-                        </Text>
-                      </LinearGradient>
-                    </TouchableOpacity>
-                    {/* Home Page 41 End */}
-
-                    {/* Home Page 40 End*/}
-
-                    {/* Home Page 42 */}
-                    <View style={styles.LastZ}>
-                      <Text style={styles.TextG}>
-                        Download Your Certificate{' '}
-                      </Text>
-                      <Text>
-                        <TouchableOpacity>
-                          <LinearGradient
-                            colors={['#79EC66', '#79EC66', '#79EC66']}
-                            style={styles.CardA}>
-                            <Text style={styles.CardTexG}>Download</Text>
-                          </LinearGradient>
-                        </TouchableOpacity>
-                      </Text>
-                    </View>
-                    {/* Home Page 42 */}
-                  </>
-                ) : (
-                  <RequestPending apply={apply} setApply={setApply} />
-                )}
-              </>
-            )}
-            {/* {markTracking === null ? (
-              <LinearGradient
-                colors={['#FFAD00', '#E19A04', '#FACF75']}
-                style={styles.CardA}>
-                <Text style={styles.CardTex}>Result is not published yet</Text>
-              </LinearGradient>
-            ) : (
-              appealedRegistration !== null &&
-              markTracking.wining_status === 0 && (
-                <LinearGradient
-                  colors={['#FFAD00', '#E19A04', '#FACF75']}
-                  style={styles.CardA}>
-                  <Text style={styles.CardTex}>
-                    Appeal Result is not published yet
+                ) : isAppealedForThisRound ? (
+                  <Text style={{color: 'white', textAlign: 'center'}}>
+                    Already appealed in this round
                   </Text>
-                </LinearGradient>
-              )
+                ) : roundInfo?.round_type === 0 && roundInfo?.appeal === 1 ? (
+                  <TouchableOpacity
+                    style={{backgroundColor: '#000000'}}
+                    onPress={() => {
+                      handleAppealRegister();
+                    }}>
+                    <LinearGradient
+                      colors={['#FFAD00', '#E19A04', '#FACF75']}
+                      style={styles.CardA}>
+                      <Text style={styles.CardTex}>Appeal Request</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                ) : null}
+              </>
+            ) : (
+              <View style={styles.topCard}>
+                <Text style={{color: 'white', fontSize: 22, margin: 50}}>
+                  Result is not published yet
+                </Text>
+              </View>
             )}
-
-            {markTracking !== null && markTracking?.wining_status === 1 && (
-              <TouchableOpacity
-                style={{backgroundColor: '#000000'}}
-                onPress={() => setShow(true)}>
-                <LinearGradient
-                  colors={['#FFAD00', '#E19A04', '#FACF75']}
-                  style={styles.CardA}>
-                  <Text style={styles.CardTex}>Apply for Certificate</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            )}
-            {markTracking !== null && markTracking?.wining_status === 0 && (
-              <TouchableOpacity
-                style={{backgroundColor: '#000000'}}
-                onPress={() => setShow(true)}>
-                <LinearGradient
-                  colors={['#FFAD00', '#E19A04', '#FACF75']}
-                  style={styles.CardA}>
-                  <Text style={styles.CardTex}>Appeal Request</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            )} */}
 
             <AppealRequestModal
               appeal={appeal}
@@ -522,6 +445,28 @@ const Result = ({route}) => {
               setCustomShow={setCustomShow}
               RoundName={roundName}
             />
+
+            {/* <RegisPaymentModal
+          eventType="generalpost"
+          modelName="generalpost"
+          isShowPaymentComp={isShowPaymentComp}
+          setIsShowPaymentComp={setIsShowPaymentComp}
+          eventId={post_id}
+          fee={fee}
+          setUnlocked={setUnlocked}
+        /> */}
+
+            {isShowPaymentComp && (
+              <RegisPaymentModal
+                eventType="auditionCertificate"
+                modelName="auditionCertificate"
+                eventId={roundInfo?.id}
+                isShowPaymentComp={isShowPaymentComp}
+                setIsShowPaymentComp={setIsShowPaymentComp}
+                setIsPaymentComplete={setIsPaymentComplete}
+                fee={certificateFee}
+              />
+            )}
 
             {/* <Button title='yo button' onPress={()=>Navigation.navigate(navigationStrings.VOTING)} /> */}
 

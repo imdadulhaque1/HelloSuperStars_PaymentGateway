@@ -106,4 +106,12 @@ export default {
   INTERESTINFO: 'Interestinfo',
   SECURITYINFO: 'Securityinfo',
   REPORTINFO: 'ReportInfo',
+
+
+//MenuV2
+  MENUV2: 'MenuV2',
+  MENUSTACKSCREENV2: 'MenuStackScreenV2',
+  "MENUFOLLOWERS":"MENUFOLLOWERS",
+  "MENUACTIVITES":"MenuActivities",
+  "ACTIVITESCARD":"ActivitesCard"
 };

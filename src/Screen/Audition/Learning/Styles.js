@@ -109,7 +109,7 @@ const stylesActive = StyleSheet.create({
     color: 'white',
     width: '100%',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 20,
   },
   textLearM: {
     fontSize: 12,

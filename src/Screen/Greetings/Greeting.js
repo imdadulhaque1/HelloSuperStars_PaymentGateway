@@ -20,6 +20,7 @@ import navigationStrings from '../../Constants/navigationStrings';
 import AppUrl from '../../RestApi/AppUrl';
 import {AuthContext} from '../../Constants/context';
 import VideoPlayer from 'react-native-video-player';
+import TitleHeader from '../../Components/TitleHeader';
 const Greeting = ({route}) => {
   const {activeGreetings} = route.params;
   console.log(activeGreetings);
@@ -38,17 +39,18 @@ const Greeting = ({route}) => {
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.container}>
         <SafeAreaView style={styles.ActiveNew}>
-          <View style={{position: 'relative'}}>
+        <TitleHeader title={'Greetings'} />
+          {/* <View style={{position: 'relative'}}>
             <Image source={imagePath.BgLane} style={styles.LaneBg} />
             <Text
               style={styles.LaneText}
               onPress={console.log(activeGreetings)}>
               Greetings
             </Text>
-          </View>
+          </View> */}
 
           <View style={{height: '100%'}}>
-            {/*================== Card  Start here==================  */}
+
             {activeGreetings.length > 0 ? (
               <FlatGrid
                 itemDimension={200}

@@ -121,7 +121,7 @@ const Wallet = ({ navigation }) => {
                 style={{ height: 20, width: 20 }}
               />
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ width:'80%'}}>
               <View>
                 <LinearGradient
                   colors={[
@@ -131,14 +131,14 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 }}>
+                  style={{ borderRadius: 5 ,width:80}}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Your status
                   </Text>
                 </LinearGradient>
 
                 <Text
-                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 20 }}>
+                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15,paddingRight:3 }}>
                   {waletInfo?.type}
                 </Text>
               </View>
@@ -152,17 +152,17 @@ const Wallet = ({ navigation }) => {
               marginVertical: 10,
               marginTop: 5,
               marginLeft: 5,
-              marginRight: 4
+              marginRight: 4,
             }}>
-            {/* status */}
+        
             <View style={Styles.fourthRow}>
               <Image
                 source={imagePath.onlyStar}
                 style={{ height: 20, width: 20 }}
               />
             </View>
-            {/* clube point */}
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+         
+            <View style={{width:'80%' }}>
               <View>
                 <LinearGradient
                   colors={[
@@ -172,20 +172,20 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 }}>
+                  style={{ borderRadius: 5 ,width:'70%'}}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Club Point
                   </Text>
                 </LinearGradient>
 
                 <Text
-                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 20 }}>
+                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15 }}>
                   {waletInfo?.club_points}
                 </Text>
               </View>
             </View>
           </View>
-          {/* react bundel count */}
+  
 
 
           <View
@@ -201,7 +201,7 @@ const Wallet = ({ navigation }) => {
             <View style={Styles.fourthRow}>
               <Icon4 name="heart" color={'#FFC448'} size={15} />
             </View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{width:'80%' }}>
               <View>
                 <LinearGradient
                   colors={[
@@ -211,15 +211,15 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 }}>
+                  style={{ borderRadius: 5 ,width:'70%'}}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Love bundle
                   </Text>
                 </LinearGradient>
 
                 <Text
-                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 20 }}>
-                  {waletInfo?.love_points}
+                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15, paddingRight:3,width:'80%' }}>
+                  {waletInfo?.love_points} 
                 </Text>
               </View>
             </View>

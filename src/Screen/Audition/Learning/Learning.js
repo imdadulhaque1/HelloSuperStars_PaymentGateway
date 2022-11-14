@@ -19,6 +19,7 @@ import styles from './Styles';
 import CountDown from 'react-native-countdown-component';
 import {FlatGrid} from 'react-native-super-grid';
 import moment from 'moment';
+import TitleHeader from '../../../Components/TitleHeader';
 const Learning = () => {
   const width = Dimensions.get('window').width;
   const navigation = useNavigation();
@@ -54,12 +55,13 @@ const Learning = () => {
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.container}>
         <SafeAreaView style={styles.ActiveNew}>
-          <View style={{position: 'relative'}}>
+          {/* <View style={{position: 'relative'}}>
             <Image source={imagePath.BgLane} style={styles.LaneBg} />
             <Text style={styles.LaneText} onPress={console.log(auditions)}>
               Auditions
             </Text>
-          </View>
+          </View> */}
+          <TitleHeader title={'Auditions'} />
 
           <View style={{height: '100%'}}>
             {/*================== Card  Start here==================  */}

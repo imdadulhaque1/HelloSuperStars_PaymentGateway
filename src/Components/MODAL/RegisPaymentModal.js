@@ -89,7 +89,7 @@ const RegisPaymentModal = ({
     event_id: eventId,
   });
 
-  console.log(stripeError);
+  console.log(fee + '  ' + modelName + '  ' + eventId);
 
   const [regComBuffer, setRegComBuffer] = useState(false);
   const [modal, setModal] = useState(false);
@@ -257,7 +257,7 @@ const RegisPaymentModal = ({
         end_time: end_time,
         greetingId: greetingId,
       };
-      console.log(data);
+      console.log('data-------------', data);
       axios
         .post(AppUrl.walletQnaLearningRegister, data, axiosConfig)
         .then(res => {
@@ -464,7 +464,7 @@ const RegisPaymentModal = ({
         paytmDat.token,
         paytmDat.amount,
         paytmDat.callBackUrl + paytmDat.order_id,
-        true,
+        false,
         false,
         '',
       )
@@ -481,32 +481,22 @@ const RegisPaymentModal = ({
               videoId: modalPara !== null ? modalPara[0] : 0,
               reactNum: modalPara !== null ? modalPara[1] : 0,
             });
-          }
-          if (eventType == 'videoFeed') {
-            setLiked(1);
-            setPaymentComplete(true);
-            return;
-          }
-          if (eventType == 'paidPhoto') {
 
-            setUnlocked(true);
+            if (eventType == 'videoFeed') {
+              setLiked(1);
+              setPaymentComplete(true);
+              return;
+            }
+
+            if (eventType == 'marketplace') {
+              Navigation.navigate(navigationStrings.MARKETPLACE);
+              return;
+            }
             setIsShowPaymentComp(false);
-            setModalObj({
-              modalType: 'success',
-              buttonTitle: 'OK',
-              message: 'Photo Purchase completed successfully !',
-            });
 
-            return;
+            setModal(true);
+            Navigation.navigate(navigationStrings.HOME);
           }
-          if (eventType == 'marketplace') {
-            Navigation.navigate(navigationStrings.MARKETPLACE);
-            return;
-          }
-          setIsShowPaymentComp(false);
-
-          setModal(true);
-          Navigation.navigate(navigationStrings.HOME);
           // }
         })
         .catch(err => {
@@ -528,6 +518,21 @@ const RegisPaymentModal = ({
       .then(res => {
         getActivity();
         console.log('my data succes', res);
+        if (eventType == 'generalpost') {
+          setUnlocked(true);
+          setIsShowPaymentComp(false);
+          setModalObj({
+            modalType: 'success',
+            buttonTitle: 'OK',
+            message: 'Photo Purchase completed successfully !',
+          });
+          setModal(true);
+          Navigation.navigate(navigationStrings.HOME);
+          return;
+        } else if (eventType == 'auditionCertificate') {
+          setIsShowPaymentComp(false);
+          Navigation.navigate(navigationStrings.MENU);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -585,21 +590,23 @@ const RegisPaymentModal = ({
         return payTmPayment();
       } else if (eventType === 'videoFeed') {
         return payTmPayment();
+      } else if (eventType === 'greeting') {
+        return payTmPayment();
+      } else if (eventType === 'auditionCertificate') {
+        return payTmPayment();
       } else {
         eventReg('paytm');
       }
     }
   };
 
-
   const videoFeedReactBuyStripe = () => {
-
     let data = {
       videoId: modalPara !== null ? modalPara[0] : 0,
       reactNum: modalPara !== null ? modalPara[1] : 0,
       modelName: modelName,
-      amount: fee
-    }
+      amount: fee,
+    };
     axios
       .post(AppUrl.stripeVideoReactPayment, data, axiosConfig)
       .then(res => {
@@ -611,35 +618,41 @@ const RegisPaymentModal = ({
       .catch(err => {
         console.log(err);
       });
-  }
+  };
   useEffect(() => {
     if (eventType == 'videoFeed') {
       if (stripePaymentStatus) {
         setIsShowPaymentComp(false);
         videoFeedReactBuyStripe();
-
+      } else if (eventType == 'greeting') {
+        setIsShowPaymentComp(false);
       }
     }
-  }, [stripePaymentStatus])
+  }, [stripePaymentStatus]);
 
   //stripe click
   const handelClickStripe = () => {
     if (stripeBuffer) {
-      job != 'pay-again' ? eventReg() : null
-      openPaymentSheet()
+      job != 'pay-again' ? eventReg() : null;
+      openPaymentSheet();
     } else {
       Toast.show('Try agin', Toast.durations.SHORT);
+    }
+  };
+  const modalButtonPress = () => {
+    if (eventType == 'greeting') {
+      return Navigation.navigate(navigationStrings.NOTIFICATION);
     }
   };
 
   return (
     <>
-      {/* <AlertModal
+      <AlertModal
         modalObj={modalObj}
         modal={modal}
         setModal={setModal}
         buttoPress={modalButtonPress}
-      /> */}
+      />
       {regBuffer ? <LoaderComp /> : <></>}
       <Modal
         visible={isShowPaymentComp}
@@ -668,39 +681,57 @@ const RegisPaymentModal = ({
                   </Text>
                 </Pressable>
               </View>
-              <Heading heading="Choose payment method dfdf" />
+              <Heading heading="Choose payment method" />
               <UnderlineImage />
 
-              <ScrollView horizontal>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-around',
+                  paddingHorizontal: 20,
+                  paddingTop: 25,
+                }}>
+                {/* surjo pay */}
+                <TouchableOpacity
+                  onPress={() =>
+                    Toast.show('Under Development', Toast.durations.SHORT)
+                  }>
+                  <Image source={imagePath.Surjo} style={styles.payment_icon} />
+                </TouchableOpacity>
+                {/* paytm */}
                 <TouchableOpacity onPress={() => handelSubmitPaytm()}>
+                  <Image source={imagePath.paytm} style={styles.payment_icon} />
+                </TouchableOpacity>
+                {/* ipay 88 */}
+                <TouchableOpacity
+                  onPress={() =>
+                    Toast.show('Under Development', Toast.durations.SHORT)
+                  }>
+                  <Image source={imagePath.Ipay} style={styles.payment_icon} />
+                </TouchableOpacity>
+
+                {/* pocket pay */}
+                <TouchableOpacity
+                  onPress={() =>
+                    Toast.show('Under Development', Toast.durations.SHORT)
+                  }>
                   <Image
-                    source={imagePath.paytm}
-                    style={{
-                      margin: 10,
-                      width: 100,
-                      height: 80,
-                      resizeMode: 'contain',
-                    }}
+                    source={imagePath.Pocket}
+                    style={styles.payment_icon}
                   />
                 </TouchableOpacity>
+
+                {/* stripe */}
                 <TouchableOpacity onPress={() => handelClickStripe()}>
                   <Image
                     source={imagePath.Stripe}
-                    style={{
-                      margin: 10,
-                      width: 100,
-                      height: 80,
-                      resizeMode: 'cover',
-                    }}
+                    style={styles.payment_icon}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image source={imagePath.payneeor} style={{ margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image source={imagePath.bank} style={{ margin: 10 }} />
-                </TouchableOpacity>
-              </ScrollView>
+              </View>
+
               {/* <Controller
                 control={control}
                 rules={{
@@ -825,7 +856,7 @@ const RegisPaymentModal = ({
                       backgroundColor: '#FFAD00',
                       width: '40%',
                       borderRadius: 4,
-                      marginVertical: 15,
+                      marginVertical: 0,
                     }}
                     onPress={() =>
                       eventType === 'auditionRegistration'
@@ -1385,7 +1416,7 @@ const styles = StyleSheet.create({
   },
   textInputView: {
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 0,
   },
   textInputView3: {
     color: 'white',
@@ -1409,7 +1440,14 @@ const styles = StyleSheet.create({
     margin: 10,
     textAlign: 'center',
   },
-
+  payment_icon: {
+    borderRadius: 10,
+    padding: 5,
+    width: 135,
+    height: 75,
+    resizeMode: 'cover',
+    marginBottom: 20,
+  },
   centered_view: {
     flex: 1,
     justifyContent: 'center',

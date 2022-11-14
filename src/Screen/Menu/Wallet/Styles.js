@@ -31,13 +31,13 @@ const styles = StyleSheet.create({
     marginRight: 4
   },
   fourthRow: {
-    height: 25,
-    width: 25,
-    backgroundColor: 'black',
+    height: 20,
+    width: 20,
+    
     borderRadius: 100,
-    margin: 10,
-    borderWidth: 1,
-    borderColor: 'gold',
+    margin: 8,
+    borderWidth: 0.8,
+    borderColor: '#ffaa00',
     justifyContent: 'center',
     alignItems: 'center',
   },

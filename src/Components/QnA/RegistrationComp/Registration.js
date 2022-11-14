@@ -353,7 +353,7 @@ const RegistrationComp = ({
                   placeholderTextColor="#9e9e9e"
                   editable={false}
                   // value={useInfo.first_name + ' ' + useInfo.last_name}
-                  value={useInfo.first_name}
+                  value={useInfo?.first_name}
                 />
               </View>
             </View>
@@ -365,7 +365,7 @@ const RegistrationComp = ({
                   style={styles.textInputStyle}
                   placeholderTextColor="#fff"
                   editable={false}
-                  value={useInfo.email}
+                  value={useInfo?.email}
                 />
               </View>
             </View>
@@ -376,7 +376,7 @@ const RegistrationComp = ({
                   style={styles.textInputStyle}
                   placeholderTextColor="#fff"
                   editable={false}
-                  value={useInfo.phone}
+                  value={useInfo?.phone}
                 />
               </View>
             </View>

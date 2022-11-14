@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
   lineImg: {
     marginVertical: 3,
   },
-  bannerRow: {alignItems: 'center', position: 'relative', paddingBottom: 15},
-  imgRow: {marginVertical: 2, width: '90%'},
-  imgRow2: {marginVertical: 2, position: 'absolute', top: '45%', left: '50%'},
+  bannerRow: { alignItems: 'center', position: 'relative', paddingBottom: 15 },
+  imgRow: { marginVertical: 2, width: '90%' },
+  imgRow2: { marginVertical: 2, position: 'absolute', top: '45%', left: '50%' },
   infoView: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -102,17 +102,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#00000099',
+
   },
   centered_viewE: {
     backgroundColor: 'black',
   },
   warning_modal: {
     width: 300,
-    height: 380,
-    backgroundColor: 'coral',
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 20,
+    height: 250,
+    backgroundColor: 'coral'
+
   },
   warning_title: {
     height: 50,
@@ -213,8 +212,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 
-  customModal:{
-margin:20
+  customModal: {
+    margin: 20
   },
 
   FleXFoZY: {
@@ -429,51 +428,51 @@ margin:20
 
   warning_modalBid: {
     width: 300,
-    position:'relative',
+    position: 'relative',
     height: 330,
-    marginBottom:20
-    
-  
-   
+    marginBottom: 20
+
+
+
   },
   ModText: {
-    color:'#FFAD00',
-    fontSize:17,
-    paddingVertical:15,
-    fontWeight:'bold',
-    textAlign:'center',
+    color: '#FFAD00',
+    fontSize: 17,
+    paddingVertical: 15,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
-  Inline : {
-    height:1,
-   
-    backgroundColor:'black',
+  Inline: {
+    height: 1,
+
+    backgroundColor: 'black',
   },
   InlineImg: {
-    position:'absolute',
-    right:4,
-    top:5,
+    position: 'absolute',
+    right: 4,
+    top: 5,
   },
-  TextSh : {
-    color:'#FFAD00',
-    fontSize:15,
+  TextSh: {
+    color: '#FFAD00',
+    fontSize: 15,
   },
   Mbtn: {
-    backgroundColor:'#666666',
-    paddingVertical:8,
-    borderRadius:15,
-    width:100,
+    backgroundColor: '#666666',
+    paddingVertical: 8,
+    borderRadius: 15,
+    width: 100,
   },
   TbtnS: {
-    textAlign:'center',
-    color:'white',
-    fontSize:15,
-    fontWeight:'bold',
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   TbtnSS: {
-    textAlign:'center',
-    color:'black',
-    fontSize:15,
-    fontWeight:'bold',
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
   // Thjdf
 });

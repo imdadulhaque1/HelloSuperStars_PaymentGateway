@@ -42,7 +42,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     flex: 1,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     overflow: 'hidden'
   },
   ContainerPad: {
@@ -55,7 +55,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     flex: 1,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
   },
 
   ImgBanner: {
@@ -89,13 +89,13 @@ const ActivitiesCardStyle = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 3,
-    backgroundColor: 'gold',
+    backgroundColor: '#ffaa00',
   },
 
   JoinNowColor: {
     paddingHorizontal: 18,
     paddingVertical: 5,
-    backgroundColor: 'gold',
+    backgroundColor: '#ffaa00',
     borderRadius: 50,
     color: 'black',
     fontWeight: "500"
@@ -147,7 +147,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     position: 'absolute',
     zIndex: 9,
     top: 0,
-    backgroundColor: 'gold',
+    backgroundColor: '#ffaa00',
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
