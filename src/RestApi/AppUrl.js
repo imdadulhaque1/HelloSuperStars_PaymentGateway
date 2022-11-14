@@ -1,15 +1,17 @@
 class AppUrl {
+
   static BaseUrl = 'https://backendA.hellosuperstars.com/api/';
   static MediaBaseUrl = 'https://backendA.hellosuperstars.com/';
 
-  // static SoketUrl = 'http://192.168.0.107:3005/';
+
+  // static SoketUrl = 'http://10.10.10.142:3005';
   // static SoketUrl = 'http://localhost:3005';
-  static SoketUrl = 'https://socket.hellosuperstars.com/';
+  static SoketUrl = 'https://socket.hellosuperstars.com';
 
   // static BaseUrl =
-  //   'http://10.10.10.142/HelloSuperStarsBackend-2/public/api/';
+  //   'http://192.168.0.104/HelloSuperStarsBackend-2/public/api/';
   // static MediaBaseUrl =
-  //   'http://10.10.10.142/HelloSuperStarsBackend-2/public/';
+  //   'http://192.168.0.104/HelloSuperStarsBackend-2/public/';
 
   // static demo instruction = 'http://your pc ip/project name on www-htdocs folder/public/';
   static virtualTour = this.BaseUrl + 'mobile/getVirtualTourVideo';
@@ -189,6 +191,7 @@ class AppUrl {
     this.BaseUrl + 'user/audition/round-appeal-registration';
   static auditionVideoUpload =
     this.BaseUrl + 'user/upload-audition-round-videos';
+  static roundInstruction = this.BaseUrl + 'user/audition/round-instruction/'; //{audition id + round num}
 
   static videoFeed = this.BaseUrl + 'user/audition/videofeed/videos';
   static hitLoveReact = this.BaseUrl + 'user/audition/videos/loveReact';
@@ -216,8 +219,6 @@ class AppUrl {
 
   static getTokenPaytm = this.BaseUrl + 'txn-token-mobile/'; //amount
   static paytmPaymentSuccess = this.BaseUrl + 'paytm-payment-success';
-
-
 
   /**
    * stripe mobile payment

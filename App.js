@@ -9,10 +9,9 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <StripeProvider
-      publishableKey="pk_test_51LtSJLGiXzKYuOYkQjOQcod5ZhxNxnsyIezQUgDHHC5BPSr1JVrOeCrBUwdG1owKJEzFjh9V9CsXtRB9RTzEtaU200Kr8oNp8P"
+      publishableKey="pk_test_51LtqaHHGaW7JdcX6i8dovZ884aYW9wHVjPgw214lNBN19ndCHovhZa2A62UzACaTfavZYOzW1nf3uw2FHyf3U6C600GXAjc3Wh"
       merchantIdentifier="merchant.com.hellosuperstars"
     >
-
       <PaperProvider>
         <Routes />
       </PaperProvider>

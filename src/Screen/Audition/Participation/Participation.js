@@ -26,6 +26,7 @@ import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
 import navigationStrings from '../../../Constants/navigationStrings';
 import {FlatGrid} from 'react-native-super-grid';
+import Toast from 'react-native-root-toast';
 const Participation = ({route}) => {
   const {
     title,
@@ -37,7 +38,6 @@ const Participation = ({route}) => {
     auditionId,
     roundId,
   } = route.params;
-  console.log('-----------props ', route.params);
   const navigation = useNavigation();
   const [pick, setPick] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -107,7 +107,10 @@ const Participation = ({route}) => {
 
   const onChoose = async () => {
     if (videos.length > roundInformation.video_slot_num - 1) {
-      alert(`Only ${videos.length} slot are there for uploading`);
+      Toast.show(
+        `Only ${videos.length} slot are there for uploading`,
+        Toast.durations.SHORT,
+      );
       return;
     }
     const permissionStatus = await androidCameraPermission();
@@ -150,10 +153,12 @@ const Participation = ({route}) => {
             {type: type, url: url, base64: res},
           ]);
           submitVideo(type, res, 'appeal');
+          Toast.show('Uploaded', Toast.durations.SHORT);
           return;
         }
         setVideos([...videos, {type: type, url: url, base64: res}]);
         // console.log(videos);
+        Toast.show('Uploaded', Toast.durations.SHORT);
         submitVideo(type, res, 'general');
       });
     });
@@ -173,20 +178,17 @@ const Participation = ({route}) => {
         if (isAppealedForThisRound) {
           setAppealVideos([...videos, {type: type, url: url, base64: res}]);
           submitVideo(type, res, 'appeal');
+          Toast.show('Uploaded', Toast.durations.SHORT);
           return;
         }
         setVideos([...videos, {type: type, url: url, base64: res}]);
         console.log('Video', res);
         submitVideo(type, res, 'general');
+        Toast.show('Uploaded', Toast.durations.SHORT);
       });
     });
   };
 
-  // const remainingTime = (start, end) => {
-  //   const startTime = new Date(start.concat(' 00:00:00')).getTime();
-  //   const endTime = new Date(end.concat(' 23:59:59')).getTime();
-  //   setRemainTime((endTime - startTime) / 1000);
-  // };
   const createSlot = () => {
     remainingTime(
       roundInformation.video_upload_start_date,
@@ -199,10 +201,6 @@ const Participation = ({route}) => {
     }
     getUploadedVideo();
   };
-  // useEffect(() => {
-  //   createSlot();
-  //   console.log(oldVideos);
-  // }, [pick]);
   const slotAppeal = () => {
     let iterator = 0;
     const b = [];
@@ -243,7 +241,7 @@ const Participation = ({route}) => {
         console.log('video array response', res);
         if (res.data.status === 200) {
           console.log(res);
-
+          Toast.show('Upload Done', Toast.durations.SHORT);
           if (videoType === 'appeal') {
             myArrayAppeal.pop();
             alert('submitted');
@@ -398,44 +396,6 @@ const Participation = ({route}) => {
         {/*============ round condition here =========== */}
         {roundInformation.round_type === 1 ? null : (
           <>
-            {/* <View style={{flex: 1, }}>
-              <TouchableOpacity style={styles.btnStyle}>
-                <LinearGradient
-                  colors={['#343434', '#343434']}
-                  style={styles.uploadMainBtn}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}>
-                    <AntDesign name="cloudupload" size={25} color={'#FFAD00'} />
-                  </View>
-                  <TouchableOpacity
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={styles.uploadTxt}>Upload Video</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btnStyle}>
-                <LinearGradient
-                  colors={['#343434', '#343434']}
-                  style={styles.uploadMainBtn}>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginHorizontal: 10,
-                    }}>
-                    <AntDesign name="cloudupload" size={25} color={'#FFAD00'} />
-                  </View>
-                  <TouchableOpacity
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={styles.uploadTxt}>Upload Video</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View> */}
             <View
               style={{
                 backgroundColor: '#272727',

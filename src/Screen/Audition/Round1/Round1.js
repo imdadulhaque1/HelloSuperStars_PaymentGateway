@@ -28,7 +28,6 @@ const Round1 = ({route}) => {
     judges,
     juries,
   } = route.params;
-  console.log('--------------------round information', auditionInfo);
   const remainingTime = time => {
     const startTime = new Date(time.concat(' 00:00:00')).getTime();
     const currentTime = new Date().getTime();

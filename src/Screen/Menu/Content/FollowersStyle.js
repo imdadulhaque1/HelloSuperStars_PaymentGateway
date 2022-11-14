@@ -8,34 +8,36 @@ const styles = StyleSheet.create({
   line: {
     borderBottomColor: 'white',
     borderBottomWidth: 1,
-    marginVertical: 10,
-    width: '40%',
+    // marginVertical: 10,
+    // width: '40%',
   },
   lineText: {
     // width: '20%',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  category: {
-    backgroundColor: '#202020',
-    marginHorizontal: 10,
-    paddingHorizontal: 27,
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  //star category
+
   followMainrow: {
-    marginHorizontal: 10,
-    marginVertical: 10,
+
     flexDirection: 'row',
+ 
+ 
+  },
+  shadowProp: {
+    shadowColor: '#171717',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   followCard: {
     backgroundColor: '#202020',
     borderRadius: 10,
-    // width: '48%',
-    marginHorizontal: 3,
-    borderWidth: 2,
-    borderColor: 'gold',
+
+margin:5,
+ 
+    // marginHorizontal: 3,
+   
+    // borderColor: 'gold',
   },
   followContents: {
     justifyContent: 'center',
@@ -47,7 +49,10 @@ const styles = StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 100,
-    marginVertical: 5,
+
+    margin:10,
+
+ 
   },
   followText: {
     color: 'white',
@@ -55,22 +60,29 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   unfollowButton: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
+
+
+    borderRadius: 1,
     paddingBottom: 2,
   },
   followButton: {
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
+  
+
+    borderRadius: 1,
     // backgroundColor: 'gold',
   },
   followBtnText: {
     textAlign: 'center',
     color: 'white',
     padding: 5,
+    backgroundColor:'#ffaa00'
+    ,
+    opacity:0.8
+    ,
+    borderBottomRightRadius:10,
+    borderBottomLeftRadius:10
   },
+  
 });
 
 export default styles;

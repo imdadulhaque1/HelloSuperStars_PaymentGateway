@@ -31,30 +31,31 @@ const AlertModal = ({ modalObj, modal, setModal, buttoPress }) => {
         <View
           style={{
             borderColor: '#FFAD00',
-            borderWidth: 1,
+            borderBottomWidth: 7,
             padding: 1,
-            borderRadius: 3,
+            borderRadius: 10,
+            overflow: 'hidden'
           }}>
           <ImageBackground
             style={styles.warning_modal}
             source={imagePath.background}
             resizeMode="cover">
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-              <TouchableOpacity onPress={() => setModal(false)} style={{ color: '#FFAD00', marginRight: 10 }}><Icon name="close" size={30} color="#FFAD00" /></TouchableOpacity>
+              <TouchableOpacity onPress={() => setModal(false)} style={{ color: '#FFAD00', marginRight: 15, marginTop: 10 }}><Icon name="close" size={20} color="#FFAD00" /></TouchableOpacity>
             </View>
-            <View style={{ marginTop: 30 }}>
-              <Image source={modalObj.modalType == 'success' ? imagePath.congratulation : imagePath.sorry} style={{ width: 300, height: 150 }} />
+            <View style={{ marginTop: 15, alignItems: 'center' }}>
+              <Image source={modalObj.modalType == 'success' ? imagePath.congratulation : imagePath.sorry} style={{ width: 200, height: 80 }} />
               <Text
-                style={{ color: '#FFAD00', textAlign: 'center', fontSize: 30 }}>
+                style={{ color: '#FFAD00', textAlign: 'center', fontSize: 25 }}>
                 {modalObj.modalType == 'success' ? 'Congratulation' : modalObj.modalType == 'warning' ? 'Opps...' : ''}
 
               </Text>
-              <Text style={{ color: 'white', textAlign: 'center' }}>
+              <Text style={{ color: 'white', textAlign: 'center', paddingHorizontal: 30, fontSize: 10 }}>
                 {modalObj.message}
 
               </Text>
             </View>
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
+            <View style={{ alignItems: 'center', marginHorizontal: 20, marginTop: 20 }}>
               <TouchableOpacity
                 style={{
                   backgroundColor: '#FFAD00',

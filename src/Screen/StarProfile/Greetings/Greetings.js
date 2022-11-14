@@ -106,6 +106,8 @@ const Greetings = ({setProfileNavigate, star_id}) => {
           setStar(res.data.star);
           setIsStarGiveGreeting(res.data.action);
           setGreetingInfo(res.data.greeting);
+
+          console.log('greetings data -----', res.data.greeting);
           if (
             res.data.greeting.user_required_day !== null &&
             res.data.greeting.user_required_day > 0
@@ -251,7 +253,13 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                         }}
                         videoWidth={120}
                         videoHeight={70}
-                        thumbnail={imagePath.greetingStar}
+                        thumbnail={
+                          GreetingInfo.banner
+                            ? {
+                                uri: AppUrl.MediaBaseUrl + GreetingInfo.banner,
+                              }
+                            : imagePath.greetingStar
+                        }
                         resizeMode={'stretch'}
                       />
                     ) : (

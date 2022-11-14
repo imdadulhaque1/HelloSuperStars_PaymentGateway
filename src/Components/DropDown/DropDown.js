@@ -23,7 +23,7 @@ const DropDown = ({title, titleIcon, menuData, onSelect = () => {}}) => {
             </View>
 
             <View style={styles.menuSubTab}>
-              <Text style={{fontSize: 16, color: '#ffaa00'}}>{title}</Text>
+              <Text style={{fontSize: 15, color: '#ffaa00'}}>{title.toUpperCase()}</Text>
             </View>
           </View>
 
@@ -50,14 +50,16 @@ const DropDown = ({title, titleIcon, menuData, onSelect = () => {}}) => {
                   borderRadius: 4,
                   marginHorizontal: 5,
                   paddingHorizontal: 4,
-                  marginVertical: 3,
+                  marginVertical: 4,
                   flexDirection: 'row',
                   alignItems: 'center',
+                 
+
                 }}
                 onPress={() => onSelectedItem(item)}
                 key={String(index)}>
-                <Text style={{marginRight: 5}}>{item.icon}</Text>
-                <Text style={{color: '#E2E2E2', fontSize: 12}}>
+                <Text style={{marginRight: 5,padding:2,fontWeight:'bold',padding:2}}>{item.icon}</Text>
+                <Text style={{color: '#E2E2E2', fontSize: 13,fontWeight:'bold',padding:2}}>
                   {item.title}
                 </Text>
               </TouchableOpacity>
@@ -87,9 +89,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 10,
     borderWidth: 1,
-    borderTopColor: 'gray',
-    borderBottomColor: 'gray',
-    marginVertical: 8,
+  borderRadius:10,
+    backgroundColor: '#343434be',
+  marginVertical: 3,
     justifyContent: 'space-between',
   },
   menuSubTab: {marginLeft: 10, justifyContent: 'center', alignItems: 'center'},

@@ -1,6 +1,13 @@
 import {StyleSheet} from 'react-native';
 
 const stylesActive = StyleSheet.create({
+  iconView2: {
+    height: 42,
+    width: 42,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#343434',
@@ -56,15 +63,19 @@ const stylesActive = StyleSheet.create({
 
   row: {
     marginVertical: 1,
-    marginTop: 5,
+    marginTop: 2,
     backgroundColor: '#343434',
   },
 
   content: {
-    padding: 5,
+    
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+backgroundColor:'#2D2F33',
+borderRadius:15,
+paddingVertical:10
+
   },
   ContentItems: {
     flexDirection: 'row',
@@ -74,38 +85,26 @@ const stylesActive = StyleSheet.create({
     justifyContent: 'center',
   },
   contentText: {
-    fontSize: 18,
-    color: 'white',
+    fontSize: 16,
+    color: '#fff',
   },
   contentText2: {
     fontSize: 12,
-    color: 'gray',
+    color: '#A5A7AB',
   },
   Touch: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 9,
   },
   // ToNotify:{
   //   position: 'relative',
   // },
-  NotifyText: {
-    position: 'absolute',
-    backgroundColor: 'red',
-    padding: 4,
-    width: 20,
-    height: 20,
-    fontSize: 8,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
-    marginLeft: 40,
-    borderRadius: 100,
-  },
+  NotifyText: { height: 15, width: 15, backgroundColor: '#ED3B3B', justifyContent: 'center', alignItems: 'center', borderRadius: 20, position: 'absolute', right: -5 },
   Bar: {
     height: 38,
     width: 3,
     marginRight: 10,
-    backgroundColor: '#F6EA45',
+    backgroundColor: '#ffaa00',
     alignSelf: 'stretch',
   },
   ActiveNew: {

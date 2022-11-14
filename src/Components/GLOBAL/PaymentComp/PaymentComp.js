@@ -84,7 +84,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         paytmDat.token,
         paytmDat.amount,
         paytmDat.callBackUrl + paytmDat.order_id,
-        true,
+        false,
         false,
         ""
       ).then((result) => {
@@ -264,7 +264,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
       <View style={styles.topCard}>
         <Text style={styles.fonts}>Payment Information</Text>
         <UnderlineImage />
-        <ScrollView horizontal>
+        {/* <ScrollView horizontal>
           <TouchableOpacity onPress={() => payTmPayment()} >
             <Image source={imagePath.paytm} style={{ margin: 10, width: 100, height: 80 }} />
           </TouchableOpacity>
@@ -277,77 +277,52 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
           <TouchableOpacity>
             <Image source={imagePath.bank} style={{ margin: 10 }} />
           </TouchableOpacity>
-        </ScrollView>
-        {/* <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View>
-              <Text style={styles.formText}>Card Holder Name</Text>
-              <View style={styles.formText2}>
-                <TextInput
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  style={styles.textInputStyle}
-                  placeholderTextColor="#fff"
-                  placeholder="Enter Name"
-                  value={value}
-                />
-                {errors.card_holder_name && <Text style={{ color: 'red', marginLeft: 8 }}>This field is required !</Text>}
-              </View>
-            </View>
+        </ScrollView> */}
+        <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 25 }}>
+          {/* surjo pay */}
+          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+            <Image
+              source={imagePath.Surjo}
+              style={styles.payment_icon}
+            />
+          </TouchableOpacity>
+          {/* paytm */}
+          <TouchableOpacity onPress={() => payTmPayment()}>
+            <Image
+              source={imagePath.paytm}
+              style={styles.payment_icon}
+            />
+          </TouchableOpacity>
+          {/* ipay 88 */}
+          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+            <Image
+              source={imagePath.Ipay}
+              style={styles.payment_icon}
+            />
+          </TouchableOpacity>
 
-          )}
-          name="card_holder_name"
-        />
-        <Controller
-          control={control}
-          rules={{
-            required: true,
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <View>
-              <Text style={styles.formText}>Card Number</Text>
-              <View style={styles.formText2}>
-                <TextInput
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  style={styles.textInputStyle}
-                  placeholderTextColor="#fff"
-                  placeholder="Enter Card Number"
-                />
-                {errors.card_number && <Text style={{ color: 'red', marginLeft: 8 }}>This field is required !</Text>}
-              </View>
-            </View>
-          )}
-          name="card_number"
-        />
+          {/* pocket pay */}
+          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+            <Image
+              source={imagePath.Pocket}
+              style={styles.payment_icon}
+            />
+          </TouchableOpacity>
 
-        <View>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={[styles.formText, { width: '45%' }]}>Date</Text>
-            <Text style={styles.formText}>CCTV</Text>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <View style={[styles.formText2, { width: '45%' }]}>
-              <TextInput
-                style={styles.textInputStyle}
-                placeholderTextColor="#fff"
-                placeholder="23-04-22"
-              />
-            </View>
-            <View style={[styles.formText2, { width: '45%' }]}>
-              <TextInput
-                style={styles.textInputStyle}
-                placeholderTextColor="#fff"
-                placeholder="125"
-              />
-            </View>
-          </View>
-        </View> */}
+          {/* stripe */}
+          <TouchableOpacity onPress={() => stripePaymentClick()}>
+            <Image
+              source={imagePath.Stripe}
+              style={styles.payment_icon}
+            />
+          </TouchableOpacity>
+
+
+
+
+
+        </View>
+
 
         <View style={styles.textInputView}>
 
@@ -376,7 +351,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
             </TouchableOpacity>
           }
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               backgroundColor: '#FFAD00',
               width: '40%',
@@ -398,7 +373,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
 
               Confirm Payment
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
 
         </View>

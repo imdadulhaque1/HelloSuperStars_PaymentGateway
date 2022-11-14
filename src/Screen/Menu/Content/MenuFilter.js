@@ -26,7 +26,7 @@ export default function MenuFilter(props) {
           onPress={() => selectHandaler(index)}>
           <View style={{alignItems: 'center'}}>
             <Image
-              style={{height: 40, width: 40, marginTop: 5}}
+              style={{height: 40, width: 40, marginTop: 5,borderRadius:100}}
               source={{uri: AppUrl.MediaBaseUrl + item.icon}}
             />
           </View>

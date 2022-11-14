@@ -17,39 +17,27 @@ import {AuthContext} from '../../../Constants/context';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/Entypo';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
+import HeaderComp from '../../HeaderComp';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import TitleHeader from '../../TitleHeader';
 
 const ActivitiesCard = ({
-  childActivityEventList,
-  childActivityEventType,
-  setMenuNavigator,
-  setMenuChange,
-  MenuBackRoute,
+ 
+  route
 }) => {
-  // console.log('menu data', childActivityEventList);
-  // console.log('menu event type', childActivityEventType);
+
+
+
+
+const {childActivityEventList,childActivityEventType}=route.params;
+
+
   const [roomId, setRoomId] = useState();
   const navigation = useNavigation();
   const {axiosConfig} = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
 
-  //============back handler==================
-  function handleBackButtonClick() {
-    setMenuNavigator(MenuNavigator.MENUACTIVITIES);
-    setMenuChange(0);
-    return true;
-  }
 
-  React.useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick);
-    return () => {
-      BackHandler.removeEventListener(
-        'hardwareBackPress',
-        handleBackButtonClick,
-      );
-    };
-  }, []);
-
-  //============back handler==================
 
   let title = '';
   switch (childActivityEventType) {
@@ -81,6 +69,7 @@ const ActivitiesCard = ({
 
   // const width = Dimensions.get('window').width;
   const renderEventItem = ({item}) => {
+    console.log('itemsssssssssssss', item);
     let event = {};
     let eventRegistration = {};
     let eventType = '';
@@ -136,6 +125,7 @@ const ActivitiesCard = ({
         paymentStatus = true;
         eventType = 'marketplace';
         event = item.market_place_order;
+        console.log('event all----------', event);
         break;
       case 'souviner':
         paymentStatus = true;
@@ -143,12 +133,12 @@ const ActivitiesCard = ({
         event = item.souvenir_apply;
     }
 
-    console.log('event data', event);
+
     let ActualEventDate = moment(
       event?.date ? event?.date : event?.event_date,
     ).format('YYYY-MM-DD');
 
-    console.log('my status', event);
+    // console.log('my status', event);
     // console.log('ActualEventDate------------', ActualEventDate);
     let EndTime = '';
     let StartTime = '';
@@ -206,17 +196,17 @@ const ActivitiesCard = ({
         // alert('under devolpment');
         navigation.navigate('Message');
       } else if (childActivityEventType == 'meetup') {
-        if (event.meetup_type == 'Offline') {
+        if (event?.meetup_type == 'Offline') {
           alert('offline');
         } else {
           navigation.navigate('VideoSdk', {
-            meetingId: event.event_link,
+            meetingId: event?.event_link,
             type: 'meetup',
           });
         }
       } else if (childActivityEventType == 'learningSession') {
         navigation.navigate('VideoSdk', {
-          meetingId: event.room_id,
+          meetingId: event?.room_id,
           type: 'learningSession',
         });
       } else {
@@ -245,7 +235,7 @@ const ActivitiesCard = ({
       Toast.show('Please wait downloading...', Toast.durations.SHORT);
 
       axios
-        .get(AppUrl.DownlodMeetUpTicket + event.id, axiosConfig)
+        .get(AppUrl.DownlodMeetUpTicket + event?.id, axiosConfig)
         .then(res => {
           return Linking.openURL(
             `${AppUrl.MediaBaseUrl}${res.data.certificateURL}`,
@@ -335,19 +325,19 @@ const ActivitiesCard = ({
             <View style={styles.DateBox}>
               {eventType == 'marketplace' ? (
                 <>
-                  {event?.marketplace.status == 1 ? (
+                  {event?.status == 1 ? (
                     <View style={styles.Join}>
                       <TouchableOpacity onPress={showDetails}>
                         <Text style={styles.JoinText}>Ordered</Text>
                       </TouchableOpacity>
                     </View>
-                  ) : event?.marketplace.status == 2 ? (
+                  ) : event?.status == 2 ? (
                     <View style={styles.Join}>
                       <TouchableOpacity onPress={showDetails}>
                         <Text style={styles.JoinText}>Received</Text>
                       </TouchableOpacity>
                     </View>
-                  ) : event?.marketplace.status == 3 ? (
+                  ) : event?.status == 3 ? (
                     <View style={styles.Join}>
                       <TouchableOpacity onPress={showDetails}>
                         <Text style={styles.JoinText}>Out for Delivery</Text>
@@ -412,7 +402,7 @@ const ActivitiesCard = ({
                     </>
                   )}
 
-                  {event.assignment === 1 && event.status === 5 ? (
+                  {event?.assignment === 1 && event?.status === 5 ? (
                     <View style={styles.Join}>
                       <TouchableOpacity
                         onPress={() => {
@@ -422,7 +412,7 @@ const ActivitiesCard = ({
                         <Text style={styles.JoinText}>Assignment</Text>
                       </TouchableOpacity>
                     </View>
-                  ) : event.assignment === 1 && event.status === 9 ? (
+                  ) : event?.assignment === 1 && event?.status === 9 ? (
                     <View style={styles.Join}>
                       <TouchableOpacity
                         onPress={() => {
@@ -436,9 +426,9 @@ const ActivitiesCard = ({
                         <Text style={styles.JoinText}>Show Result</Text>
                       </TouchableOpacity>
                     </View>
-                  ) : event.assignment === 1 &&
-                    event.status > 1 &&
-                    event.status < 5 ? (
+                  ) : event?.assignment === 1 &&
+                    event?.status > 1 &&
+                    event?.status < 5 ? (
                     <View style={styles.Join}>
                       {EventDateWithStartTime.getTime() <
                         CurrentDateWithTime.getTime() ||
@@ -475,7 +465,7 @@ const ActivitiesCard = ({
                             <Text style={styles.JoinText}>Upcomming</Text>
                           </TouchableOpacity>
                         </View>
-                      ) : event.assignment === 1 && event.status === 2 ? (
+                      ) : event?.assignment === 1 && event?.status === 2 ? (
                         <View style={styles.Join}>
                           <TouchableOpacity>
                             <Text style={styles.JoinText}>Waiting</Text>
@@ -502,7 +492,7 @@ const ActivitiesCard = ({
                       CurrentDateWithTime.getTime() ? (
                         <View style={styles.Join}>
                           {childActivityEventType == 'meetup' &&
-                          event.meetup_type == 'Offline' ? (
+                          event?.meetup_type == 'Offline' ? (
                             <>
                               {paymentStatus ? (
                                 <TouchableOpacity
@@ -575,77 +565,12 @@ const ActivitiesCard = ({
                     </>
                   )}
 
-                  {/* {EventDateWithEndTime.getTime() < CurrentDateWithTime.getTime() ? (
-              <View style={styles.Join}>
-                <TouchableOpacity>
-                  <Text style={styles.JoinText}>Completed</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <>
-                {EventDateWithStartTime.getTime() > CurrentDateWithTime.getTime() ? (
-                  <></>
-                ) : (
-                  <>
-                    {EventDateWithStartTime.getTime() < CurrentDateWithTime.getTime() || EventDateWithEndTime.getTime() > CurrentDateWithTime.getTime() ? (
-                      <View style={styles.Join}>
-                        <TouchableOpacity>
-                          <Text style={styles.JoinText}>Running</Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <>
-                      </>
-                    )}
-                  </>
-                )}
-              </>
-            )} */}
+             
                 </>
               )}
             </View>
 
-            {/* {EventDateWithEndTime.getTime() < CurrentDateWithTime.getTime() ? (
-            <View style={styles.BannerCsText1}>
-              <TouchableOpacity
-                style={styles.STextA}>
-                <Text style={styles.ext}>Completed </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <>
-              {EventDateWithStartTime.getTime() > CurrentDateWithTime.getTime() ? (
-                <View style={styles.BannerCsText}>
-                  <View style={styles.SText}>
-                    <Text style={styles.ext}>{days}</Text>
-                    <Text style={styles.ext}>Days</Text>
-                  </View>
-                  <View style={styles.SText}>
-                    <Text style={styles.ext}>{hours}</Text>
-                    <Text style={styles.ext}>Hours</Text>
-                  </View>
-                  <View style={styles.SText}>
-                    <Text style={styles.ext}>{minutes}</Text>
-                    <Text style={styles.ext}>Min</Text>
-                  </View>
-                </View>
-              ) : (
-                <>
-                  {EventDateWithStartTime.getTime() < CurrentDateWithTime.getTime() || EventDateWithEndTime.getTime() > CurrentDateWithTime.getTime() ? (
-                    <View style={styles.BannerCsText1}>
-                      <TouchableOpacity
-                        style={styles.STextA}>
-                        <Text style={styles.ext}>Running </Text>
-                      </TouchableOpacity>
-                    </View>
-                  ) : (
-                    <>
-                    </>
-                  )}
-                </>
-              )}
-            </>
-          )} */}
+        
 
             <View style={styles.bannerTag}>
               <Image source={imagePath.BgTag} />
@@ -664,7 +589,7 @@ const ActivitiesCard = ({
         </View>
         <RegisPaymentModal
           eventType={eventType}
-          eventId={event.id}
+          eventId={event?.id}
           modelName={eventType}
           isShowPaymentComp={isShowPaymentComp}
           setIsShowPaymentComp={setIsShowPaymentComp}
@@ -677,16 +602,27 @@ const ActivitiesCard = ({
 
   return (
     <>
-      <View style={styles.Header}>
+<View style={{flex:1,backgroundColor:'#000'}}>
+<SafeAreaView>
+<HeaderComp backFunc={()=>navigation.goBack()} />
+
+
+      {/* <View style={styles.Header}>
         <Image source={imagePath.BgLane} style={styles.HeaderImg} />
         <Text style={styles.HeaderText}>{title}</Text>
-      </View>
+      </View> */}
+
+      <TitleHeader title={title} />
 
       <FlatGrid
         itemDimension={150}
         data={childActivityEventList}
         renderItem={renderEventItem}
+
       />
+      </SafeAreaView>
+</View>
+ 
     </>
   );
 };

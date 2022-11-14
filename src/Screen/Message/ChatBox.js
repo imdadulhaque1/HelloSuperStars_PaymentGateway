@@ -16,7 +16,7 @@ import { timecoundFunc } from '../../CustomHelper/timecoundFunc';
 
 function ChatBox({ data }) {
     const [qnaStarStatus, setQnaStarStatus] = useState(true)
-    const [timeCount, setTimeCount] = useState(data.type !== 'fan-group' ? timecoundFunc(data?.qna?.qna_date.split(" ")[0] + " " + data.qna.qna_start_time) / 1000 : 0)
+    const [timeCount, setTimeCount] = useState(data.type !== 'fan-group' ? timecoundFunc(data?.qna?.qna_date.split(" ")[0] + " " + data?.qna?.qna_start_time) / 1000 : 0)
     console.log(data)
     const navigation = useNavigation()
     let chatData

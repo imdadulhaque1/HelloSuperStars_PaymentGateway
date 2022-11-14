@@ -236,6 +236,23 @@ const OrderStatus = ({route, navigation}) => {
                   </Text>
                 </View>
               </View>
+              <View
+                style={{
+                  marginVertical: 5,
+                  // position: 'absolute',
+                  // display: 'flex',
+                  // justifyContent: 'center',
+                  // alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  style={styles.downloadContainer}
+                  onPress={downloadInvoice}>
+                  <Text style={{color: '#fe7013'}}>
+                    <FontAwesome5 name={'download'} style={styles.customIcon} />{' '}
+                    Download Invoice
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>

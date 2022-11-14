@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
   titile: {
     color: '#fff',
     fontSize: 25,
+    marginLeft:10,
+    marginBottom:10
   },
   centerView: {marginHorizontal: 5, justifyContent: 'center'},
 });

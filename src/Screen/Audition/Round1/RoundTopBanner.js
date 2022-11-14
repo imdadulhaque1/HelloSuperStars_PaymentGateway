@@ -13,7 +13,6 @@ export default function RoundTopBanner({
   auditionImage,
   remainingTime,
 }) {
-  console.log('-----------remaining time', remainingTime);
   return (
     <>
       <View

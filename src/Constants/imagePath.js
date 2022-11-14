@@ -1,5 +1,5 @@
 export default {
-  noImage: require('../Assets/Images/no-image.png'),
+  noImage: require('../Assets/Images/no-image1.png'),
   coverNoImgae: require('../Assets/Images/cover-no-image.jpg'),
   noImageUser: require('../Assets/Images/noImageUser.png'),
 
@@ -8,6 +8,7 @@ export default {
   lazyDog: require('../Assets/Icons/loading/dogs.gif'),
 
   // loadingGold: require('../Assets/Icons/loading/loading1.gif'),
+  //payment icons
 
 
   loveReact5: require('../Assets/Icons/5-Love-React.gif'),
@@ -118,11 +119,14 @@ export default {
 
   // payment images
   paypal: require('../Assets/Icons/paypal.png'),
-  paytm: require('../Assets/Icons/paytm.png'),
+  paytm: require('../Assets/Icons/TM.jpg'),
   payneeor: require('../Assets/Icons/payoneer.png'),
   bank: require('../Assets/Icons/worldBank.png'),
   bkash: require('../Assets/Icons/Bkash.jpg'),
-  Stripe: require('../Assets/Icons/paymentStripe.png'),
+  Stripe: require('../Assets/Icons/IN.jpg'),
+  Pocket: require('../Assets/Icons/UEA.jpg'),
+  Ipay: require('../Assets/Icons/MY.jpg'),
+  Surjo: require('../Assets/Icons/Bd.jpg'),
 
   //live chat image
   LiveChatImage: require('../Assets/Images/sakibLiveVedio.png'),
@@ -311,4 +315,6 @@ export default {
   starSign: require('../Assets/Images/starSign.png'),
   football: require('../Assets/Images/football001.png'),
   jersey: require('../Assets/Images/jersey.png'),
+
+  menuBanner2: require('../Assets/Images/goldBanner.png')
 };
