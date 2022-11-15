@@ -113,7 +113,7 @@ const Login = () => {
                 style={styles.Icon}
               />
               <TextInput
-                placeholder="Your Email"
+                placeholder="Enter Your Email !"
                 style={styles.input_fild}
                 placeholderTextColor="#9e9e9e"
                 onChangeText={newText => setEmail(newText)}
@@ -132,7 +132,7 @@ const Login = () => {
                 style={styles.Icon}
               />
               <TextInput
-                placeholder="******"
+                placeholder="Enter Your Password !"
                 style={styles.input_fild}
                 placeholderTextColor="#9e9e9e"
                 secureTextEntry={showPass}
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     justifyContent: 'space-between',
-    gap: 5,
+
   },
 
   login_btn: {
@@ -257,12 +257,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // borderColor: '#D4AF37',
     borderRadius: 50,
-    paddingHorizontal: 55,
+    paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 50,
     alignItems: 'center',
     marginTop: 30,
-
     color: 'black',
   },
 
@@ -270,7 +269,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ffaa00',
     borderRadius: 50,
-    paddingHorizontal: 55,
+    paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 50,
     alignItems: 'center',

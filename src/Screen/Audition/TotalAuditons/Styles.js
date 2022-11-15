@@ -6,9 +6,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   topBannerImg: {
-    height: 150,
+    height: 140,
     width: '100%',
-    backgroundColor: '#343434',
+    // backgroundColor: '#343434',
     borderRadius: 10,
     padding: 10,
     position: 'relative',
@@ -51,17 +51,19 @@ const styles = StyleSheet.create({
   //round updated design started
   roundView: {
     flexDirection: 'row',
-    marginVertical: 15,
+    marginVertical: 10,
     justifyContent: 'space-between',
   },
   roundImg: {height: '100%', width: '100%'},
   roundTxt: {
     color: 'white',
     position: 'absolute',
-    width: '100%',
+  left:'47%',
     textAlign: 'center',
-    top: '24%',
-    fontSize: 50,
+    top: '27%',
+    // backgroundColor:'red',
+ 
+    fontSize: 30,
     fontWeight: 'bold',
   },
   roundTouchable: {

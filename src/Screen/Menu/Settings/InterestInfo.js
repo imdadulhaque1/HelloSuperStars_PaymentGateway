@@ -6,6 +6,8 @@
 //   TouchableOpacity,
 //   View,
 
+import { ReactNativeForegroundService } from "@videosdk.live/react-native-sdk";
+
 // } from 'react-native';
 // import React, {useContext, useEffect, useState} from 'react';
 // import HeaderComp from '../../../Components/HeaderComp';
@@ -16,6 +18,7 @@
 // import axios from 'axios';
 // import AppUrl from '../../../RestApi/AppUrl';
 // import {AuthContext} from '../../../Constants/context';
+// import TitleHeader from '../../../Components/TitleHeader';
 // const initialState = {
 //   All: false,
 //   Wooing: false,
@@ -50,10 +53,9 @@
 //     <View style={{flex: 1, backgroundColor: 'black'}}>
 //       <SafeAreaView>
 //         <HeaderComp backFunc={() => navigation.goBack()} />
-//         <View style={{margin: 10}}>
-//           <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
-//             INTEREST INFORMATION
-//           </Text>
+//         <TitleHeader title={'Interest information'}/>
+//         <View style={{marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
+
 
 //           <View
 //             style={{
@@ -183,7 +185,7 @@
 //   },
 // });
 
-import { StyleSheet, Text, View } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 
 const InterestInfo = () => {
@@ -195,5 +197,3 @@ const InterestInfo = () => {
 }
 
 export default InterestInfo
-
-const styles = StyleSheet.create({})

@@ -1,6 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useContext, useState} from 'react';
 import {
+  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import {AuthContext} from '../Constants/context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import imagePath from '../Constants/imagePath';
+const windowHeight = Dimensions.get('window').height;
 
 const HeaderComp = ({action, text, status, backFunc}) => {
   const [showBar, setSHowBar] = React.useState(false);

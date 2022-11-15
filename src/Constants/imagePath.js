@@ -1,5 +1,5 @@
 export default {
-  noImage: require('../Assets/Images/no-image1.png'),
+  noImage: require('../Assets/Images/no-image.png'),
   coverNoImgae: require('../Assets/Images/cover-no-image.jpg'),
   noImageUser: require('../Assets/Images/noImageUser.png'),
 
@@ -316,5 +316,5 @@ export default {
   football: require('../Assets/Images/football001.png'),
   jersey: require('../Assets/Images/jersey.png'),
 
-  menuBanner2: require('../Assets/Images/goldBanner.png')
+  menuBanner2:require('../Assets/Images/goldBanner.png')
 };

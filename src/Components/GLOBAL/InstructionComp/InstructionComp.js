@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import RenderHtml from 'react-native-render-html';
+import TitleHeader from '../../TitleHeader';
 import UnderlineImage from '../Reuseable/UnderlineImage';
 // import {LinearTextGradient} from 'react-native-text-gradient';
 
@@ -11,15 +12,16 @@ function InstructionComp({title, instruction}) {
   };
   return (
     <>
+    <TitleHeader title={title} />
       <View style={styles.topCard}>
-        <Text style={styles.fonts}>{title}</Text>
-        <UnderlineImage />
+    
+      
 
-        <View
-          style={{borderWidth: 0.2, borderColor: 'black', marginVertical: 10}}
-        />
-        {/* <UnderlineImage /> */}
-        <RenderHtml contentWidth={width} source={source} />
+       <View style={{margin:10,justifyContent:'center',alignItems:'center'}}>
+       <RenderHtml contentWidth={width} source={source} />
+       </View>
+    
+ 
       </View>
     </>
   );

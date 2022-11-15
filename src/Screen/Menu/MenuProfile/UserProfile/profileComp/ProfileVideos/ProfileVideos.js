@@ -1,16 +1,16 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
-import noImage from '../../../../../../Assets/Images/no-image1.png';
+import {useEffect} from 'react';
+import {useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatGrid} from 'react-native-super-grid';
+import noImage from '../../../../../../Assets/Images/no-image.png';
 import navigationStrings from '../../../../../../Constants/navigationStrings';
 import AppUrl from '../../../../../../RestApi/AppUrl';
 import VideoPlayer from 'react-native-video-player';
 import imagePath from '../../../../../../Constants/imagePath';
 
-const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
+const ProfileVideos = ({userActivites, purchasedVideos = null}) => {
   const Navigation = useNavigation();
   const [videoList, setVideoList] = useState([]);
   console.log(userActivites);
@@ -24,7 +24,7 @@ const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
       ),
     );
   }, []);
-  const renderPaidProfileVideo = ({ item }) => {
+  const renderPaidProfileVideo = ({item}) => {
     return (
       <>
         <VideoPlayer
@@ -46,7 +46,7 @@ const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
 
   const renderVideo = (data, index) => {
     return (
-      <View key={index} style={{ margin: 7 }}>
+      <View key={index} style={{margin: 7}}>
         <View
           style={{
             height: 120,
@@ -58,8 +58,9 @@ const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
           }}>
           <VideoPlayer
             video={{
-              uri: `${AppUrl.MediaBaseUrl + data.item.greeting_registration.video
-                }`,
+              uri: `${
+                AppUrl.MediaBaseUrl + data.item.greeting_registration.video
+              }`,
             }}
             pauseOnPress
             fullScreenOnLongPress
@@ -83,7 +84,7 @@ const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
 
   return (
     <>
-      <View style={{ margin: 7 }}>
+      <View style={{margin: 7}}>
         {videoList.length > 0 || purchasedVideos ? (
           <>
             <FlatGrid
@@ -100,16 +101,16 @@ const ProfileVideos = ({ userActivites, purchasedVideos = null }) => {
             />
           </>
         ) : (
-          <View style={{ height: 300, justifyContent: 'center' }}>
+          <View style={{height: 300, justifyContent: 'center'}}>
             <View>
-              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{justifyContent: 'center', alignItems: 'center'}}>
                 <Image
                   source={imagePath.lazyDog}
-                  style={{ height: 100, width: 100 }}
+                  style={{height: 100, width: 100}}
                 />
               </View>
 
-              <Text style={{ color: 'white', textAlign: 'center' }}>
+              <Text style={{color: 'white', textAlign: 'center'}}>
                 Sorry No Data Available !
               </Text>
             </View>

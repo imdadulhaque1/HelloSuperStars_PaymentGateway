@@ -10,7 +10,7 @@ const TitleHeader = ({title}) => {
       borderRadius: 18,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 20,
+      marginTop: 15,
 
     }}>
 
@@ -23,7 +23,7 @@ const TitleHeader = ({title}) => {
           color:'#ffaa00'
         },
       ]}>
-     {title.toUpperCase()}
+     {title}
     </Text>
 
 

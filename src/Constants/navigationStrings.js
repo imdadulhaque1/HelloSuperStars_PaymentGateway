@@ -7,7 +7,8 @@ export default {
   NOTIFICATION: 'Notification',
   NOTIFICATIONSTACK: 'NotificationStackScreen',
   MEETUP: 'Meetup',
-
+  //
+  SHURJOPAY: 'ShujoyPay',
   //MENU
   ACTIVITIES: 'Activities',
   WALLET: 'wallet',

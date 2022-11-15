@@ -19,7 +19,7 @@ import VideoPlayer from 'react-native-video-player';
 import imagePath from '../../../../Constants/imagePath';
 import navigationStrings from '../../../../Constants/navigationStrings';
 import AppUrl from '../../../../RestApi/AppUrl';
-import noImage from '../../../Assets/Images/no-image1.png';
+// import noImage from '../../../Assets/Images/no-image.png';
 
 import { AuthContext } from '../../../../Constants/context';
 

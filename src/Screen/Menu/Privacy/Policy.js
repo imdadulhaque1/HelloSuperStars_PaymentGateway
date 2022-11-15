@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Linking,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -14,6 +15,7 @@ import {AuthContext} from '../../../Constants/context';
 import RenderHTML from 'react-native-render-html';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
+import TitleHeader from '../../../Components/TitleHeader';
 
 function CustomHeader(props) {
   return (
@@ -42,6 +44,7 @@ const Policy = ({navigation}) => {
   const [policy, setPolicy] = useState('');
   const [source, setSource] = useState('');
   const {width} = useWindowDimensions();
+  const windowHeight = Dimensions.get('window').height;
   useEffect(() => {
     axios.get(AppUrl.policy, axiosConfig).then(res => {
       setPolicy(res.data.data[0].details);
@@ -59,7 +62,8 @@ const Policy = ({navigation}) => {
         <CustomHeader onPress={handleBack} />
 
         <View style={{margin: 10}}>
-          <View>
+        <TitleHeader title={'Privacy Policy'}/>
+          {/* <View>
             <Text
               style={{
                 color: '#ffaa00',
@@ -69,7 +73,7 @@ const Policy = ({navigation}) => {
               }}>
               Privacy policy
             </Text>
-          </View>
+          </View> */}
 
           <View
             style={{
@@ -78,7 +82,7 @@ const Policy = ({navigation}) => {
               padding: 10,
               borderRadius: 10,
               overflow: 'scroll',
-              height: '88%',
+              height: windowHeight-200,
             }}>
             <ScrollView>
               <RenderHTML contentWidth={width} source={source} />

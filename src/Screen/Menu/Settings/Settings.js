@@ -7,6 +7,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import navigationStrings from '../../../Constants/navigationStrings';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import TitleHeader from '../../../Components/TitleHeader';
 
 function SettingsTitle({title, icon, clickFunc}) {
   return (
@@ -63,7 +64,9 @@ const Settings = ({navigation}) => {
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
         <View style={{margin: 10}}>
-          <Text style={styles.titile}>Settings</Text>
+          {/* <Text style={styles.titile}>Settings</Text>
+           */}
+           <TitleHeader title={'Settings'} />
 
           <SettingsTitle
             title="Personal Information"
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
   titile: {
     color: '#fff',
     fontSize: 25,
-    marginLeft:10,
+    marginLeft:15,
     marginBottom:10
   },
   centerView: {marginHorizontal: 5, justifyContent: 'center'},

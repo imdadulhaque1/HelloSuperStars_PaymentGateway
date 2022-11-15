@@ -22,7 +22,7 @@ const LearningSession = ({route, navigation}) => {
   console.log('data------', data);
   return (
     <SafeAreaView style={styles.container}>
-      <HeaderComp />
+      <HeaderComp backFunc={()=>navigation.goBack()}/>
       <ScrollView>
         <Video
           image={`${AppUrl.MediaBaseUrl + data.learning_session.banner}`}

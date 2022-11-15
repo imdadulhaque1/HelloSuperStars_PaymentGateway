@@ -12,7 +12,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import noImage from '../../../Assets/Images/no-image1.png';
+import noImage from '../../../Assets/Images/no-image.png';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
@@ -56,7 +56,7 @@ const AuctionProductCard = ({ data }) => {
     );
   };
   return (
-    <ScrollView style={{}}>
+    <ScrollView >
       <View style={styles.MaiN}>
         <View style={styles.mainView}>
           <View style={{ flexDirection: 'row', margin: 10 }}>
@@ -84,6 +84,7 @@ const AuctionProductCard = ({ data }) => {
 
               <View style={{ height: 100, width: '100%' }}>
                 <RenderHtml contentWidth={width} source={source} />
+               
               </View>
 
               <View style={styles.PriceRow}>

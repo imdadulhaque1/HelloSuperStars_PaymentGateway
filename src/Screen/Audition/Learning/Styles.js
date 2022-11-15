@@ -45,12 +45,12 @@ const stylesActive = StyleSheet.create({
     marginVertical: 8,
     position: 'relative',
     zIndex: 1,
-    margin: 2,
+    margin: 5,
     flex: 1,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'gold',
-    backgroundColor: '#ffaa00',
+    borderColor: '#ffaa00',
+    
   },
   LagEr2: {
     marginVertical: 8,
@@ -60,7 +60,7 @@ const stylesActive = StyleSheet.create({
     flex: 1,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     backgroundColor: 'black',
   },
 
@@ -78,7 +78,7 @@ const stylesActive = StyleSheet.create({
   },
   LearnText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 20,
     textAlign: 'center',
     fontWeight: 'bold',
     paddingVertical: 10,
@@ -99,17 +99,18 @@ const stylesActive = StyleSheet.create({
     width: 25,
     height: 25,
     borderRadius: 3,
-    backgroundColor: 'gold',
+    backgroundColor: '#ffaa00',
   },
 
   autionTitleText: {
     position: 'absolute',
     bottom: '83%',
     textAlign: 'center',
-    color: 'white',
+    color: '#fffa',
     width: '100%',
     fontWeight: 'bold',
     fontSize: 20,
+    
   },
   textLearM: {
     fontSize: 12,

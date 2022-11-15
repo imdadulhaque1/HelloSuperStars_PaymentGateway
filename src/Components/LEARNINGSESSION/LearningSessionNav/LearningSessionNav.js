@@ -19,7 +19,7 @@ import RenderHtml from 'react-native-render-html';
 import AppUrl from '../../../RestApi/AppUrl';
 import CountDown from 'react-native-countdown-component';
 import moment from 'moment';
-const LearningSessionNav = ({route}) => {
+const LearningSessionNav = ({route,navigation}) => {
   const {event} = route.params;
   const Navigation = useNavigation();
   const [showInstruction, setShowInstruction] = useState(false);
@@ -40,7 +40,7 @@ const LearningSessionNav = ({route}) => {
 
   return (
     <ScrollView style={styles.container}>
-      <HeaderComp />
+      <HeaderComp backFunc={()=>navigation.goBack()} />
       <View style={styles.bannerTitle}>
         <ImageBackground
           style={styles.background}

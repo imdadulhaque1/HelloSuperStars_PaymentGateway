@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +14,7 @@ import RenderHTML from 'react-native-render-html';
 import {AuthContext} from '../../../Constants/context';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
+import TitleHeader from '../../../Components/TitleHeader';
 
 function CustomHeader(props) {
   return (
@@ -38,6 +40,7 @@ const FaQ = ({navigation}) => {
   const [details, setDetails] = useState('');
   const [source, setSource] = useState('');
   const {width} = useWindowDimensions();
+  const windowHeight = Dimensions.get('window').height;
   useEffect(() => {
     axios.get(AppUrl.faq, axiosConfig).then(res => {
       setTitle(res.data.data[0].title);
@@ -55,7 +58,10 @@ const FaQ = ({navigation}) => {
         <CustomHeader onPress={handleBack} />
 
         <View style={{margin: 10}}>
-          <View>
+
+<TitleHeader title={title} />
+
+          {/* <View>
             <Text
               style={{
                 color: '#ffaa00',
@@ -65,7 +71,7 @@ const FaQ = ({navigation}) => {
               }}>
               {title}
             </Text>
-          </View>
+          </View> */}
 
           <View
             style={{
@@ -73,7 +79,7 @@ const FaQ = ({navigation}) => {
               margin: 10,
               padding: 10,
               borderRadius: 10,
-              height: '87%',
+              height: windowHeight-200,
               overflow: 'scroll',
             }}>
             <ScrollView>

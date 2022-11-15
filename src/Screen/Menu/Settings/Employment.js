@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
+import TitleHeader from '../../../Components/TitleHeader';
 const Employment = ({navigation}) => {
   const [salary, setSalary] = useState('');
   const [position, setPosition] = useState('');
@@ -60,10 +61,11 @@ const Employment = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <View style={{margin: 10}}>
-          <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
+        <TitleHeader title={'Employment information'} />
+        <View style={{marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
+          {/* <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
             EMPLOYMENT INFORMATION
-          </Text>
+          </Text> */}
           <TouchableOpacity style={{marginVertical: 5}}>
             <View
               style={{

@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Alert,
   Image,
@@ -12,8 +12,8 @@ import {
   View,
 } from 'react-native';
 import RNFS from 'react-native-fs';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {AuthContext} from '../../../Constants/context';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import HeaderComp from '../../HeaderComp';
@@ -21,16 +21,16 @@ import VideoUploadSuccessfulModal from '../../MODAL/VideoUploadSuccessfulModal';
 import moment from 'moment';
 import CountDown from 'react-native-countdown-component';
 import VideoPlayer from 'react-native-video-player';
-import {androidCameraPermission} from '../../../../permission';
+import { androidCameraPermission } from '../../../../permission';
 import ImagePicker from 'react-native-image-crop-picker';
 
-const VideoUploadLearningSession = ({route}) => {
+const VideoUploadLearningSession = ({ route }) => {
   const [assinmentNumebr, setAssinmentNumebr] = useState(0);
   const Navigation = useNavigation();
   const [uploadDone, setUploadDone] = useState(false);
   const [document, setDocument] = useState(null);
-  const {axiosConfig} = useContext(AuthContext);
-  const {event} = route.params;
+  const { axiosConfig } = useContext(AuthContext);
+  const { event } = route.params;
   const [lastTime, setLastTime] = useState(true);
   const [updateData, setUpdateData] = useState({
     video: {
@@ -60,9 +60,9 @@ const VideoUploadLearningSession = ({route}) => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Profile Picture', 'Choose an option', [
-        {text: 'Camera', onPress: onCamera},
-        {text: 'Gallery', onPress: onGallery},
-        {text: 'Cancel', onPress: () => {}},
+        { text: 'Camera', onPress: onCamera },
+        { text: 'Gallery', onPress: onGallery },
+        { text: 'Cancel', onPress: () => { } },
       ]);
     }
     clearInterval(progress);
@@ -86,7 +86,7 @@ const VideoUploadLearningSession = ({route}) => {
             data: res,
           },
         });
-        console.log('image data', url, type, res);
+        // console.log('image data', url, type, res);
       });
     });
   };
@@ -98,11 +98,11 @@ const VideoUploadLearningSession = ({route}) => {
     };
     launchImageLibrary(options, response => {
       if (response.didCancel) {
-        console.log('User cancelled video picker');
+        // console.log('User cancelled video picker');
       } else if (response.error) {
-        console.log('Video Picker Error: ', response.error);
+        // console.log('Video Picker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
+        // console.log('User tapped custom button: ', response.customButton);
         alert(response.customButton);
       } else {
         RNFS.readFile(response.assets[0].uri, 'base64')
@@ -126,12 +126,12 @@ const VideoUploadLearningSession = ({route}) => {
   };
 
   const uploadVideo = () => {
-    console.log('wait uploading');
+    // console.log('wait uploading');
     setProgress(true);
     axios
       .post(AppUrl.LearningSessionVideoUplaod, updateData, axiosConfig)
       .then(res => {
-        console.log(res);
+        //  console.log(res);
 
         setUpdateData({
           video: {
@@ -154,7 +154,7 @@ const VideoUploadLearningSession = ({route}) => {
         // console.log('done', res)
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
         setUpdateData({
           video: {
             learningSessionId: event.id,
@@ -177,7 +177,7 @@ const VideoUploadLearningSession = ({route}) => {
       <View style={styles.bannerTitle}>
         <ImageBackground
           style={styles.background}
-          source={{uri: `${AppUrl.MediaBaseUrl + event.banner}`}}>
+          source={{ uri: `${AppUrl.MediaBaseUrl + event.banner}` }}>
           <View>
             <View
               style={{
@@ -195,8 +195,8 @@ const VideoUploadLearningSession = ({route}) => {
                   borderColor: '#FFAD00',
                   borderRadius: 20,
                 }}
-                digitTxtStyle={{color: '#FFAD00'}}
-                timeLabelStyle={{color: 'black', fontWeight: 'bold'}}
+                digitTxtStyle={{ color: '#FFAD00' }}
+                timeLabelStyle={{ color: 'black', fontWeight: 'bold' }}
                 size={20}
               />
             </View>
@@ -237,7 +237,7 @@ const VideoUploadLearningSession = ({route}) => {
                 borderColor: '#ffad00',
               }}>
               <VideoPlayer
-                video={{uri: updateData.video.uri}}
+                video={{ uri: updateData.video.uri }}
                 videoWidth={100}
                 videoHeight={100}
                 autoplay={false}
@@ -263,7 +263,7 @@ const VideoUploadLearningSession = ({route}) => {
                     {progress ? (
                       <Image
                         source={imagePath.loadingBuffering}
-                        style={{height: 40, width: 40}}
+                        style={{ height: 40, width: 40 }}
                       />
                     ) : (
                       <Image source={imagePath.UploadVideoLearning} />
@@ -289,8 +289,8 @@ const VideoUploadLearningSession = ({route}) => {
             alignItems: 'center',
             marginTop: 50,
           }}>
-          <Image source={imagePath.lazyDog} style={{height: 150, width: 150}} />
-          <Text style={{color: '#FFAD00', fontSize: 20}}>
+          <Image source={imagePath.lazyDog} style={{ height: 150, width: 150 }} />
+          <Text style={{ color: '#FFAD00', fontSize: 20 }}>
             Oops Time Expired !
           </Text>
         </View>

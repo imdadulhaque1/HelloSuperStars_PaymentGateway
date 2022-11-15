@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, {useContext, useEffect, useState} from 'react';
 import {
@@ -33,6 +34,8 @@ const MarketPlaceBuyNow = ({route}) => {
   const {axiosConfig} = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [parentData, setParentData] = useState({});
+
+  const navigation=useNavigation()
 
   const [modalObj, setModalObj] = useState({
     modalType: '',
@@ -183,7 +186,7 @@ const MarketPlaceBuyNow = ({route}) => {
         setModal={setModal}
         buttoPress={modalOkBtn}
       />
-      <HeaderComp />
+      <HeaderComp  backFunc={()=>navigation.goBack()}/>
       <ScrollView style={styles.container}>
         <SafeAreaView>
           {buffer ? <LoaderComp /> : <></>}
@@ -279,7 +282,6 @@ const MarketPlaceBuyNow = ({route}) => {
               <View style={styles.MaiN}>
                 <View style={styles.Increment}>
                   <View style={{flex: 2}}>
-                    <Image source={imagePath.BoxA} />
                   </View>
                   <View style={{flex: 7}}>
                     <Text style={styles.TextEr}>Your quantity</Text>

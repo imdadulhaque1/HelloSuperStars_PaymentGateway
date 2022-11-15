@@ -14,7 +14,7 @@ export default function TopAuditonBanner({title}) {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{color: 'white', fontSize: 15}}>{title}</Text>
+          <Text style={{color: '#fff', fontSize: 20}}>{title}</Text>
         </ImageBackground>
       </View>
     </View>

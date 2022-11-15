@@ -16,6 +16,7 @@ import VideoPlayer from 'react-native-video-player';
 import navigationStrings from '../../../Constants/navigationStrings';
 import RenderHtml from 'react-native-render-html';
 import AppUrl from '../../../RestApi/AppUrl';
+import TitleHeader from '../../../Components/TitleHeader';
 const Instuction = ({navigation, route}) => {
   const {width} = useWindowDimensions();
   const {
@@ -30,7 +31,7 @@ const Instuction = ({navigation, route}) => {
   } = route.params;
 
   const instructionHTML = {
-    html: `<div style=color:#F6EA45;font-size:14px;font-weight: bold; '>${instruction?.instruction}</div>`,
+    html: `<div style=color:#fff;'>${instruction?.instruction}</div>`,
   };
 
   console.log(route.params);
@@ -45,9 +46,10 @@ const Instuction = ({navigation, route}) => {
           auditionImage={auditionImage}
           remainingTime={remainingTime}
         />
+        <TitleHeader title='Instructions' />
         <View style={styles.auditionDescriptionRound}>
-          <Heading heading="Instructions" />
-          <UnderlineImage />
+          {/* <Heading heading="Instructions" /> */}
+          {/* <UnderlineImage /> */}
           {instruction !== null ? (
             <>
               <View style={{marginLeft: 0, marginRight: 15}}>
@@ -63,11 +65,10 @@ const Instuction = ({navigation, route}) => {
                   source={imagePath.AuditionInstruction}
                   resizeMode="stretch"
                 /> */}
-                    <View style={{marginLeft: 5, marginRight: 15}}>
-                      <Text style={{color: '#fff'}}>
-                        {/* {instruction.instruction} */}
-                      </Text>
+                    <View style={{marginLeft: 5, marginRight: 15,padding:5}}>
+                   
                       <RenderHtml
+                      
                         contentWidth={width}
                         source={instructionHTML}
                       />
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 10,
     marginBottom: 10,
+    marginHorizontal:10
   },
   flagImg: {
     width: 25,
@@ -190,14 +192,14 @@ const styles = StyleSheet.create({
   },
   startBg: {
     backgroundColor: '#1d4779',
-    padding: 8,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 10,
   },
   endBg: {
     backgroundColor: '#806e08',
-    padding: 8,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 10,

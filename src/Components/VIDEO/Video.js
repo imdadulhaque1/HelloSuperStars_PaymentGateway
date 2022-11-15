@@ -4,20 +4,22 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import VideoPlayer from 'react-native-video-player';
 import imagePath from '../../Constants/imagePath';
 import AppUrl from '../../RestApi/AppUrl';
+import TitleHeader from '../TitleHeader';
 
 function Video({title, image, videoSrc = null}) {
   console.log('image path', image);
 
   return (
+    <>
+    <TitleHeader title={title} />
     <View style={styles.topCard}>
-      <Text style={styles.fonts}>{title}</Text>
+    
 
-      <View
-        style={{borderWidth: 0.3, borderColor: 'black', marginVertical: 10}}
-      />
+
+    
 
       {videoSrc !== null ? (
-        <View style={{marginHorizontal: 20, marginVertical: 10}}>
+        <View style={{marginHorizontal: 20, marginVertical: 3}}>
           <VideoPlayer
             style={{height: 300}}
             video={{
@@ -28,10 +30,12 @@ function Video({title, image, videoSrc = null}) {
           />
         </View>
       ) : (
-        <Image
+     <View style={{padding:10}}>
+     <Image
           source={{uri: image}}
-          style={{height: 150, resizeMode: 'cover'}}
+          style={{height: 180, resizeMode: 'cover',borderRadius:10}}
         />
+     </View>
       )}
       {/* <VideoPlayer
         style={{ height: 300 }}
@@ -44,6 +48,7 @@ function Video({title, image, videoSrc = null}) {
         }}
       /> */}
     </View>
+    </>
   );
 }
 
@@ -52,7 +57,7 @@ export default Video;
 const styles = StyleSheet.create({
   topCard: {
     backgroundColor: '#282828',
-    margin: 8,
+    marginHorizontal: 10,
     borderRadius: 5,
   },
   fonts: {
@@ -60,6 +65,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     fontSize: 18,
+    paddingHorizontal:3
   },
   bannerRow: {
     alignItems: 'center',

@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
   },
   mainView: {
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     borderRadius: 3,
     backgroundColor: 'black',
     padding: 2,
-    borderWidth: 0.5,
+    borderWidth: 2,
     marginBottom: 3,
   },
 
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
 
   PriceBest: {
-    color: 'gold',
+    color: '#ffaa00',
     fontWeight: 'bold',
     paddingVertical: 1,
     paddingHorizontal: 5,
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     borderWidth: 0.2,
     borderRadius: 15,
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
   },
 
   Btn: {
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   },
 
   PriceBD: {
-    color: 'gold',
+    color: '#ffaa00',
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     width: 40,
     height: 40,
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
   },
   BidHis: {
     flexDirection: 'row',
@@ -798,7 +798,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 17,
     color: '#B6B6B6',
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     borderRadius: 50,
     backgroundColor: 'black',
   },
@@ -809,7 +809,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     padding: 10,
     color: '#B6B6B6',
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     borderRadius: 25,
     backgroundColor: 'black',
   },
@@ -822,7 +822,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'center',
     color: '#488BFF',
-    borderColor: 'gold',
+    borderColor: '#ffaa00',
     borderRadius: 50,
     backgroundColor: 'black',
   },

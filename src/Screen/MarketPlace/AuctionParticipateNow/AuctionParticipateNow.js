@@ -17,7 +17,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
-import noImage from '../../../Assets/Images/no-image1.png';
+import noImage from '../../../Assets/Images/no-image.png';
 import HeaderComp from '../../../Components/HeaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
 import BidCongratulationModal from '../../../Components/MODAL/BidCongratulationModal';
@@ -95,6 +95,7 @@ const AuctionParticipateNow = ({ route }) => {
 
   const countDownDate = new Date(product?.bid_to).getTime();
   const resultPublishDate = new Date(product?.result_date).getTime();
+
 
   setInterval(() => {
     const now = new Date().getTime();

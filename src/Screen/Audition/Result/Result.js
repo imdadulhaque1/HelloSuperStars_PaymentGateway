@@ -26,6 +26,7 @@ import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import Toast from 'react-native-root-toast';
+import TitleHeader from '../../../Components/TitleHeader';
 const Result = ({route}) => {
   const {
     roundName,
@@ -189,8 +190,10 @@ const Result = ({route}) => {
                 roundId={roundId}
               />
             ) : (
+              <>
+              <TitleHeader title={'Your Upload videos'} />
               <View style={styles.topCard}>
-                <Text
+                {/* <Text
                   style={styles.fonts}
                   onPress={() => {
                     console.log('-----------------');
@@ -208,7 +211,7 @@ const Result = ({route}) => {
                   }}>
                   Your Uploaded videos
                 </Text>
-                <UnderlineImage />
+                <UnderlineImage /> */}
 
                 <View style={styles.VideoT}>
                   {videoList.map((item, index) => {
@@ -233,6 +236,7 @@ const Result = ({route}) => {
                   })}
                 </View>
               </View>
+              </>
             )}
             {isAppealedForThisRound &&
               markTracking.wining_status === 0 &&

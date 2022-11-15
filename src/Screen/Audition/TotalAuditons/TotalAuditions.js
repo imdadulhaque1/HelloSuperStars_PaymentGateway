@@ -81,7 +81,7 @@ const TotalAuditions = ({route}) => {
         {/*============ top banner start here ======= */}
 
         <View style={styles.topBannerImg}>
-          <View style={{zIndex: 2, elevation: 2}}>
+          <View style={{zIndex: 2}}>
             <CountDown
               // until={totalSecond}
               until={remainingTime(
@@ -181,9 +181,10 @@ const TotalAuditions = ({route}) => {
                   style={{
                     height: 180,
                     width: '100%',
-                    backgroundColor: '#282828',
+                    // backgroundColor: '#282828',
                     borderRadius: 10,
-                    padding: 10,
+                    // padding: 10,
+                  position:'relative',
                   }}>
                   <Image
                     source={imagePath.Round}

@@ -9,6 +9,7 @@ import imagePath from '../../../Constants/imagePath';
 import RoundTopBanner from '../Round1/RoundTopBanner';
 import {Text} from 'react-native-paper';
 import AppUrl from '../../../RestApi/AppUrl';
+import TitleHeader from '../../../Components/TitleHeader';
 
 const Judges = ({navigation, route}) => {
   const {
@@ -34,14 +35,17 @@ const Judges = ({navigation, route}) => {
           auditionImage={auditionImage}
           remainingTime={remainingTime}
         />
+        <TitleHeader title={'Who will judge you !'} />
         <View
           style={{
             backgroundColor: '#272727',
             paddingBottom: 10,
             borderRadius: 10,
+            marginTop:5,
+            marginHorizontal:10
           }}>
-          <Heading heading="Who will judge you" />
-          <UnderlineImage />
+          {/* <Heading heading="Who will judge you" />
+          <UnderlineImage /> */}
 
           <FlatGrid
             itemDimension={180}
@@ -69,8 +73,9 @@ const Judges = ({navigation, route}) => {
               );
             }}
           />
-          <Heading heading="Incredible jury waiting for you" />
-          <UnderlineImage />
+          {/* <Heading heading="Incredible jury waiting for you" /> */}
+          <TitleHeader title={'Increadible jury waiting for you'} />
+      
           <FlatGrid
             itemDimension={180}
             data={juries}

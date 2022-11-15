@@ -13,6 +13,7 @@ import ChatWithStar from '../Screen/StarProfile/Greetings/ChatWithStar/ChatWithS
 import Greetings from '../Screen/StarProfile/Greetings/Greetings';
 import GreetingsHome from '../Screen/StarProfile/Greetings/GreetingsHome/GreetingsHome';
 import PaymentInfo from '../Screen/StarProfile/Greetings/PaymentInfo/PaymentInfo';
+import ShujoyPay from '../Screen/TakePayment/ShujoyPay';
 import TabRoutes from './TabRoutes';
 
 const MainStack = Stack => {
@@ -34,6 +35,8 @@ const MainStack = Stack => {
       {/* <Stack.Screen name={'LiveChatSdk'} component={LiveChatSdk} /> */}
       <Stack.Screen name={'ImgCrop'} component={ImgCrop} />
       <Stack.Screen name={'SearchPage'} component={SearchPage} />
+      <Stack.Screen name={navigationStrings.SHURJOPAY} component={ShujoyPay} />
+
     </>
   );
 };

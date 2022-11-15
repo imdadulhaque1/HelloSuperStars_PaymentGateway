@@ -1,13 +1,13 @@
 //import liraries
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
-import {TextInput} from 'react-native-paper';
+import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import StepIndicator from 'react-native-step-indicator';
 import imagePath from '../../../Constants/imagePath';
 import RenderHtml from 'react-native-render-html';
@@ -15,7 +15,7 @@ import AppUrl from '../../../RestApi/AppUrl';
 import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import HeaderComp from '../../HeaderComp';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 
@@ -55,9 +55,9 @@ const customStyles = {
 };
 
 // create a component
-const SouvenirOrderStatus = ({route, navigation}) => {
-  const {width} = useWindowDimensions();
-  const {event} = route.params;
+const SouvenirOrderStatus = ({ route, navigation }) => {
+  const { width } = useWindowDimensions();
+  const { event } = route.params;
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   console.log(event);
   const ownerName = event?.name;
@@ -70,7 +70,7 @@ const SouvenirOrderStatus = ({route, navigation}) => {
   };
   const progress = event?.status;
   const imageURl = event?.image;
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
 
   const downloadInvoice = e => {
     const data = {
@@ -106,13 +106,13 @@ const SouvenirOrderStatus = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView style={{backgroundColor: '#000', flex: 1, paddingBottom: 20}}>
+    <ScrollView style={{ backgroundColor: '#000', flex: 1, paddingBottom: 20 }}>
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.centered_view}>
         <View style={styles.warning_modal}>
-          <View style={{margin: 8}}>
+          <View style={{ margin: 8 }}>
             <View style={styles.showcaseStatus}>
-              <Text style={{color: '#ff0'}}>Delivery Status</Text>
+              <Text style={{ color: '#ff0' }}>Delivery Status</Text>
             </View>
 
             <View style={styles.stepIndicator}>
@@ -129,11 +129,11 @@ const SouvenirOrderStatus = ({route, navigation}) => {
                 source={{
                   uri: `${AppUrl.MediaBaseUrl + '/' + imageURl}`,
                 }}
-                style={{width: '100%', height: 200, borderRadius: 10}}
+                style={{ width: '100%', height: 200, borderRadius: 10 }}
                 resizeMode="stretch"
               />
 
-              <View style={{width: '100%', marginVertical: 25}}>
+              <View style={{ width: '100%', marginVertical: 25 }}>
                 <Text style={styles.inputText}>Name {ownerName}</Text>
                 <Text style={styles.inputText}>Mobile No {ownerPhone}</Text>
                 <Text style={styles.inputText}>Address {ownerAddress}</Text>
@@ -148,7 +148,7 @@ const SouvenirOrderStatus = ({route, navigation}) => {
                   <View>
                     <Text style={styles.desc}>Description </Text>
                   </View>
-                  <View style={{width: '80%'}}>
+                  <View style={{ width: '80%' }}>
                     <RenderHtml contentWidth={width} source={descriptionHTML} />
                   </View>
                 </View>
@@ -183,7 +183,7 @@ const SouvenirOrderStatus = ({route, navigation}) => {
                   <TouchableOpacity
                     style={styles.downloadContainer}
                     onPress={handlePayment}>
-                    <Text style={{color: '#fe7013'}}>
+                    <Text style={{ color: '#fe7013' }}>
                       <FontAwesome5
                         name={'credit-card'}
                         style={styles.customIcon}
@@ -192,11 +192,11 @@ const SouvenirOrderStatus = ({route, navigation}) => {
                       Pay now
                     </Text>
                   </TouchableOpacity>
-                ) : event?.status == 2 ? (
+                ) : event?.status == 7 ? (
                   <TouchableOpacity
                     style={styles.downloadContainer}
                     onPress={downloadInvoice}>
-                    <Text style={{color: '#fe7013'}}>
+                    <Text style={{ color: '#fe7013' }}>
                       <FontAwesome5
                         name={'download'}
                         style={styles.customIcon}
@@ -221,6 +221,7 @@ const SouvenirOrderStatus = ({route, navigation}) => {
           souvenirId={event.souvenir_id}
           id={event.id}
           fee={event.total_amount}
+          eventId={event.souvenir_id}
         />
       ) : (
         <></>

@@ -5,6 +5,7 @@ import imagePath from '../../../Constants/imagePath';
 import TopAuditonBanner from '../TotalAuditons/TopAuditonBanner';
 import AppUrl from '../../../RestApi/AppUrl';
 import CountDown from 'react-native-countdown-component';
+import TitleHeader from '../../../Components/TitleHeader';
 export default function RoundTopBanner({
   title,
   toptitle,
@@ -15,24 +16,16 @@ export default function RoundTopBanner({
 }) {
   return (
     <>
+    <TitleHeader title={auditionTitle}/>
       <View
         style={{
           backgroundColor: '#272727',
-          marginVertical: 15,
+         marginBottom:5,
+          marginHorizontal:10,
           borderRadius: 5,
         }}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 16,
-            padding: 10,
-            textAlign: 'center',
-          }}>
-          {auditionTitle}
-        </Text>
-        <View
-          style={{borderWidth: 0.5, borderColor: 'black', marginVertical: 2}}
-        />
+     
+   
         <TopAuditonBanner title={toptitle ? 'Auditons' : RoundName} />
 
         <View style={{position: 'relative', paddingBottom: 20}}>

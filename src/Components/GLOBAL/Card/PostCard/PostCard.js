@@ -1,8 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 import axios from 'axios';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {
   Dimensions,
@@ -25,20 +25,20 @@ import imagePath from '../../../../Constants/imagePath';
 import navigationStrings from '../../../../Constants/navigationStrings';
 import AppUrl from '../../../../RestApi/AppUrl';
 // import noImage from '../../../Assets/Images/no-image.png';
-import noImage from '../../../../Assets/Images/no-image1.png';
+import noImage from '../../../../Assets/Images/no-image.png';
 
-import { AuthContext } from '../../../../Constants/context';
+import {AuthContext} from '../../../../Constants/context';
 
 import LockPaymentModal from '../../../MODAL/LockPaymentModal';
 import styles from './styles';
 import UpcomingAuditionsCard from './UpcomingAuditionsCard';
-import { timecoundFunc } from '../../../../CustomHelper/timecoundFunc';
+import {timecoundFunc} from '../../../../CustomHelper/timecoundFunc';
 import RegisPaymentModal from '../../../MODAL/RegisPaymentModal';
 
-const PostCard = ({ post, callform = null }) => {
-  const { width } = useWindowDimensions();
+const PostCard = ({post, callform = null}) => {
+  const {width} = useWindowDimensions();
   const [unlocked, setUnlocked] = useState(false);
-  const { useInfo, axiosConfig } = useContext(AuthContext);
+  const {useInfo, axiosConfig} = useContext(AuthContext);
 
   const Navigation = useNavigation();
   const [like, setlike] = useState(
@@ -229,16 +229,19 @@ const PostCard = ({ post, callform = null }) => {
 
   //post content
   const contentSource = {
-    html: `<div style='color:#e6e6e6;'>${postContent?.description ? postContent?.description : ''
-      }</div>`,
+    html: `<div style='color:#e6e6e6;'>${
+      postContent?.description ? postContent?.description : ''
+    }</div>`,
   };
   const titleSource = {
-    html: `<div style='color:#e6e6e6;font-size:20px;font-weight: bold;'>${postContent?.title ? postContent?.title : ''
-      }</div>`,
+    html: `<div style='color:#e6e6e6;font-size:20px;font-weight: bold;'>${
+      postContent?.title ? postContent?.title : ''
+    }</div>`,
   };
   const titleAudition = {
-    html: `<div style=color:#F6EA45;font-size:14px;font-weight: bold; '>${postContent?.title ? postContent?.title : ''
-      }</div>`,
+    html: `<div style=color:#F6EA45;font-size:14px;font-weight: bold; '>${
+      postContent?.title ? postContent?.title : ''
+    }</div>`,
   };
 
   //discription text length count
@@ -321,10 +324,11 @@ const PostCard = ({ post, callform = null }) => {
                   source={
                     post?.fangroup?.my_superstar?.image !== null
                       ? {
-                        uri: `${AppUrl.MediaBaseUrl +
-                          post?.fangroup?.my_superstar?.image
+                          uri: `${
+                            AppUrl.MediaBaseUrl +
+                            post?.fangroup?.my_superstar?.image
                           }`,
-                      }
+                        }
                       : 'https://media.istockphoto.com/vectors/default-image-icon-vector-missing-picture-page-for-website-design-or-vector-id1357365823?k=20&m=1357365823&s=612x612&w=0&h=ZH0MQpeUoSHM3G2AWzc8KkGYRg4uP_kuu0Za8GFxdFc='
                   }
                 />
@@ -349,10 +353,11 @@ const PostCard = ({ post, callform = null }) => {
                   source={
                     post?.fangroup?.another_superstar?.image !== null
                       ? {
-                        uri: `${AppUrl.MediaBaseUrl +
-                          post?.fangroup?.another_superstar?.image
+                          uri: `${
+                            AppUrl.MediaBaseUrl +
+                            post?.fangroup?.another_superstar?.image
                           }`,
-                      }
+                        }
                       : noImage
                   }
                 />
@@ -369,11 +374,11 @@ const PostCard = ({ post, callform = null }) => {
           ) : post?.type == 'audition' ? (
             //audition card start here
             <>
-              <View style={{ position: 'relative', width: '100%' }}>
+              <View style={{position: 'relative', width: '100%'}}>
                 <View style={styles.CardContent}>
                   <View>
                     <ImageBackground
-                      imageStyle={{ borderRadius: 2 }}
+                      imageStyle={{borderRadius: 2}}
                       source={imagePath.BannerAu}
                       resizeMode={'stretch'}
                       style={{
@@ -411,7 +416,7 @@ const PostCard = ({ post, callform = null }) => {
                         borderBottomStartRadius: 10,
                         backgroundColor: '#1A1A1A',
                       }}>
-                      <View style={{ marginRight: 5 }}>
+                      <View style={{marginRight: 5}}>
                         <Text
                           style={{
                             color: 'white',
@@ -424,7 +429,7 @@ const PostCard = ({ post, callform = null }) => {
                           {dateMonthConverter(postContent?.end_date)}
                         </Text>
                       </View>
-                      <View style={{ marginRight: 5 }}>
+                      <View style={{marginRight: 5}}>
                         <TouchableOpacity
                           onPress={() => handlePress('audition')}>
                           <LinearGradient
@@ -528,8 +533,9 @@ const PostCard = ({ post, callform = null }) => {
                           <Image
                             style={styles.starCardImg}
                             source={{
-                              uri: `${AppUrl.MediaBaseUrl + judge?.user?.image
-                                }`,
+                              uri: `${
+                                AppUrl.MediaBaseUrl + judge?.user?.image
+                              }`,
                             }}
                           />
                         </View>
@@ -550,9 +556,10 @@ const PostCard = ({ post, callform = null }) => {
                   source={
                     post?.star?.image !== null
                       ? {
-                        uri: `${AppUrl.MediaBaseUrl + postContent?.star?.image
+                          uri: `${
+                            AppUrl.MediaBaseUrl + postContent?.star?.image
                           }`,
-                      }
+                        }
                       : noImage
                   }
                 />
@@ -587,7 +594,7 @@ const PostCard = ({ post, callform = null }) => {
 
           {textLength > 300 && post?.type !== 'audition' ? (
             <TouchableOpacity onPress={() => setContentHeight(!contentHeight)}>
-              <Text style={{ color: '#FFAD00', marginTop: 5 }}>
+              <Text style={{color: '#FFAD00', marginTop: 5}}>
                 {contentHeight ? `Read More . . . ` : `Read Less`}
               </Text>
             </TouchableOpacity>
@@ -597,9 +604,9 @@ const PostCard = ({ post, callform = null }) => {
 
           <Text style={styles.cardContentText}></Text>
 
-          <View style={{ position: 'relative' }}>
+          <View style={{position: 'relative'}}>
             {post.type !== 'audition' && (
-              <View style={{ position: 'absolute', zIndex: 1, bottom: 10 }}>
+              <View style={{position: 'absolute', zIndex: 1, bottom: 10}}>
                 <Text
                   style={{
                     color: '#fff',
@@ -678,7 +685,7 @@ const PostCard = ({ post, callform = null }) => {
                     )}
                   </View>
                 ) : (
-                  <View style={{ borderRadius: 10, overflow: 'hidden' }}>
+                  <View style={{borderRadius: 10, overflow: 'hidden'}}>
                     {post?.type === 'general' ? (
                       <>
                         {postContent?.image ? (
@@ -703,7 +710,7 @@ const PostCard = ({ post, callform = null }) => {
                             thumbnail={{
                               uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}`,
                             }}
-                          // blurRadius={1}
+                            // blurRadius={1}
                           />
                         )}
                       </>
@@ -723,7 +730,7 @@ const PostCard = ({ post, callform = null }) => {
                 )}
               </View>
             ) : post?.type == 'greeting' ? (
-              <View style={{ borderRadius: 10, overflow: 'hidden' }}>
+              <View style={{borderRadius: 10, overflow: 'hidden'}}>
                 <VideoPlayer
                   video={{
                     uri: `${AppUrl.MediaBaseUrl}${postContent?.video}`,
@@ -733,7 +740,7 @@ const PostCard = ({ post, callform = null }) => {
                   thumbnail={{
                     uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}`,
                   }}
-                // blurRadius={1}
+                  // blurRadius={1}
                 />
               </View>
             ) : post?.type == 'audition' ? (
@@ -810,8 +817,8 @@ const PostCard = ({ post, callform = null }) => {
               <>
                 {post?.type == 'meetup' ? (
                   <View style={styles.mainMeetUpView}>
-                    <View style={{ paddingVertical: 2 }}>
-                      <Text style={{ color: '#FFAD00', fontSize: 15 }}>
+                    <View style={{paddingVertical: 2}}>
+                      <Text style={{color: '#FFAD00', fontSize: 15}}>
                         {moment(postContent?.date).format('DD MMMM YYYY')}{' '}
                         {timeIdentity} {postContent?.venue ? 'at' : null}
                         {/* Friday night at Pan Pacific */}
@@ -828,7 +835,7 @@ const PostCard = ({ post, callform = null }) => {
                     {/* {A.getTime() > B.getTime() ? ( */}
                     {true ? (
                       <>
-                        <View style={{ justifyContent: 'center' }}>
+                        <View style={{justifyContent: 'center'}}>
                           <TouchableOpacity
                             onPress={() => handlePress('meetup')}>
                             <LinearGradient
@@ -972,23 +979,23 @@ const PostCard = ({ post, callform = null }) => {
                             onPress={() => handlePress('livechat')}>
                             {timecoundFunc(postContent.registration_end_date) >=
                               0 && (
-                                <LinearGradient
-                                  style={styles.meetupBtn}
-                                  colors={[
-                                    '#F1A817',
-                                    '#F5E67D',
-                                    '#FCB706',
-                                    '#DFC65C',
-                                  ]}>
-                                  <Animatable.Text
-                                    animation="pulse"
-                                    easing="ease-out"
-                                    iterationCount="infinite"
-                                    style={{ color: '#000', fontSize: 12 }}>
-                                    Register Now
-                                  </Animatable.Text>
-                                </LinearGradient>
-                              )}
+                              <LinearGradient
+                                style={styles.meetupBtn}
+                                colors={[
+                                  '#F1A817',
+                                  '#F5E67D',
+                                  '#FCB706',
+                                  '#DFC65C',
+                                ]}>
+                                <Animatable.Text
+                                  animation="pulse"
+                                  easing="ease-out"
+                                  iterationCount="infinite"
+                                  style={{color: '#000', fontSize: 12}}>
+                                  Register Now
+                                </Animatable.Text>
+                              </LinearGradient>
+                            )}
                           </TouchableOpacity>
                         </View>
                       </>
@@ -1057,14 +1064,14 @@ const PostCard = ({ post, callform = null }) => {
           </View>
 
           <View style={styles.cardInfo}>
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <View style={{flexDirection: 'row', marginTop: 5}}>
               <Text style={styles.infoText}>
                 <Icon name="heart" color={'red'} size={12} />
               </Text>
-              <Text style={{ marginLeft: 4, color: '#d9d9d9' }}>{likeCount}</Text>
+              <Text style={{marginLeft: 4, color: '#d9d9d9'}}>{likeCount}</Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ marginTop: 7 }}>
+            <View style={{flexDirection: 'row'}}>
+              <View style={{marginTop: 7}}>
                 <Icon name="paper-plane" color={'#03a5fc'} size={12} />
               </View>
               <View>
@@ -1088,7 +1095,7 @@ const PostCard = ({ post, callform = null }) => {
                     <AntDesign name="hearto" color={'red'} size={22} />
                   )}
                 </View>
-                <Text style={{ marginLeft: 8, marginTop: 1, color: '#d9d9d9' }}>
+                <Text style={{marginLeft: 8, marginTop: 1, color: '#d9d9d9'}}>
                   Like
                 </Text>
               </View>
@@ -1113,7 +1120,7 @@ const PostCard = ({ post, callform = null }) => {
                     <Icon name="paper-plane-o" color={'#03a5fc'} size={21} />
                   )}
                 </View>
-                <Text style={{ marginLeft: 8, marginTop: 1, color: '#d9d9d9' }}>
+                <Text style={{marginLeft: 8, marginTop: 1, color: '#d9d9d9'}}>
                   Share
                 </Text>
               </View>

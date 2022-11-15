@@ -53,7 +53,8 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
     'token': "",
     'order_id': "",
     'mid': "",
-    'amount': ""
+    'amount': "",
+    'mode': ""
   })
 
   useEffect(() => {
@@ -66,7 +67,8 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
       'order_id': resData?.orderId,
       'mid': resData?.mid,
       'amount': resData?.amount,
-      'callBackUrl': resData?.callBackUrl
+      'callBackUrl': resData?.callBackUrl,
+      'mode': resData?.takePaymentMode
     })
     console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + singlePackage?.price)
 
@@ -84,7 +86,8 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         paytmDat.token,
         paytmDat.amount,
         paytmDat.callBackUrl + paytmDat.order_id,
-        false,
+        // paytmDat.mode,
+        true,
         false,
         ""
       ).then((result) => {
@@ -253,6 +256,36 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   }, [stripePaymentStatus])
 
 
+  const [shujoBuffer, setShujoBuffer] = useState(true)
+  //shurjo payment 
+  const shurjoPayMakePayment = () => {
+    setShujoBuffer(false)
+    let info = {
+      amount: singlePackage?.price,
+      event_type: buyFor,
+      event_id: PackegeId,
+    }
+
+    axios.post(AppUrl.shujroPayPaymentInitiata, info, axiosConfig).then(res => {
+      console.log('cjeck out url', res.data)
+      Navigation.navigate(navigationStrings.SHURJOPAY, {
+        checkOutUrl: res?.data?.checkout_url,
+        redirect: false,
+        PackegeId: PackegeId,
+        buyFor: buyFor
+      })
+      setShujoBuffer(true)
+    })
+      .catch(err => {
+        setShujoBuffer(true)
+        console.log(err);
+      });
+
+  }
+
+
+
+
   return (
     <>
       <AlertModal modalObj={modalObj} modal={modal} setModal={setModal} buttoPress={modalButtonPress} />
@@ -280,7 +313,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         </ScrollView> */}
         <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 25 }}>
           {/* surjo pay */}
-          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+          <TouchableOpacity onPress={() => shujoBuffer ? shurjoPayMakePayment() : null}>
             <Image
               source={imagePath.Surjo}
               style={styles.payment_icon}
