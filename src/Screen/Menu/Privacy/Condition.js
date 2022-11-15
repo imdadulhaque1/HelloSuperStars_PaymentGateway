@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -13,7 +14,9 @@ import {AuthContext} from '../../../Constants/context';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import RenderHTML from 'react-native-render-html';
-
+import HeaderComp from '../../../Components/HeaderComp';
+import TitleHeader from '../../../Components/TitleHeader';
+const windowHeight = Dimensions.get('window').height;
 function CustomHeader(props) {
   return (
     <View style={{backgroundColor: '#343434', paddingVertical: 10}}>
@@ -56,25 +59,15 @@ const Condition = ({navigation}) => {
         <CustomHeader onPress={handleBack} />
 
         <View style={{margin: 10}}>
-          <View>
-            <Text
-              style={{
-                color: '#ffaa00',
-                fontSize: 19,
-                fontWeight: 'bold',
-                textAlign: 'center',
-              }}>
-              {title}
-            </Text>
-          </View>
+       <TitleHeader title={title} />
 
           <View
             style={{
               backgroundColor: '#1F1F1F',
-              margin: 10,
+          marginHorizontal:10,
               padding: 10,
               borderRadius: 10,
-              height: '87%',
+              height:windowHeight-200,
               overflow: 'scroll',
             }}>
             <ScrollView>

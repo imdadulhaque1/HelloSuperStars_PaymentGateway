@@ -36,6 +36,10 @@ import Round1 from '../../Screen/Audition/Round1/Round1';
 import ActivitiesCard from '../../Components/GLOBAL/Reuseable/ActivitiesCard';
 import UserProfile from '../../Screen/Menu/MenuProfile/UserProfile/UserProfile';
 import UpCommingPost from '../../Screen/Menu/UpCommingPost';
+import VideoUploadLearningSession from '../../Components/LEARNINGSESSION/VideoUploadLearningSession/VideoUploadLearningSession';
+import ResultLearningSession from '../../Components/LEARNINGSESSION/ResultLearningSession/ResultLearningSession';
+import ApplyForCertificate from '../../Components/LEARNINGSESSION/ApplyForCertificate';
+import SouvenirOrderStatus from '../../Components/GLOBAL/Reuseable/SouvenirOrderStatus';
 
 
 const MenuStackV2 = createNativeStackNavigator();
@@ -44,8 +48,31 @@ const MenuStackScreenV2 = () => {
     <MenuStackV2.Navigator screenOptions={{ headerShown: false }}>
       <MenuStackV2.Screen name={navigationStrings.MENUV2} component={MenuV2} />
 
+      <MenuStackV2.Screen
+        name={navigationStrings.LEARNINGSESSIONNAV}
+        component={LearningSessionNav}
+      />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.VIDEOUPLOADLEARNINGSESSION}
+        component={VideoUploadLearningSession}
+      />
 
 
+      <MenuStackV2.Screen
+        name={navigationStrings.RESULTLEARNINGSESSION}
+        component={ResultLearningSession}
+      />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.APPLYFORCERLEARNINGSESSION}
+        component={ApplyForCertificate}
+      />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.SOUVENIRSTATUS}
+        component={SouvenirOrderStatus}
+      />
 
       <MenuStackV2.Screen
         name={navigationStrings.ABOUTPOLICY}
@@ -98,12 +125,12 @@ const MenuStackScreenV2 = () => {
         name={navigationStrings.REPORTINFO}
         component={ReportInfo}
       />
- <MenuStackV2.Screen name={navigationStrings.WALLET} component={Wallet} />
- <MenuStackV2.Screen name={navigationStrings.MENUFOLLOWERS} component={MenuFollowers} />
- <MenuStackV2.Screen name={navigationStrings.MENUACTIVITES} component={MenuActivities} />
+      <MenuStackV2.Screen name={navigationStrings.WALLET} component={Wallet} />
+      <MenuStackV2.Screen name={navigationStrings.MENUFOLLOWERS} component={MenuFollowers} />
+      <MenuStackV2.Screen name={navigationStrings.MENUACTIVITES} component={MenuActivities} />
 
- {/* Audition */}
- <MenuStackV2.Screen
+      {/* Audition */}
+      <MenuStackV2.Screen
         name={navigationStrings.LEARNING}
         component={Learning}
       />
@@ -132,12 +159,12 @@ const MenuStackScreenV2 = () => {
         component={Greeting}
       />
 
-<MenuStackV2.Screen
+      <MenuStackV2.Screen
         name={navigationStrings.USERPROFILE}
         component={UserProfile}
       />
 
-<MenuStackV2.Screen
+      <MenuStackV2.Screen
         name={navigationStrings.POSTSHOWBYTYPE}
         component={UpCommingPost}
       />

@@ -17,6 +17,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
+import TitleHeader from '../../../Components/TitleHeader';
 const SecurityInfo = ({navigation}) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -53,10 +54,11 @@ const SecurityInfo = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <View style={{margin: 10}}>
-          <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
+        <TitleHeader title={'Security information'} />
+        <View style={{marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
+          {/* <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
             SECURITY INFORMATION
-          </Text>
+          </Text> */}
 
           <View style={{marginVertical: 5}}>
             <View

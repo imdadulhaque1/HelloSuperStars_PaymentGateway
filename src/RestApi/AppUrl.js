@@ -1,17 +1,15 @@
 class AppUrl {
-
-  static BaseUrl = 'https://backendA.hellosuperstars.com/api/';
-  static MediaBaseUrl = 'https://backendA.hellosuperstars.com/';
-
+  static BaseUrl = 'https://backend.test.hellosuperstars.com/api/';
+  static MediaBaseUrl = 'https://backend.test.hellosuperstars.com/';
 
   // static SoketUrl = 'http://10.10.10.142:3005';
   // static SoketUrl = 'http://localhost:3005';
   static SoketUrl = 'https://socket.hellosuperstars.com';
 
   // static BaseUrl =
-  //   'http://192.168.0.104/HelloSuperStarsBackend-2/public/api/';
+  //   'http://192.168.0.105/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
   // static MediaBaseUrl =
-  //   'http://192.168.0.104/HelloSuperStarsBackend-2/public/';
+  //   'http://192.168.0.105/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
 
   // static demo instruction = 'http://your pc ip/project name on www-htdocs folder/public/';
   static virtualTour = this.BaseUrl + 'mobile/getVirtualTourVideo';
@@ -223,8 +221,15 @@ class AppUrl {
   /**
    * stripe mobile payment
    */
-  static stripeMobilePayment = this.BaseUrl + 'stripe-make-mobile-payment'; //amount
-  static stripeVideoReactPayment = this.BaseUrl + 'stripe-stripe-video-react'; //amount
+  static stripeMobilePayment = this.BaseUrl + 'stripe-make-mobile-payment';
+  static VideoFeedReactPayment = this.BaseUrl + 'buy-video-feed-react';
+
+  /**
+   *shurjo pay 
+   */
+  static shujroPayPaymentInitiata = this.BaseUrl + 'initiata-shurjo-payment';
+  static shujoPaymentStatus = this.BaseUrl + 'shurjo-payment-status/'; //oreder_id
+
 
   /**
    * get oxygen video

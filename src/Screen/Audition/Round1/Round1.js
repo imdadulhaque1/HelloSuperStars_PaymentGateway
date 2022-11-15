@@ -12,6 +12,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import HeaderComp from '../../../Components/HeaderComp';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import RoundTopBanner from './RoundTopBanner';
 
@@ -67,8 +68,9 @@ const Round1 = ({route}) => {
         <View
           style={{
             backgroundColor: '#272727',
-            marginVertical: 15,
+            marginVertical: 5,
             borderRadius: 5,
+            marginHorizontal:10
           }}>
           <TouchableOpacity
             style={styles.listParent}
@@ -84,17 +86,20 @@ const Round1 = ({route}) => {
               })
             }>
             <View style={styles.onLeft}>
-              <Image
+            <View style={{height:32,width:32,backgroundColor:'#2D2F33',borderRadius:100,justifyContent:'center',alignItems:'center'}}>
+<FontAwesome5 name='hand-sparkles' size={18} color='#ffaa00'/>
+            </View>
+              {/* <Image
                 style={styles.resizeImage}
                 source={imagePath.participation}
                 resizeMode="stretch"
-              />
+              /> */}
             </View>
             <View style={styles.middleOne}>
               <Text style={styles.participationText}>Participation</Text>
             </View>
             <View style={styles.onRight}>
-              <AntDesign name="caretright" color="#ff0" size={20} />
+              <AntDesign name="rightcircleo" color="gray" size={20} />
             </View>
           </TouchableOpacity>
 
@@ -113,17 +118,20 @@ const Round1 = ({route}) => {
               })
             }>
             <View style={styles.onLeft}>
-              <Image
+            <View style={{height:32,width:32,backgroundColor:'#2D2F33',borderRadius:100,justifyContent:'center',alignItems:'center'}}>
+<FontAwesome5 name='chalkboard-teacher' size={16} color='#ffaa00'/>
+            </View>
+              {/* <Image
                 style={styles.resizeImage}
                 source={imagePath.instruction}
                 resizeMode="stretch"
-              />
+              /> */}
             </View>
             <View style={styles.middleOne}>
               <Text style={styles.participationText}>Instruction</Text>
             </View>
             <View style={styles.onRight}>
-              <AntDesign name="caretright" color="#ff0" size={20} />
+              <AntDesign name="rightcircleo" color="gray" size={20} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -141,17 +149,20 @@ const Round1 = ({route}) => {
               })
             }>
             <View style={styles.onLeft}>
-              <Image
+            <View style={{height:32,width:32,backgroundColor:'#2D2F33',borderRadius:100,justifyContent:'center',alignItems:'center'}}>
+<FontAwesome5 name='person-booth' size={16} color='#ffaa00'/>
+            </View>
+              {/* <Image
                 style={styles.resizeImage}
                 source={imagePath.judges}
                 resizeMode="stretch"
-              />
+              /> */}
             </View>
             <View style={styles.middleOne}>
               <Text style={styles.participationText}>Judges</Text>
             </View>
             <View style={styles.onRight}>
-              <AntDesign name="caretright" color="#ff0" size={20} />
+              <AntDesign name="rightcircleo" color="gray" size={20} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -169,17 +180,20 @@ const Round1 = ({route}) => {
               })
             }>
             <View style={styles.onLeft}>
-              <Image
+            <View style={{height:32,width:32,backgroundColor:'#2D2F33',borderRadius:100,justifyContent:'center',alignItems:'center'}}>
+<FontAwesome5 name='landmark' size={16} color='#ffaa00'/>
+            </View>
+              {/* <Image
                 style={styles.resizeImage}
                 source={imagePath.markDistribution}
                 resizeMode="stretch"
-              />
+              /> */}
             </View>
             <View style={styles.middleOne}>
               <Text style={styles.participationText}>Mark Distribution</Text>
             </View>
             <View style={styles.onRight}>
-              <AntDesign name="caretright" color="#ff0" size={20} />
+              <AntDesign name="rightcircleo" color="gray" size={20} />
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -197,17 +211,20 @@ const Round1 = ({route}) => {
               })
             }>
             <View style={styles.onLeft}>
-              <Image
+            <View style={{height:32,width:32,backgroundColor:'#2D2F33',borderRadius:100,justifyContent:'center',alignItems:'center'}}>
+<FontAwesome5 name='newspaper' size={16} color='#ffaa00'/>
+            </View>
+              {/* <Image
                 style={styles.resizeImage}
                 source={imagePath.result}
                 resizeMode="stretch"
-              />
+              /> */}
             </View>
             <View style={styles.middleOne}>
               <Text style={styles.participationText}>Result</Text>
             </View>
             <View style={styles.onRight}>
-              <AntDesign name="caretright" color="#ff0" size={20} />
+              <AntDesign name="rightcircleo" color="gray" size={20} />
             </View>
           </TouchableOpacity>
         </View>
@@ -228,23 +245,26 @@ const styles = StyleSheet.create({
   },
   resizeImage: {
     // width: 50h
-    height: 40,
+    height: 30,
+    width:30
   },
   listParent: {
     flexDirection: 'row',
     margin: 10,
     backgroundColor: '#0b0b0b',
-    padding: 5,
+    padding: 3,
     borderRadius: 12,
   },
   onLeft: {
     flex: 1,
+    padding:3
   },
   participationText: {
-    color: '#ff0',
+    color: '#fff',
+    fontWeight:'bold'
   },
   middleOne: {
-    flex: 3,
+    flex: 6,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -253,6 +273,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
+    right:5
   },
   textColor: {
     color: '#ddd',

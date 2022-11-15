@@ -5,6 +5,9 @@ import Heading from '../../../Components/GLOBAL/Reuseable/Heading';
 import UnderlineImage from '../../../Components/GLOBAL/Reuseable/UnderlineImage';
 import imagePath from '../../../Constants/imagePath';
 import RoundTopBanner from '../../Audition/Round1/RoundTopBanner';
+import TitleHeader from '../../../Components/TitleHeader';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 const MarkDistribution = ({navigation, route}) => {
   const {
     userMarks,
@@ -25,13 +28,17 @@ const MarkDistribution = ({navigation, route}) => {
         auditionImage={auditionImage}
         remainingTime={remainingTime}
       />
-      <View style={{backgroundColor: '#343434', borderRadius: 10}}>
-        <Heading heading="Audition Mark Distribution" />
-        <UnderlineImage />
+      <TitleHeader title={'Audition Mark Distribution'} />
+      <View style={{backgroundColor: '#343434', borderRadius: 10,marginHorizontal:10,marginTop:10}}>
+        {/* <Heading heading="Audition Mark Distribution" />
+        <UnderlineImage /> */}
         <View style>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.userVote}>
-              <Image resizeMode="stretch" source={imagePath.UserVote} />
+            <Ionicons name='person' size={20} color='#ffaa00' />
+              {/* <Image resizeMode="stretch" source={imagePath.UserVote} />
+               */}
+           
             </View>
             <View style={styles.userVoteView}>
               <Text style={{color: '#fff', paddingLeft: 5}}>User Vote</Text>
@@ -42,7 +49,7 @@ const MarkDistribution = ({navigation, route}) => {
           </View>
           <View style={{flexDirection: 'row'}}>
             <View style={styles.userVote}>
-              <Image resizeMode="stretch" source={imagePath.JuryMark} />
+            <Fontisto name='persons' size={20} color='#ffaa00' />
             </View>
             <View style={styles.userVoteView}>
               <Text style={{color: '#fff', paddingLeft: 5}}>Jury Mark</Text>

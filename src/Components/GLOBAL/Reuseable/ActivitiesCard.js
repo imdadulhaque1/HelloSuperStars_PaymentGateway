@@ -1,19 +1,19 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
-import {FlatGrid} from 'react-native-super-grid';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { FlatGrid } from 'react-native-super-grid';
 
 // import AppUrl from '../../RestApi/AppUrl';
 import styles from './ActivitiesCardStyle';
-import {BackHandler} from 'react-native';
+import { BackHandler } from 'react-native';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import MenuNavigator from '../../../Screen/Menu/MenuNavigator';
 import PushNotification from 'react-native-push-notification';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/Entypo';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
@@ -22,19 +22,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import TitleHeader from '../../TitleHeader';
 
 const ActivitiesCard = ({
- 
+
   route
 }) => {
 
 
 
 
-const {childActivityEventList,childActivityEventType}=route.params;
+  const { childActivityEventList, childActivityEventType } = route.params;
 
 
   const [roomId, setRoomId] = useState();
   const navigation = useNavigation();
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
 
 
@@ -68,7 +68,7 @@ const {childActivityEventList,childActivityEventType}=route.params;
   }
 
   // const width = Dimensions.get('window').width;
-  const renderEventItem = ({item}) => {
+  const renderEventItem = ({ item }) => {
     console.log('itemsssssssssssss', item);
     let event = {};
     let eventRegistration = {};
@@ -181,7 +181,7 @@ const {childActivityEventList,childActivityEventType}=route.params;
         EventDateWithStartTime.getTime() - CurrentDateWithTime.getTime(),
       ) /
         (1000 * 60)) %
-        60,
+      60,
     );
 
     const handleJoinNow = () => {
@@ -249,7 +249,7 @@ const {childActivityEventList,childActivityEventType}=route.params;
 
     return (
       <>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={styles.Container}>
             {event?.banner == null && eventType == '' ? (
               <>
@@ -357,12 +357,12 @@ const {childActivityEventList,childActivityEventType}=route.params;
                 <>
                   {/* <Text style={{color: 'white'}}>I am date Box</Text> */}
                   {EventDateWithEndTime.getTime() <
-                  CurrentDateWithTime.getTime() ? (
+                    CurrentDateWithTime.getTime() ? (
                     <>{/* completed  */}</>
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                      CurrentDateWithTime.getTime() ? (
+                        CurrentDateWithTime.getTime() ? (
                         <>
                           <View style={styles.DateColor}>
                             <Text style={styles.textDay}>{days}</Text>
@@ -383,7 +383,7 @@ const {childActivityEventList,childActivityEventType}=route.params;
                         <>
                           {EventDateWithStartTime.getTime() <
                             CurrentDateWithTime.getTime() ||
-                          EventDateWithEndTime.getTime() >
+                            EventDateWithEndTime.getTime() >
                             CurrentDateWithTime.getTime() ? (
                             <>
                               {paymentStatus && (
@@ -432,10 +432,10 @@ const {childActivityEventList,childActivityEventType}=route.params;
                     <View style={styles.Join}>
                       {EventDateWithStartTime.getTime() <
                         CurrentDateWithTime.getTime() ||
-                      EventDateWithEndTime.getTime() >
+                        EventDateWithEndTime.getTime() >
                         CurrentDateWithTime.getTime() ? (
                         EventDateWithEndTime.getTime() <
-                        CurrentDateWithTime.getTime() ? (
+                          CurrentDateWithTime.getTime() ? (
                           <View style={styles.Join}>
                             <TouchableOpacity>
                               <Text style={styles.JoinText}>
@@ -489,10 +489,10 @@ const {childActivityEventList,childActivityEventType}=route.params;
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                      CurrentDateWithTime.getTime() ? (
+                        CurrentDateWithTime.getTime() ? (
                         <View style={styles.Join}>
                           {childActivityEventType == 'meetup' &&
-                          event?.meetup_type == 'Offline' ? (
+                            event?.meetup_type == 'Offline' ? (
                             <>
                               {paymentStatus ? (
                                 <TouchableOpacity
@@ -565,12 +565,12 @@ const {childActivityEventList,childActivityEventType}=route.params;
                     </>
                   )}
 
-             
+
                 </>
               )}
             </View>
 
-        
+
 
             <View style={styles.bannerTag}>
               <Image source={imagePath.BgTag} />
@@ -602,27 +602,27 @@ const {childActivityEventList,childActivityEventType}=route.params;
 
   return (
     <>
-<View style={{flex:1,backgroundColor:'#000'}}>
-<SafeAreaView>
-<HeaderComp backFunc={()=>navigation.goBack()} />
+      <View style={{ flex: 1, backgroundColor: '#000' }}>
+        <SafeAreaView>
+          <HeaderComp backFunc={() => navigation.goBack()} />
 
 
-      {/* <View style={styles.Header}>
+          {/* <View style={styles.Header}>
         <Image source={imagePath.BgLane} style={styles.HeaderImg} />
         <Text style={styles.HeaderText}>{title}</Text>
       </View> */}
 
-      <TitleHeader title={title} />
+          <TitleHeader title={title} />
 
-      <FlatGrid
-        itemDimension={150}
-        data={childActivityEventList}
-        renderItem={renderEventItem}
+          <FlatGrid
+            itemDimension={150}
+            data={childActivityEventList}
+            renderItem={renderEventItem}
 
-      />
-      </SafeAreaView>
-</View>
- 
+          />
+        </SafeAreaView>
+      </View>
+
     </>
   );
 };

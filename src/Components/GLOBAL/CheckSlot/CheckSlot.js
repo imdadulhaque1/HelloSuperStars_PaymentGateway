@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AlertModal from '../../MODAL/AlertModal';
+import TitleHeader from '../../TitleHeader';
 import styles from './styles';
 
 const CheckSlot = ({ data, charge = 0, setBuffer, setTakeTimeParent, setIsShowRegComp, setFeeCount, setStartTime, setEndTime, apiInPoint }) => {
@@ -124,22 +126,22 @@ const CheckSlot = ({ data, charge = 0, setBuffer, setTakeTimeParent, setIsShowRe
 
     return (
         <>
+        <TitleHeader title={'Slot Checking'} />
             <AlertModal modalObj={modalObj} modal={modal} setModal={setModal} buttoPress={applyNow} />
             <View style={styles.topCard}>
-                <Text style={styles.fonts}>Slot checking</Text>
-                <View style={styles.lineImgView} >
-                    <Image style={styles.lineImg} source={imagePath.lineMeetup} />
-                </View>
-                <View>
+             
+            
+                <View style={{margin:10}}>
                     <Text style={{
                         color: 'white',
                         marginBottom: 5,
-                        paddingHorizontal: 10
+                    fontWeight:'bold'
+                     
                     }}>
                         Time Period
                     </Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, paddingHorizontal: 10 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, paddingHorizontal: 10,margin:10 }}>
                     <View>
                         <Text style={styles.formText}>
                             Min: {Number(data.min_time) != null ? Number(data.min_time) : 0} Minute(s) | Max: {Number(data.max_time) != null ? Number(data.max_time) : 0} Minute(s)
@@ -165,12 +167,23 @@ const CheckSlot = ({ data, charge = 0, setBuffer, setTakeTimeParent, setIsShowRe
                     </View>
                 </View>
                 <View style={styles.textInputView}>
-                    <TouchableOpacity
+
+                <TouchableOpacity onPress={handelCheckSlot}>
+                <LinearGradient
+                  style={styles.login_btn}
+                  colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
+                  <Text style={{ color: 'black' }}>Check Slot</Text>
+                </LinearGradient>
+                {/* <Text style={styles.input_title}>LOGIN</Text> */}
+              </TouchableOpacity>
+
+
+                    {/* <TouchableOpacity
                         style={styles.textInputView3}
                         onPress={handelCheckSlot}
                     >
                         <Text style={styles.textInputPass} >Check Slot</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         </>

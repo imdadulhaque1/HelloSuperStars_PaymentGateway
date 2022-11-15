@@ -17,6 +17,7 @@ import axios from 'axios';
 import {AuthContext} from '../../../Constants/context';
 import LinearGradient from 'react-native-linear-gradient';
 import AppUrl from '../../../RestApi/AppUrl';
+import TitleHeader from '../../../Components/TitleHeader';
 const EducationInfo = ({navigation}) => {
   const [degree, setDegree] = useState('');
   const [institute, setInstitute] = useState('');
@@ -61,10 +62,10 @@ const EducationInfo = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <View style={{margin: 10}}>
-          <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
-            EDUCATIONAL INFORMATION
-          </Text>
+        <TitleHeader title={'Educational information'} />
+        <View style={{ marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
+   
+         
           <TouchableOpacity style={{marginVertical: 5}}>
             <View
               style={{

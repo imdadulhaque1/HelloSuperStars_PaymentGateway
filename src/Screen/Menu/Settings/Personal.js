@@ -15,6 +15,7 @@ import {Controller, useForm} from 'react-hook-form';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {TextInput} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
+import TitleHeader from '../../../Components/TitleHeader';
 function CustomHeader(props) {
   return (
     <View style={{backgroundColor: '#343434', paddingVertical: 10}}>
@@ -49,7 +50,8 @@ const Personal = ({navigation}) => {
         <CustomHeader onPress={handleBack} />
 
         <View style={{margin: 10}}>
-          <View>
+        <TitleHeader title={'Personal Information'} />
+          {/* <View>
             <Text
               style={{
                 color: '#ffaa00',
@@ -59,7 +61,7 @@ const Personal = ({navigation}) => {
               }}>
               Personal Information
             </Text>
-          </View>
+          </View> */}
 
           <View
             style={{

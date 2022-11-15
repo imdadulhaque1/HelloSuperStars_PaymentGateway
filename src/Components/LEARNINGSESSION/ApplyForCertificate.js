@@ -1,6 +1,6 @@
 //import liraries
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,16 +15,16 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {AuthContext} from '../../Constants/context';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import AppUrl from '../../RestApi/AppUrl';
 import HeaderComp from '../HeaderComp';
 import BidCongratulationModal from '../MODAL/BidCongratulationModal';
 import RegisPaymentModal from '../MODAL/RegisPaymentModal';
 
-const ApplyForCertificate = ({route}) => {
+const ApplyForCertificate = ({ route }) => {
   // const {slug} = route.params;
-  const {slug} = route.params;
+  const { slug } = route.params;
   const [showModal, setShowModal] = useState(false);
   const [isShowPaymentComp, setIsShowPaymentComp] = React.useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
@@ -33,15 +33,17 @@ const ApplyForCertificate = ({route}) => {
   const [password, setPassword] = useState('');
   const [certificateUrl, setCertificateUrl] = useState('');
   const [data, setData] = useState({});
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
 
   const handleDone = () => {
+
     if (name != null || fatherName != null) {
       setData({
         name: name,
         fatherName: fatherName,
       });
-      setIsShowPaymentComp(true);
+      setPaymentComplete(true)
+      // setIsShowPaymentComp(true);
     }
   };
   useEffect(() => {
@@ -76,7 +78,7 @@ const ApplyForCertificate = ({route}) => {
               </View> */}
 
               <View style={styles.LearningApply}>
-                <View style={{marginVertical: 10}}>
+                <View style={{ marginVertical: 10 }}>
                   <TextInput
                     placeholder="Enter your name..."
                     placeholderTextColor={'white'}
@@ -90,7 +92,7 @@ const ApplyForCertificate = ({route}) => {
                     onChangeText={newText => setName(newText)}
                   />
                 </View>
-                <View style={{marginVertical: 10}}>
+                <View style={{ marginVertical: 10 }}>
                   <TextInput
                     placeholder=" Father name..."
                     placeholderTextColor={'white'}
@@ -162,6 +164,7 @@ const ApplyForCertificate = ({route}) => {
         isShowPaymentComp={isShowPaymentComp}
         setIsShowPaymentComp={setIsShowPaymentComp}
         setPaymentComplete={setPaymentComplete}
+        job="learningSessionCertificate"
       />
 
       {/* <BidCongratulationModal
@@ -193,9 +196,9 @@ const styles = StyleSheet.create({
   lineImg: {
     marginVertical: 3,
   },
-  bannerRow: {alignItems: 'center', position: 'relative', paddingBottom: 15},
-  imgRow: {marginVertical: 2, width: '90%'},
-  imgRow2: {marginVertical: 2, position: 'absolute', top: '45%', left: '50%'},
+  bannerRow: { alignItems: 'center', position: 'relative', paddingBottom: 15 },
+  imgRow: { marginVertical: 2, width: '90%' },
+  imgRow2: { marginVertical: 2, position: 'absolute', top: '45%', left: '50%' },
   infoView: {
     flexDirection: 'row',
     justifyContent: 'center',

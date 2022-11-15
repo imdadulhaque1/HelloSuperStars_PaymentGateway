@@ -1,6 +1,6 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 import Menu from '../../Screen/Menu/Menu';
 
 import LearningSessionNav from '../../Components/LEARNINGSESSION/LearningSessionNav/LearningSessionNav';
@@ -40,12 +40,18 @@ import Employment from '../../Screen/Menu/Settings/Employment';
 import InterestInfo from '../../Screen/Menu/Settings/InterestInfo';
 import SecurityInfo from '../../Screen/Menu/Settings/SecurityInfo';
 import ReportInfo from '../../Screen/Menu/Settings/ReportInfo';
+import ShujoyPay from '../../Screen/TakePayment/ShujoyPay';
 
 const MenuStack = createNativeStackNavigator();
 const MenuStackScreen = () => {
   return (
-    <MenuStack.Navigator screenOptions={{headerShown: false}}>
+    <MenuStack.Navigator screenOptions={{ headerShown: false }}>
+
+
+
+
       <MenuStack.Screen name={navigationStrings.MENU} component={Menu} />
+
       <MenuStack.Screen
         name={navigationStrings.USERPROFILE}
         component={UserProfile}

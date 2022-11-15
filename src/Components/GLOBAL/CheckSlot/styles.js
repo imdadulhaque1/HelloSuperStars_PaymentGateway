@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
   },
   formText: {
     color: 'white',
-    marginBottom: 5,
+    marginBottom: 15,
     // width:'50%'
   },
   formText2: {
     color: 'white',
-    marginBottom: 5,
+    marginBottom: 15,
   },
   textInputStyleTime: {
     width: 160,
@@ -58,6 +58,19 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     fontWeight: 'bold',
     paddingVertical: 5,
+  },
+  login_btn: {
+    // backgroundColor: '#D4AF37',
+    borderWidth: 1,
+    // borderColor: '#D4AF37',
+    borderRadius: 50,
+    paddingHorizontal: 55,
+    paddingVertical: 10,
+    borderRadius: 50,
+    alignItems: 'center',
+  
+
+    color: 'black',
   },
 });
 

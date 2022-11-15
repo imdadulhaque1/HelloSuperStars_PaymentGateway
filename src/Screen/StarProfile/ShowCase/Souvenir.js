@@ -1,34 +1,34 @@
-import { Picker } from '@react-native-picker/picker';
-import { useNavigation } from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import React, {useContext, useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
+import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import VideoPlayer from 'react-native-video-player';
-import noImage from '../../../Assets/Images/no-image1.png';
+import noImage from '../../../Assets/Images/no-image.png';
 import AlertModal from '../../../Components/MODAL/AlertModal';
 import RenderHtmlComp from '../../../Components/GLOBAL/Reuseable/RenderHtmlComp';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp/LoaderComp';
 import styles from './styles';
 import Entypo from 'react-native-vector-icons/Entypo';
 
-const Souvenir = ({ star }) => {
+const Souvenir = ({star}) => {
   const navigation = useNavigation();
   const [formImage, setFormImage] = useState({});
   const [document, setDocument] = useState(null);
   const [souvinerInfo, setSouvinerInfo] = useState(null);
-  const { socketData, axiosConfig } = useContext(AuthContext);
+  const {socketData, axiosConfig} = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
   const [modalStartFrom, setModalStartFrom] = useState('Default');
   const [buffer, setBuffer] = useState(false);
@@ -218,7 +218,7 @@ const Souvenir = ({ star }) => {
             <RenderHtmlComp description={souvinerInfo?.description} />
             {souvinerInfo?.video !== null ? (
               <VideoPlayer
-                video={{ uri: `${AppUrl.MediaBaseUrl + souvinerInfo?.video}` }}
+                video={{uri: `${AppUrl.MediaBaseUrl + souvinerInfo?.video}`}}
                 videoWidth={120}
                 videoHeight={80}
                 thumbnail={imagePath.greetingStar}
@@ -243,10 +243,10 @@ const Souvenir = ({ star }) => {
             <Text style={styles.InstructionV}>Apply</Text>
           </View>
 
-          <View style={{ margin: 8 }}>
+          <View style={{margin: 8}}>
             <View style={styles.MaiNAppL}>
               <View style={styles.WinnerES}>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text
                     style={styles.ApplyR}
                     onPress={() => {
@@ -259,7 +259,7 @@ const Souvenir = ({ star }) => {
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
@@ -289,19 +289,19 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.country_id && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>State</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
@@ -331,19 +331,19 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.state_id && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>City</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <Picker
                         dropdownIconColor="white"
                         mode="dialog"
@@ -372,19 +372,19 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.city_id && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Name</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <TextInput
                         onBlur={onBlur}
                         onChangeText={onChange}
@@ -399,12 +399,12 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.name && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Mail</Text>
                   <Controller
                     control={control}
@@ -416,7 +416,7 @@ const Souvenir = ({ star }) => {
                         message: 'Please enter a valid email',
                       },
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <TextInput
                         onBlur={onBlur}
                         onChangeText={onChange}
@@ -431,14 +431,14 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.email && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       {errors.email?.type === 'pattern'
                         ? 'Provide valid email'
                         : 'This field is required !'}
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Phone</Text>
                   <Controller
                     control={control}
@@ -450,7 +450,7 @@ const Souvenir = ({ star }) => {
                         message: 'Please enter a valid phone number',
                       },
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <TextInput
                         onBlur={onBlur}
                         onChangeText={onChange}
@@ -466,21 +466,21 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.mobile_no && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       {errors.mobile_no?.type === 'pattern'
                         ? 'Provide valid phone number'
                         : 'This field is required !'}
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Address</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <TextInput
                         onBlur={onBlur}
                         onChangeText={onChange}
@@ -495,19 +495,19 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.area && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
                 </View>
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Short Description</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <TextInput
                         onBlur={onBlur}
                         onChangeText={onChange}
@@ -523,7 +523,7 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.description && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -544,7 +544,7 @@ const Souvenir = ({ star }) => {
                         height: 100,
                         width: 100,
                       }}
-                      source={{ uri: document }}
+                      source={{uri: document}}
                     />
                   ) : (
                     <Image
@@ -617,14 +617,14 @@ const Souvenir = ({ star }) => {
                   </View>
                 </View>
 
-                <View style={{ marginTop: 10, marginBottom: 10 }}>
+                <View style={{marginTop: 10, marginBottom: 10}}>
                   <Text style={styles.ApplyR}>Password</Text>
                   <Controller
                     control={control}
                     rules={{
                       required: true,
                     }}
-                    render={({ field: { onChange, onBlur, value } }) => (
+                    render={({field: {onChange, onBlur, value}}) => (
                       <>
                         <TextInput
                           // onBlur={onBlur}
@@ -669,7 +669,7 @@ const Souvenir = ({ star }) => {
                   />
                   {errors.password && (
                     <Text
-                      style={{ color: 'red', marginLeft: 27, marginBottom: -15 }}>
+                      style={{color: 'red', marginLeft: 27, marginBottom: -15}}>
                       This field is required !
                     </Text>
                   )}
@@ -680,8 +680,8 @@ const Souvenir = ({ star }) => {
           <View style={styles.ApplyBg}>
             <TouchableOpacity onPress={handleSubmit(onSubmit)}>
               <LinearGradient
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
+                start={{x: 0, y: 0}}
+                end={{x: 1, y: 0}}
                 colors={[
                   '#FFAD00',
                   '#FFD273',
@@ -697,16 +697,16 @@ const Souvenir = ({ star }) => {
           </View>
         </>
       ) : (
-        <View style={{ height: 200, justifyContent: 'center' }}>
+        <View style={{height: 200, justifyContent: 'center'}}>
           <View>
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <Image
                 source={imagePath.lazyDog}
-                style={{ height: 100, width: 100 }}
+                style={{height: 100, width: 100}}
               />
             </View>
 
-            <Text style={{ color: 'white', textAlign: 'center' }}>
+            <Text style={{color: 'white', textAlign: 'center'}}>
               Sorry No Data Available !
             </Text>
           </View>

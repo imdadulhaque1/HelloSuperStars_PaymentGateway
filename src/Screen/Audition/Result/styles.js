@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   topCard: {
     backgroundColor: '#282828',
-
+marginHorizontal:10,
     borderRadius: 5,
   },
   fonts: {

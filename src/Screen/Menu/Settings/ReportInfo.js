@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker'
 import { Picker } from '@react-native-picker/picker';
 import LinearGradient from 'react-native-linear-gradient';
+import TitleHeader from '../../../Components/TitleHeader';
 const SecurityInfo = ({ navigation }) => {
  
     const [selectedLanguage, setSelectedLanguage] = useState();
@@ -14,8 +15,9 @@ const SecurityInfo = ({ navigation }) => {
         <View style={{ flex: 1, backgroundColor: 'black' }}>
             <SafeAreaView>
                 <HeaderComp backFunc={() => navigation.goBack()} />
-                <View style={{ margin: 10 }}>
-                    <Text style={{ fontSize: 18, color: 'white', textAlign: 'center' }}>SECURITY INFORMATION</Text>
+                <TitleHeader title={'Security information'} />
+                <View style={{marginHorizontal:10,backgroundColor: '#202020',borderRadius:10 }}>
+                    {/* <Text style={{ fontSize: 18, color: 'white', textAlign: 'center' }}>SECURITY INFORMATION</Text> */}
                     <TouchableOpacity style={{ marginVertical: 5 }}>
                         <View style={{ marginHorizontal: 20, borderWidth: 0.8, marginTop: 15, paddingHorizontal: 10, borderColor: '#ffaa00', borderRadius: 23, paddingVertical: 2, height: 50, justifyContent: 'center' }}>
                             <Picker

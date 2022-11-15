@@ -30,9 +30,10 @@ const FanBaseModal2 = props => {
 
       HandelSubmit()
       HandelGetData()
-      setJoinStatus(true)
+      fanGroup.join_approval_status != 0 ? setJoinStatus(true) : null
+      // 
     } else {
-      navigation.navigate(navigationStrings.MENUSTACK, { screen: navigationStrings.WALLET })
+      navigation.navigate(navigationStrings.MENUSTACKSCREENV2, { screen: navigationStrings.WALLET })
     }
     props.closeModal();
   }

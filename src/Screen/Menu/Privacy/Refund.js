@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   useWindowDimensions,
+  Dimensions,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -13,6 +14,7 @@ import {AuthContext} from '../../../Constants/context';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import RenderHTML from 'react-native-render-html';
+import TitleHeader from '../../../Components/TitleHeader';
 
 function CustomHeader(props) {
   return (
@@ -38,6 +40,7 @@ const Refund = ({navigation}) => {
   const [details, setDetails] = useState('');
   const [source, setSource] = useState('');
   const {width} = useWindowDimensions();
+  const windowHeight = Dimensions.get('window').height;
   useEffect(() => {
     axios.get(AppUrl.refund, axiosConfig).then(res => {
       setTitle(res.data?.data.title);
@@ -56,7 +59,9 @@ const Refund = ({navigation}) => {
         <CustomHeader onPress={handleBack} />
 
         <View style={{margin: 10}}>
-          <View>
+
+        <TitleHeader title={title} />
+          {/* <View>
             <Text
               style={{
                 color: '#ffaa00',
@@ -66,7 +71,7 @@ const Refund = ({navigation}) => {
               }}>
               {title}
             </Text>
-          </View>
+          </View> */}
 
           <View
             style={{
@@ -74,7 +79,7 @@ const Refund = ({navigation}) => {
               margin: 10,
               padding: 10,
               borderRadius: 10,
-              height: '87%',
+              height: windowHeight-200,
               overflow: 'scroll',
             }}>
             <ScrollView>

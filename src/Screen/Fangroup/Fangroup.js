@@ -218,6 +218,8 @@ const Fangroup = ({ route }) => {
   }
 
 
+  console.log('join status--->', fangroup.join_approval_status)
+
 
   return (
     <>
@@ -267,7 +269,7 @@ const Fangroup = ({ route }) => {
           ) : (
             <View style={styles.row3}>
               <TouchableOpacity
-                onPress={() => resData.myJoinStaus ? null : HandelJoin()}
+                onPress={() => resData.myJoinData ? null : HandelJoin()}
                 style={{
                   backgroundColor: '#ffaa00',
                   flexDirection: 'row',
@@ -275,7 +277,7 @@ const Fangroup = ({ route }) => {
                   justifyContent: 'center',
                 }}>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={styles.joinNowText}>{resData.myJoinStaus ? resData.myJoinData?.star_name : "Join Now!"} </Text>
+                  <Text style={styles.joinNowText}>{resData.myJoinData ? resData.myJoinData?.star_name : "Join Now!"} </Text>
                 </View>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -401,6 +403,7 @@ const Fangroup = ({ route }) => {
           {fanState === 'Members' || fanState === 'Analytics' ? null : (
             <>
               {(resData.myJoinStaus || joinStatus) &&
+
                 <View style={[styles.row1, styles.postRow]}>
                   <View style={styles.subRow}>
                     <Text style={[styles.routeTxt, styles.postTitle]}>
@@ -484,6 +487,7 @@ const Fangroup = ({ route }) => {
                     </TouchableOpacity>
                   </View>
                 </View>
+
               }
             </>
 
@@ -498,7 +502,10 @@ const Fangroup = ({ route }) => {
                       <>
                         {resData.fanPost && resData.fanPost.map((item, index) =>
 
+
                           <FangroupCard data={item} key={index} />
+
+
                         )}
                       </>
                     ) : null}

@@ -71,6 +71,7 @@ const RegisPaymentModal = ({
     order_id: '',
     mid: '',
     amount: '',
+    mode: ''
   });
 
   const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(
@@ -116,10 +117,13 @@ const RegisPaymentModal = ({
       mid: resData?.mid,
       amount: resData?.amount,
       callBackUrl: resData?.callBackUrl,
+      mode: resData?.takePaymentMode
     });
+
+    console.log('payment status', resData?.takePaymentMode)
     console.log(
       'paytm token',
-      resData?.Token_data?.body?.txnToken + ' fee  :' + fee,
+      resData?.Token_data?.body?.txnToken + ' fee  :' + fee + "  payment mode" + resData?.takePaymentMode,
     );
   }, [resData]);
 
@@ -464,6 +468,7 @@ const RegisPaymentModal = ({
         paytmDat.token,
         paytmDat.amount,
         paytmDat.callBackUrl + paytmDat.order_id,
+        // paytmDat.mode,
         false,
         false,
         '',
@@ -472,7 +477,7 @@ const RegisPaymentModal = ({
           console.log('result back', result);
           if (result.STATUS == 'TXN_SUCCESS') {
             Toast.show('Payment successful', Toast.durations.SHORT);
-            paytmSuccess({
+            paytmScucess({
               ...result,
               modelName,
               eventId,
@@ -500,7 +505,7 @@ const RegisPaymentModal = ({
           // }
         })
         .catch(err => {
-          console.log('error message', err);
+          console.log('error message', err.message);
           Toast.show('Payment failed', Toast.durations.SHORT);
         });
     } else {
@@ -511,7 +516,7 @@ const RegisPaymentModal = ({
   /**
    *paytm payment success to backend
    */
-  const paytmSuccess = data => {
+  const paytmScucess = data => {
     console.log('payment data success');
     axios
       .post(AppUrl.paytmPaymentSuccess, data, axiosConfig)
@@ -600,7 +605,7 @@ const RegisPaymentModal = ({
     }
   };
 
-  const videoFeedReactBuyStripe = () => {
+  const handelVideoFeedReactBuy = () => {
     let data = {
       videoId: modalPara !== null ? modalPara[0] : 0,
       reactNum: modalPara !== null ? modalPara[1] : 0,
@@ -608,7 +613,7 @@ const RegisPaymentModal = ({
       amount: fee,
     };
     axios
-      .post(AppUrl.stripeVideoReactPayment, data, axiosConfig)
+      .post(AppUrl.VideoFeedReactPayment, data, axiosConfig)
       .then(res => {
         setLiked(1);
         setPaymentComplete(true);
@@ -619,11 +624,12 @@ const RegisPaymentModal = ({
         console.log(err);
       });
   };
+
   useEffect(() => {
     if (eventType == 'videoFeed') {
       if (stripePaymentStatus) {
         setIsShowPaymentComp(false);
-        videoFeedReactBuyStripe();
+        handelVideoFeedReactBuy();
       } else if (eventType == 'greeting') {
         setIsShowPaymentComp(false);
       }
@@ -639,12 +645,47 @@ const RegisPaymentModal = ({
       Toast.show('Try agin', Toast.durations.SHORT);
     }
   };
+
   const modalButtonPress = () => {
     if (eventType == 'greeting') {
       return Navigation.navigate(navigationStrings.NOTIFICATION);
     }
   };
 
+  const [shujoBuffer, setShujoBuffer] = useState(true)
+
+  //shurjo pay click
+  const shurjoPayMakePayment = () => {
+    setShujoBuffer(false)
+    let info = {
+      amount: fee,
+      event_type: modelName,
+      event_id: eventId,
+      reactNum: modalPara !== null ? modalPara[1] : 0,
+    }
+    axios.post(AppUrl.shujroPayPaymentInitiata, info, axiosConfig).then(res => {
+      // console.log('cjeck out url', res.data.checkout_url)
+      Navigation.navigate(navigationStrings.SHURJOPAY, {
+        checkOutUrl: res?.data?.checkout_url
+      })
+      setShujoBuffer(true)
+    })
+      .catch(err => {
+        setShujoBuffer(true)
+        console.log(err);
+      });
+
+
+
+
+  }
+
+  const shurjoPayClick = () => {
+
+    job != 'pay-again' ? eventReg() : null;
+    shurjoPayMakePayment();
+
+  }
   return (
     <>
       <AlertModal
@@ -695,9 +736,7 @@ const RegisPaymentModal = ({
                 }}>
                 {/* surjo pay */}
                 <TouchableOpacity
-                  onPress={() =>
-                    Toast.show('Under Development', Toast.durations.SHORT)
-                  }>
+                  onPress={() => shujoBuffer ? shurjoPayClick() : null}>
                   <Image source={imagePath.Surjo} style={styles.payment_icon} />
                 </TouchableOpacity>
                 {/* paytm */}

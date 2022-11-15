@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Image, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
+import { Image, Text, TouchableOpacity, View, useWindowDimensions, Share } from 'react-native';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -69,6 +69,29 @@ const FangroupCard = ({ data }) => {
   }
 
 
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'app Link',
+        message: `https://www.hellosuperstars.com/ `,
+        url: `https://www.hellosuperstars.com`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+
   return (
     <View>
       <View style={styles.CardRow}>
@@ -119,12 +142,12 @@ const FangroupCard = ({ data }) => {
               </Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
-              <View>
+              {/* <View>
                 <Text style={styles.infoText}>16 Comments</Text>
               </View>
               <View>
                 <Text style={styles.infoText}>106 Share</Text>
-              </View>
+              </View> */}
             </View>
           </View>
           <View
@@ -162,13 +185,13 @@ const FangroupCard = ({ data }) => {
                 </Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.likeBtn}>
+            {/* <TouchableOpacity style={styles.likeBtn}>
               <Text style={styles.btnText}>
                 <FontAwesome5 name={'comment'} />
                 Comment
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.likeBtn}>
+            </TouchableOpacity> */}
+            <TouchableOpacity style={styles.likeBtn} onPress={() => onShare()}>
               <Text style={styles.btnText}>
                 {' '}
                 <FontAwesome5 name={'share'} />

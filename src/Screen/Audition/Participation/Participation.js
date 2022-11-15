@@ -27,6 +27,7 @@ import {AuthContext} from '../../../Constants/context';
 import navigationStrings from '../../../Constants/navigationStrings';
 import {FlatGrid} from 'react-native-super-grid';
 import Toast from 'react-native-root-toast';
+import TitleHeader from '../../../Components/TitleHeader';
 const Participation = ({route}) => {
   const {
     title,
@@ -289,31 +290,17 @@ const Participation = ({route}) => {
           auditionImage={auditionImage}
           remainingTime={remainTime}
         />
-
+<TitleHeader title={' Video Uploaded Details'} />
         <View
           style={{
             backgroundColor: '#272727',
             borderRadius: 10,
-            marginTop: 10,
+          marginTop:3,
             position: 'relative',
+            marginHorizontal:10
           }}>
-          <View>
-            <Text
-              onPress={() => {
-                console.log('-----------------');
-                console.log(markTracking);
-                console.log('Old Videos', videoList);
-                console.log('appeal video', appealVideoList);
-                console.log(appealMarkTracking);
-                console.log(isAppealedForThisRound);
-                console.log('------------------');
-              }}
-              style={[
-                styles.textColor,
-                {textAlign: 'center', paddingVertical: 10, fontSize: 18},
-              ]}>
-              Video Uploaded Details
-            </Text>
+          <View style={{marginHorizontal:10}}>
+       
           </View>
           <View style={{borderWidth: 0.5, borderBottomColor: 'black'}} />
           <View style={styles.uploadStyle}>
@@ -366,6 +353,7 @@ const Participation = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginVertical: 14,
+                  marginHorizontal:10
                 }}>
                 <View
                   style={{
@@ -401,6 +389,7 @@ const Participation = ({route}) => {
                 backgroundColor: '#272727',
                 marginVertical: 10,
                 borderRadius: 10,
+                marginHorizontal:10
               }}>
               <View style={{flex: 1, flexDirection: 'row'}}>
                 {roundInformation.round_type === 0 &&
@@ -491,7 +480,7 @@ const Participation = ({route}) => {
                 </View>
               ) : roundInformation.round_instruction !== null ? (
                 <View>
-                  <Text
+                  {/* <Text
                     style={{
                       color: 'green',
                       textAlign: 'center',
@@ -500,7 +489,7 @@ const Participation = ({route}) => {
                       fontWeight: 'bold',
                     }}>
                     Please Upload video for Participation
-                  </Text>
+                  </Text> */}
                 </View>
               ) : (
                 videoList.length === 0 &&
@@ -662,6 +651,7 @@ const styles = StyleSheet.create({
   },
   textColor: {
     color: '#E6E6E6',
+    
   },
   browse: {
     height: 100,

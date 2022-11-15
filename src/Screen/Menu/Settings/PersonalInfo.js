@@ -18,6 +18,7 @@ import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import {AuthContext} from '../../../Constants/context';
 import moment from 'moment';
+import TitleHeader from '../../../Components/TitleHeader';
 const PersonalInfo = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -70,11 +71,11 @@ const PersonalInfo = ({navigation}) => {
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <View style={{margin: 10}}>
-          <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
-            PERSONAL INFORMATION
-          </Text>
-
+    
+        <TitleHeader title={'Personal Information'} />
+        <View style={{backgroundColor: '#202020',marginHorizontal:10, borderRadius:10}}>
+        
+       
           <View style={{marginVertical: 5}}>
             <View
               style={{

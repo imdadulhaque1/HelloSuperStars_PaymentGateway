@@ -25,7 +25,7 @@ const MenuActivities = ({
 
 
   const [greetingActivities, setGreetingActivities] = useState(0);
-  const filteredActivities = menuActivitList.greeting_activities.filter(
+  const filteredActivities = menuActivitList?.greeting_activities?.filter(
     item => {
       return item.type === 'greeting'
         ? item?.greeting_registration?.status > 2
@@ -267,8 +267,8 @@ const MenuActivities = ({
 
 
 
-                  
-               
+
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>Question & Answer</Text>
                     <Text style={styles.contentText2}>
@@ -302,9 +302,9 @@ const MenuActivities = ({
           {/* Greetings  */}
           <TouchableOpacity
             onPress={() => {
- navigation.navigate(navigationStrings.GREETINGS, {
-            activeGreetings: menuActivitList?.greeting_activities,
-          });
+              navigation.navigate(navigationStrings.GREETINGS, {
+                activeGreetings: menuActivitList?.greeting_activities,
+              });
             }}>
             <View style={styles.Touch}>
               <View style={styles.content}>
@@ -331,18 +331,18 @@ const MenuActivities = ({
                     </View>
 
                   </View>
-                
 
 
 
 
 
-                  
-
-               
 
 
-                 
+
+
+
+
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>Greetings</Text>
                     <Text style={styles.contentText2}>
@@ -396,7 +396,7 @@ const MenuActivities = ({
 
 
 
-             
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>Auditions</Text>
                     <Text style={styles.contentText2}>
@@ -430,9 +430,9 @@ const MenuActivities = ({
             <View style={styles.Touch}>
               <View style={styles.content}>
                 <View style={styles.ContentItems}>
-               
 
-                <View style={{ position: 'relative' }}>
+
+                  <View style={{ position: 'relative' }}>
                     <LinearGradient
                       colors={
 
@@ -454,7 +454,7 @@ const MenuActivities = ({
 
 
 
-             
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>MarketPlace</Text>
                     <Text style={styles.contentText2}>
@@ -484,7 +484,7 @@ const MenuActivities = ({
           </TouchableOpacity>
           {/* Auction  */}
 
-{/* 
+          {/* 
           setChildActivityEventList(menuActivitList?.auction_activities);
           setChildActivityEventType('auction'); */}
 
@@ -493,14 +493,14 @@ const MenuActivities = ({
           <TouchableOpacity
             onPress={() => {
               navigation.navigate(navigationStrings.ACTIVITESCARD, {
-                childActivityEventList:menuActivitList?.auction_activities,
+                childActivityEventList: menuActivitList?.auction_activities,
                 childActivityEventType: 'auction'
               })
             }}>
             <View style={styles.Touch}>
               <View style={styles.content}>
                 <View style={styles.ContentItems}>
-                <View style={{ position: 'relative' }}>
+                  <View style={{ position: 'relative' }}>
                     <LinearGradient
                       colors={
 
@@ -521,7 +521,7 @@ const MenuActivities = ({
 
 
 
-                
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>Auction</Text>
                     <Text style={styles.contentText2}>
@@ -560,15 +560,15 @@ const MenuActivities = ({
             <View style={styles.Touch}>
               <View style={styles.content}>
                 <View style={styles.ContentItems}>
-                 
-                <View style={{ position: 'relative' }}>
+
+                  <View style={{ position: 'relative' }}>
                     <LinearGradient
                       colors={
 
                         ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
                       }
                       style={styles.iconView2}>
-                       <FontAwesome name='gift' size={23} color='#000' />
+                      <FontAwesome name='gift' size={23} color='#000' />
                     </LinearGradient>
 
 
@@ -579,9 +579,9 @@ const MenuActivities = ({
 
                   </View>
 
-                 
 
-              
+
+
                   <View style={styles.ContentItems2}>
                     <Text style={styles.contentText}>Souvenir</Text>
                     <Text style={styles.contentText2}>
@@ -613,23 +613,23 @@ const MenuActivities = ({
           {/* live now  */}
           <TouchableOpacity
             onPress={() => {
-             Alert.alert('No Activites Available')
+              Alert.alert('No Activites Available')
             }}>
             <View style={styles.Touch}>
               <View style={styles.content}>
                 <View style={styles.ContentItems}>
-                
 
 
 
-                <View style={{ position: 'relative' }}>
+
+                  <View style={{ position: 'relative' }}>
                     <LinearGradient
                       colors={
 
                         ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
                       }
                       style={styles.iconView2}>
-                       <MaterialCommunityIcons name='video' size={23} color='#000' />
+                      <MaterialCommunityIcons name='video' size={23} color='#000' />
                     </LinearGradient>
 
 
@@ -642,7 +642,7 @@ const MenuActivities = ({
 
 
 
-           
+
 
 
                   {/* <Text style={styles.NotifyText}>15</Text> */}

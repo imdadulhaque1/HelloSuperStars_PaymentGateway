@@ -1,14 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import MainStack from './MainStack';
 
 import AuthStack from './AuthStack';
 
 import io from 'socket.io-client';
-import {AuthContext} from '../Constants/context';
+import { AuthContext } from '../Constants/context';
 import AppUrl from '../RestApi/AppUrl';
 import Loader from '../Screen/Auth/Loader';
 import axios from 'axios';
@@ -30,6 +30,7 @@ const Routes = () => {
   const [activities, setActivities] = useState([]);
 
   const [totalNotification, setTotalNotification] = useState();
+  const [shurjoPayment, setShurjoPayment] = useState(false);
   //socket connection
   useEffect(() => {
     //socket connection
@@ -71,7 +72,7 @@ const Routes = () => {
         setUserInfo(data);
         setLoginStatus(data);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   let axiosConfig = {
@@ -125,7 +126,7 @@ const Routes = () => {
       .then(res => {
         console.log('my data succes', res.data);
       })
-      .catch(err => {});
+      .catch(err => { });
   };
 
   //notification
@@ -215,7 +216,7 @@ const Routes = () => {
           setLoading(false);
         }, 800);
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   if (loading) {
@@ -248,9 +249,12 @@ const Routes = () => {
         updateNotification,
         paytmSuccess,
         setUserInfo,
+        getWaletInformation,
+        shurjoPayment,
+        setShurjoPayment
       }}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           {/* !!loginStatus */}
           {!!loginStatus ? <>{MainStack(Stack)}</> : <>{AuthStack(Stack)}</>}
         </Stack.Navigator>

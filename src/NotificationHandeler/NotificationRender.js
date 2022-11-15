@@ -1,13 +1,13 @@
-import {View, Text} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import {AuthContext} from '../Constants/context';
+import { View, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../Constants/context';
 import PushNotification from 'react-native-push-notification';
 import AppUrl from '../RestApi/AppUrl';
 import moment from 'moment';
 
 const NotificationRender = () => {
-  const {activities, socketData} = useContext(AuthContext);
-  const {useInfo} = useContext(AuthContext);
+  const { activities, socketData } = useContext(AuthContext);
+  const { useInfo } = useContext(AuthContext);
 
   useEffect(() => {
     handelLearningSessionNotification();
@@ -57,10 +57,10 @@ const NotificationRender = () => {
    */
   const handelLearningSessionNotification = () => {
     activities?.learning_session_activities?.map(item => {
-      let dateTime = item.learning_session?.event_date.split(' ');
+      let dateTime = item?.learning_session?.event_date.split(' ');
       let scheduleTime = timeCount(
         dateTime[0],
-        item.learning_session?.start_time,
+        item?.learning_session?.start_time,
       );
 
       if (scheduleTime >= 0) {
@@ -71,7 +71,7 @@ const NotificationRender = () => {
           bigText:
             'Get ready for your register learning session with  start with sort time ',
           color: 'red',
-          id: item.id,
+          id: item?.id,
           playSound: true,
           soundName: 'sound.mp3',
           bigPictureUrl: AppUrl.MediaBaseUrl + item?.learning_session?.banner,
@@ -101,7 +101,7 @@ const NotificationRender = () => {
           bigText:
             'Get ready for your register meetup session with  start with sort time ',
           color: 'red',
-          id: item.id,
+          id: item?.id,
           playSound: true,
           soundName: 'sound.mp3',
           bigPictureUrl: AppUrl.MediaBaseUrl + item?.meetup?.banner,
@@ -122,7 +122,7 @@ const NotificationRender = () => {
       let dateTime = item?.qna_registration?.qna_date?.split(' ');
       let scheduleTime = timeCount(
         dateTime[0],
-        item.qna_registration?.qna_start_time,
+        item?.qna_registration?.qna_start_time,
       );
 
       if (scheduleTime >= 0) {
@@ -133,7 +133,7 @@ const NotificationRender = () => {
           bigText:
             'Get ready for your register question and answer session with  start with sort time ',
           color: 'red',
-          id: item.id,
+          id: item?.id,
           playSound: true,
           soundName: 'sound.mp3',
           bigPictureUrl: AppUrl.MediaBaseUrl + item?.qna?.banner,
@@ -152,8 +152,8 @@ const NotificationRender = () => {
   const handelLiveChatNotification = () => {
     activities?.live_chat_activities?.map(item => {
       let scheduleTime = timeCount(
-        item.livechat?.event_date,
-        item.livechat_registration?.live_chat_start_time,
+        item?.livechat?.event_date,
+        item?.livechat_registration?.live_chat_start_time,
       );
 
       if (scheduleTime >= 0) {
@@ -164,7 +164,7 @@ const NotificationRender = () => {
           bigText:
             'Get ready for your register live chat session with  start with sort time ',
           color: 'red',
-          id: item.id,
+          id: item?.id,
           playSound: true,
           soundName: 'sound.mp3',
           bigPictureUrl: AppUrl.MediaBaseUrl + item?.livechat?.banner,

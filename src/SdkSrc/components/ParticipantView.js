@@ -30,7 +30,7 @@ export default function ParticipantView({
     isLocal,
     setQuality,
     isActiveSpeaker,
-    setViewPort
+    setViewPort,
   } = useParticipant(participantId, {
     onStreamEnabled,
     onStreamDisabled,

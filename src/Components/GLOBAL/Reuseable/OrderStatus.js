@@ -1,13 +1,13 @@
 //import liraries
-import React, {useContext, useState} from 'react';
+import React, { useContext, useState } from 'react';
 import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
-import {TextInput} from 'react-native-paper';
+import { Image, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import StepIndicator from 'react-native-step-indicator';
 import imagePath from '../../../Constants/imagePath';
 import RenderHtml from 'react-native-render-html';
@@ -16,7 +16,7 @@ import moment from 'moment';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import HeaderComp from '../../HeaderComp';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 
 // const labels = ['Applied', 'Approved', 'Processing', 'Delivered', 'Son'];
 const labels = ['Ordered', 'Received', 'Out for Delivery', 'Delivered'];
@@ -46,11 +46,11 @@ const customStyles = {
 };
 
 // create a component
-const OrderStatus = ({route, navigation}) => {
-  const {width} = useWindowDimensions();
-  const {event} = route.params;
+const OrderStatus = ({ route, navigation }) => {
+  const { width } = useWindowDimensions();
+  const { event } = route.params;
 
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   console.log(event);
   const ownerName =
     event?.marketplace?.superstar?.first_name +
@@ -95,13 +95,13 @@ const OrderStatus = ({route, navigation}) => {
   };
 
   return (
-    <ScrollView style={{backgroundColor: '#000', flex: 1, paddingBottom: 40}}>
+    <ScrollView style={{ backgroundColor: '#000', flex: 1, paddingBottom: 40 }}>
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.centered_view}>
         <View style={styles.warning_modal}>
-          <View style={{marginTop: 5}}>
+          <View style={{ marginTop: 5 }}>
             <View style={styles.showcaseStatus}>
-              <Text style={{color: '#ff0'}}>Delivery Status</Text>
+              <Text style={{ color: '#ff0' }}>Delivery Status</Text>
             </View>
 
             <View style={styles.stepIndicator}>
@@ -118,7 +118,7 @@ const OrderStatus = ({route, navigation}) => {
                 source={{
                   uri: `${AppUrl.MediaBaseUrl + '/' + imageURl}`,
                 }}
-                style={{width: '100%', height: 200, borderRadius: 5}}
+                style={{ width: '100%', height: 200, borderRadius: 5 }}
                 resizeMode="stretch"
               />
 
@@ -127,8 +127,8 @@ const OrderStatus = ({route, navigation}) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{width: '20%'}}>
-                  <Text style={{color: '#fff'}}>Owner:</Text>
+                <View style={{ width: '20%' }}>
+                  <Text style={{ color: '#fff' }}>Owner:</Text>
                 </View>
                 <View
                   style={{
@@ -137,7 +137,7 @@ const OrderStatus = ({route, navigation}) => {
 
                     width: '78%',
                   }}>
-                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                  <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
                     {ownerName}
                   </Text>
                 </View>
@@ -147,8 +147,8 @@ const OrderStatus = ({route, navigation}) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{width: '20%', justifyContent: 'center'}}>
-                  <Text style={{color: '#fff'}}>Description:</Text>
+                <View style={{ width: '20%', justifyContent: 'center' }}>
+                  <Text style={{ color: '#fff' }}>Description:</Text>
                 </View>
                 <View
                   style={{
@@ -171,8 +171,8 @@ const OrderStatus = ({route, navigation}) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{width: '20%'}}>
-                  <Text style={{color: '#fff'}}>Price:</Text>
+                <View style={{ width: '20%' }}>
+                  <Text style={{ color: '#fff' }}>Price:</Text>
                 </View>
                 <View
                   style={{
@@ -181,7 +181,7 @@ const OrderStatus = ({route, navigation}) => {
 
                     width: '78%',
                   }}>
-                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                  <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
                     {totalPrice}
                   </Text>
                 </View>
@@ -191,8 +191,8 @@ const OrderStatus = ({route, navigation}) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{width: '20%'}}>
-                  <Text style={{color: '#fff'}}>
+                <View style={{ width: '20%' }}>
+                  <Text style={{ color: '#fff' }}>
                     {event?.status == 3 ? <>Delivered: </> : <>Ordered: </>}
                   </Text>
                 </View>
@@ -203,7 +203,7 @@ const OrderStatus = ({route, navigation}) => {
 
                     width: '78%',
                   }}>
-                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                  <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
                     {moment(event?.created_at).format('LL')}
                   </Text>
                 </View>
@@ -213,8 +213,8 @@ const OrderStatus = ({route, navigation}) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{width: '20%'}}>
-                  <Text style={{color: '#fff'}}>Status:</Text>
+                <View style={{ width: '20%' }}>
+                  <Text style={{ color: '#fff' }}>Status:</Text>
                 </View>
                 <View
                   style={{
@@ -223,7 +223,7 @@ const OrderStatus = ({route, navigation}) => {
 
                     width: '78%',
                   }}>
-                  <Text style={{color: '#fff', flexWrap: 'wrap'}}>
+                  <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
                     {event?.status == 1 ? (
                       <> Ordered</>
                     ) : event?.status == 2 ? (
@@ -247,7 +247,7 @@ const OrderStatus = ({route, navigation}) => {
                 <TouchableOpacity
                   style={styles.downloadContainer}
                   onPress={downloadInvoice}>
-                  <Text style={{color: '#fe7013'}}>
+                  <Text style={{ color: '#fe7013' }}>
                     <FontAwesome5 name={'download'} style={styles.customIcon} />{' '}
                     Download Invoice
                   </Text>

@@ -27,7 +27,7 @@ const Livechat = ({route, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       {buffer ? <LoaderComp /> : <></>}
-      <HeaderComp />
+      <HeaderComp backFunc={()=>navigation.goBack()} />
       <ScrollView>
         <Video
           image={`${AppUrl.MediaBaseUrl + data.livechat.banner}`}
