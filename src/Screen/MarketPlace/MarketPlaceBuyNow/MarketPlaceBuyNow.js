@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -12,30 +12,33 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import HeaderComp from '../../../Components/HeaderComp';
 import LoaderComp from '../../../Components/LoaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import MarketPlaceShipingComp from '../MarketPlaceShipingComp/MarketPlaceShipingComp';
 import styles from './MarketPlaceBuyNowStyle';
 
-const MarketPlaceBuyNow = ({route}) => {
-  const {width} = useWindowDimensions();
-  const {product} = route.params;
+const MarketPlaceBuyNow = ({ route }) => {
+
+  const { axiosConfig, currencyMulti, currencyCount, currency } = useContext(AuthContext);
+
+  const { width } = useWindowDimensions();
+  const { product } = route.params;
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
   const [step, setStep] = useState(1);
   const [marketplaceOrder, setMarketplaceOrder] = useState({});
   const [modal, setModal] = useState(false);
   const [buffer, setBuffer] = useState(false);
-  const {axiosConfig} = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [parentData, setParentData] = useState({});
 
-  const navigation=useNavigation()
+
+  const navigation = useNavigation()
 
   const [modalObj, setModalObj] = useState({
     modalType: '',
@@ -45,9 +48,8 @@ const MarketPlaceBuyNow = ({route}) => {
   });
 
   const contentSource = {
-    html: `<div style='color:#e6e6e6;'>${
-      product?.description ? product?.description : ''
-    }</div>`,
+    html: `<div style='color:#e6e6e6;'>${product?.description ? product?.description : ''
+      }</div>`,
   };
   const decrement = () => {
     if (count > 0) {
@@ -62,15 +64,17 @@ const MarketPlaceBuyNow = ({route}) => {
   const setTotalPrice = async count_amount => {
     if (count_amount !== 0) {
       setAmount(
-        count_amount * Number(product?.unit_price) +
-          count_amount * Number(product?.tax) +
-          Number(product?.delivery_charge),
+        Number(count_amount * currencyCount(product?.unit_price)) +
+        Number(count_amount * currencyCount(product?.tax)) +
+        Number(currencyCount(product?.delivery_charge)),
       );
     } else {
       setAmount(0);
     }
   };
   const checkPaymentUncompletedOrder = async () => {
+
+    // return alert('dadad')
     setBuffer(true);
     axios
       .get(AppUrl.CheckPaymentUncompletedOrder + product.id, axiosConfig)
@@ -99,6 +103,7 @@ const MarketPlaceBuyNow = ({route}) => {
       });
   };
   const handleBuyNow = async () => {
+
     if (count !== 0) {
       const inputData = {
         items: count,
@@ -157,16 +162,16 @@ const MarketPlaceBuyNow = ({route}) => {
     });
     setModal(false);
   };
-  const randerFlatListItem = ({index}) => {
+  const randerFlatListItem = ({ index }) => {
     return (
       <Image
-        style={{height: 200, width: width - 20}}
+        style={{ height: 200, width: width - 20 }}
         source={
           product?.image == null
             ? imagePath.Foot
             : {
-                uri: `${AppUrl.MediaBaseUrl + product?.image}`,
-              }
+              uri: `${AppUrl.MediaBaseUrl + product?.image}`,
+            }
         }
         key={index}
       />
@@ -186,14 +191,14 @@ const MarketPlaceBuyNow = ({route}) => {
         setModal={setModal}
         buttoPress={modalOkBtn}
       />
-      <HeaderComp  backFunc={()=>navigation.goBack()}/>
+      <HeaderComp backFunc={() => navigation.goBack()} />
       <ScrollView style={styles.container}>
         <SafeAreaView>
           {buffer ? <LoaderComp /> : <></>}
           <View style={styles.row1}>
             <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               colors={[
                 '#FFAD00',
                 '#FFD273',
@@ -202,7 +207,7 @@ const MarketPlaceBuyNow = ({route}) => {
                 '#E7A725',
                 '#FFAD00',
               ]}
-              style={{borderRadius: 15, marginTop: 15}}>
+              style={{ borderRadius: 15, marginTop: 15 }}>
               <Text style={styles.AuctionT}>MarketPlace</Text>
             </LinearGradient>
           </View>
@@ -218,7 +223,7 @@ const MarketPlaceBuyNow = ({route}) => {
             <Text style={styles.FootH}>{product?.title}</Text>
             {/* if product type === auction the it show  */}
             {/* <Text style={styles.FootSt}>Auction at 21-11-2022</Text> */}
-            <View style={{width: '100%'}}>
+            <View style={{ width: '100%' }}>
               <RenderHtml contentWidth={width} source={contentSource} />
             </View>
           </View>
@@ -237,7 +242,7 @@ const MarketPlaceBuyNow = ({route}) => {
                       <Text style={styles.PriceDollarText}> Price</Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        Tk {Number(product?.unit_price)}
+                        {currencyCount(product?.unit_price) + " " + currency.symbol}
                       </Text>
                     </View>
                   </View>
@@ -255,7 +260,8 @@ const MarketPlaceBuyNow = ({route}) => {
                       </Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        Tk {Number(product?.delivery_charge)}
+                        {currencyCount(product?.delivery_charge) + " " + currency.symbol}
+
                       </Text>
                     </View>
                   </View>
@@ -272,7 +278,8 @@ const MarketPlaceBuyNow = ({route}) => {
                       <Text style={styles.PriceDollarText}> Tax</Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        Tk {Number(product?.tax)}
+                        {currencyCount(product?.tax) + " " + currency.symbol}
+
                       </Text>
                     </View>
                   </View>
@@ -281,9 +288,9 @@ const MarketPlaceBuyNow = ({route}) => {
 
               <View style={styles.MaiN}>
                 <View style={styles.Increment}>
-                  <View style={{flex: 2}}>
+                  <View style={{ flex: 2 }}>
                   </View>
-                  <View style={{flex: 7}}>
+                  <View style={{ flex: 7 }}>
                     <Text style={styles.TextEr}>Your quantity</Text>
                   </View>
                   <View style={styles.Increment1}>
@@ -308,23 +315,23 @@ const MarketPlaceBuyNow = ({route}) => {
                   </View>
                 </View>
                 <View style={styles.Increment}>
-                  <View style={{flex: 2}}>
+                  <View style={{ flex: 2 }}>
                     <Image source={imagePath.PriceTag} />
                   </View>
-                  <View style={{flex: 8}}>
+                  <View style={{ flex: 8 }}>
                     <Text style={styles.TextEr}>Total Price</Text>
                   </View>
                   <View style={styles.Increment2}>
                     <View style={styles.Flex1}>
-                      <Text style={styles.TextColorS}> Tk {amount} </Text>
+                      <Text style={styles.TextColorS}> {amount + " " + currency.symbol} </Text>
                     </View>
                   </View>
                 </View>
               </View>
               <TouchableOpacity onPress={handleBuyNow}>
                 <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   colors={[
                     '#FFAD00',
                     '#FFD273',

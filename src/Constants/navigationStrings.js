@@ -9,6 +9,8 @@ export default {
   MEETUP: 'Meetup',
   //
   SHURJOPAY: 'ShujoyPay',
+  POCKETTXT: 'PocketTxt',
+  POCKETPAY: 'PocketPay',
   //MENU
   ACTIVITIES: 'Activities',
   WALLET: 'wallet',
@@ -65,6 +67,7 @@ export default {
   AUCTIONPARTICIPATENOW: 'AuctionParticipateNow',
   // livechat
   MESSAGESTAR: 'MessageStar',
+  AUCTIONPARTICIOATENOW: 'AuctionParticipateNow',
 
   // qna
   QNA: 'Qna',
@@ -107,12 +110,16 @@ export default {
   INTERESTINFO: 'Interestinfo',
   SECURITYINFO: 'Securityinfo',
   REPORTINFO: 'ReportInfo',
+  DELETEWARNING: 'DeleteWarnign',
 
-
-//MenuV2
+  //MenuV2
   MENUV2: 'MenuV2',
   MENUSTACKSCREENV2: 'MenuStackScreenV2',
-  "MENUFOLLOWERS":"MENUFOLLOWERS",
-  "MENUACTIVITES":"MenuActivities",
-  "ACTIVITESCARD":"ActivitesCard"
+  MENUFOLLOWERS: 'MENUFOLLOWERS',
+  MENUACTIVITES: 'MenuActivities',
+  ACTIVITESCARD: 'ActivitesCard',
+
+  //Forget password
+  FORGETPASSWORD: 'ForgetPassword',
+  CREATEPASSWORD: 'CreatePassword',
 };

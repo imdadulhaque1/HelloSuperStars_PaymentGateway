@@ -387,7 +387,7 @@ const MenuV2 = ({ navigation }) => {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.mainRow}
                 onPress={() => Navigation.navigate(navigationStrings.WALLET)}
               >
@@ -400,7 +400,7 @@ const MenuV2 = ({ navigation }) => {
                     {waletInfo?.club_points} credit
                   </Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </ImageBackground>
 

@@ -1,43 +1,33 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
-import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
-import { FlatGrid } from 'react-native-super-grid';
+import React, {useContext, useEffect, useState} from 'react';
+import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
+import {FlatGrid} from 'react-native-super-grid';
 
 // import AppUrl from '../../RestApi/AppUrl';
 import styles from './ActivitiesCardStyle';
-import { BackHandler } from 'react-native';
+import {BackHandler} from 'react-native';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import MenuNavigator from '../../../Screen/Menu/MenuNavigator';
 import PushNotification from 'react-native-push-notification';
 import axios from 'axios';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/Entypo';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 import HeaderComp from '../../HeaderComp';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import TitleHeader from '../../TitleHeader';
 
-const ActivitiesCard = ({
-
-  route
-}) => {
-
-
-
-
-  const { childActivityEventList, childActivityEventType } = route.params;
-
+const ActivitiesCard = ({route}) => {
+  const {childActivityEventList, childActivityEventType} = route.params;
 
   const [roomId, setRoomId] = useState();
   const navigation = useNavigation();
-  const { axiosConfig } = useContext(AuthContext);
+  const {axiosConfig} = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
-
-
 
   let title = '';
   switch (childActivityEventType) {
@@ -68,13 +58,27 @@ const ActivitiesCard = ({
   }
 
   // const width = Dimensions.get('window').width;
-  const renderEventItem = ({ item }) => {
+  const renderEventItem = ({item}) => {
     console.log('itemsssssssssssss', item);
     let event = {};
     let eventRegistration = {};
     let eventType = '';
     let paymentStatus;
     let fee = 0;
+
+    let bidEnd;
+    let result_date;
+    let current_date = new Date().getTime();
+
+    // const [bidEndingTime, setBidEndingTime] = useState(null);
+    // const [resultTime, setResultTime] = useState(null);
+    // const [currentTime, setCurrentTime] = useState(null);
+
+    // const getTime = async () => {
+    //   setBidEndingTime(await new Date(event?.bid_to).getTime());
+    //   setResultTime(await new Date(event?.result_date).getTime());
+    //   setCurrentTime(await new Date().getTime());
+    // };
 
     switch (childActivityEventType) {
       case 'learningSession':
@@ -131,8 +135,15 @@ const ActivitiesCard = ({
         paymentStatus = true;
         eventType = 'souvenir';
         event = item.souvenir_apply;
+        break;
+      case 'auction':
+        paymentStatus = true;
+        eventType = 'auction';
+        event = item.auction;
+        bidEnd = new Date(event?.bid_to).getTime();
+        result_date = new Date(event?.result_date).getTime();
+        break;
     }
-
 
     let ActualEventDate = moment(
       event?.date ? event?.date : event?.event_date,
@@ -181,7 +192,7 @@ const ActivitiesCard = ({
         EventDateWithStartTime.getTime() - CurrentDateWithTime.getTime(),
       ) /
         (1000 * 60)) %
-      60,
+        60,
     );
 
     const handleJoinNow = () => {
@@ -189,7 +200,7 @@ const ActivitiesCard = ({
 
       if (childActivityEventType == 'liveChat') {
         navigation.navigate('VideoSdk', {
-          meetingId: roomId,
+          meetingId: item?.livechat_registration?.room_id,
           type: 'videoChat',
         });
       } else if (childActivityEventType == 'qna') {
@@ -249,7 +260,7 @@ const ActivitiesCard = ({
 
     return (
       <>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{flexDirection: 'row'}}>
           <View style={styles.Container}>
             {event?.banner == null && eventType == '' ? (
               <>
@@ -308,6 +319,37 @@ const ActivitiesCard = ({
                   </View>
                 </TouchableOpacity>
               </>
+            ) : eventType == 'auction' ? (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate(
+                      navigationStrings.AUCTIONPARTICIPATENOW,
+                      {
+                        product: event,
+                      },
+                    );
+                  }}>
+                  <Image
+                    source={{
+                      uri: `${AppUrl.MediaBaseUrl + event?.banner}`,
+                    }}
+                    style={styles.ImgBanner}
+                  />
+                  <Text style={styles.Title}>{event?.title}</Text>
+                  <View style={styles.DateBox}>
+                    <View style={styles.Join}>
+                      <Text style={styles.JoinTextAuction}>
+                        {bidEnd < current_date && result_date > current_date
+                          ? 'Acquired Application'
+                          : result_date < current_date
+                          ? 'Show Result'
+                          : ''}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </>
             ) : (
               <>
                 <Image
@@ -357,12 +399,12 @@ const ActivitiesCard = ({
                 <>
                   {/* <Text style={{color: 'white'}}>I am date Box</Text> */}
                   {EventDateWithEndTime.getTime() <
-                    CurrentDateWithTime.getTime() ? (
+                  CurrentDateWithTime.getTime() ? (
                     <>{/* completed  */}</>
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                        CurrentDateWithTime.getTime() ? (
+                      CurrentDateWithTime.getTime() ? (
                         <>
                           <View style={styles.DateColor}>
                             <Text style={styles.textDay}>{days}</Text>
@@ -383,7 +425,7 @@ const ActivitiesCard = ({
                         <>
                           {EventDateWithStartTime.getTime() <
                             CurrentDateWithTime.getTime() ||
-                            EventDateWithEndTime.getTime() >
+                          EventDateWithEndTime.getTime() >
                             CurrentDateWithTime.getTime() ? (
                             <>
                               {paymentStatus && (
@@ -432,10 +474,10 @@ const ActivitiesCard = ({
                     <View style={styles.Join}>
                       {EventDateWithStartTime.getTime() <
                         CurrentDateWithTime.getTime() ||
-                        EventDateWithEndTime.getTime() >
+                      EventDateWithEndTime.getTime() >
                         CurrentDateWithTime.getTime() ? (
                         EventDateWithEndTime.getTime() <
-                          CurrentDateWithTime.getTime() ? (
+                        CurrentDateWithTime.getTime() ? (
                           <View style={styles.Join}>
                             <TouchableOpacity>
                               <Text style={styles.JoinText}>
@@ -489,10 +531,10 @@ const ActivitiesCard = ({
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                        CurrentDateWithTime.getTime() ? (
+                      CurrentDateWithTime.getTime() ? (
                         <View style={styles.Join}>
                           {childActivityEventType == 'meetup' &&
-                            event?.meetup_type == 'Offline' ? (
+                          event?.meetup_type == 'Offline' ? (
                             <>
                               {paymentStatus ? (
                                 <TouchableOpacity
@@ -564,16 +606,14 @@ const ActivitiesCard = ({
                       )}
                     </>
                   )}
-
-
                 </>
               )}
             </View>
 
-
-
             <View style={styles.bannerTag}>
-              <Image source={imagePath.BgTag} />
+              <Image
+                source={eventType === 'auction' ? null : imagePath.BgTag}
+              />
             </View>
 
             {item.days === '00' && item.hours === '00' ? (
@@ -602,10 +642,9 @@ const ActivitiesCard = ({
 
   return (
     <>
-      <View style={{ flex: 1, backgroundColor: '#000' }}>
+      <View style={{flex: 1, backgroundColor: '#000'}}>
         <SafeAreaView>
           <HeaderComp backFunc={() => navigation.goBack()} />
-
 
           {/* <View style={styles.Header}>
         <Image source={imagePath.BgLane} style={styles.HeaderImg} />
@@ -618,11 +657,9 @@ const ActivitiesCard = ({
             itemDimension={150}
             data={childActivityEventList}
             renderItem={renderEventItem}
-
           />
         </SafeAreaView>
       </View>
-
     </>
   );
 };

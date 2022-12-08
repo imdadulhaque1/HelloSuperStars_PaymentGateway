@@ -1,6 +1,9 @@
 import React from 'react';
+import navigationStrings from '../Constants/navigationStrings';
 import CategorySelection from '../Screen/Auth/CategorySelection';
+import CreatePassword from '../Screen/Auth/CreatePassword';
 import Flash from '../Screen/Auth/Flash';
+import ForgetPassword from '../Screen/Auth/ForgetPassword';
 import Login from '../Screen/Auth/Login';
 import Otp from '../Screen/Auth/Otp';
 import SignUp from '../Screen/Auth/SignUp';
@@ -23,8 +26,8 @@ const AuthStack = Stack => {
       <Stack.Screen name="virtualTour" component={VirtualTour} />
 
       <Stack.Screen name="userInformation" component={UserInformation} />
-
-
+      <Stack.Screen name={navigationStrings.FORGETPASSWORD} component={ForgetPassword} />
+      <Stack.Screen name={navigationStrings.CREATEPASSWORD} component={CreatePassword} />
 
     </>
   );

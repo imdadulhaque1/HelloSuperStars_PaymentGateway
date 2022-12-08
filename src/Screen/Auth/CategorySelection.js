@@ -100,6 +100,7 @@ const CategorySelection = () => {
     });
 
     if (selected.length <= 0) {
+      setBuffer(false);
       Toast.show('Place Select Some Category', Toast.durations.SHORT);
     } else {
       let formData = {
@@ -116,6 +117,7 @@ const CategorySelection = () => {
           }
         })
         .catch(err => {
+          setBuffer(false);
           console.log(err);
           Toast.show('problem', Toast.durations.SHORT);
           // alert('network problem')

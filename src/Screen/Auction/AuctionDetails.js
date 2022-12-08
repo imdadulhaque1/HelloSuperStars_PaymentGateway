@@ -1,8 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import moment from 'moment';
-import React, {useContext, useEffect, useState} from 'react';
-import {Controller, useForm} from 'react-hook-form';
+import React, { useContext, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Image,
   ImageBackground,
@@ -16,14 +16,14 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import noImage from '../../Assets/Images/no-image.png';
 import HeaderComp from '../../Components/HeaderComp';
 import AlertModal from '../../Components/MODAL/AlertModal';
 import BidCongratulationModal from '../../Components/MODAL/BidCongratulationModal';
 import ProductProcessModal from '../../Components/MODAL/ProductProcessModal';
 import RegisPaymentModal from '../../Components/MODAL/RegisPaymentModal';
-import {AuthContext} from '../../Constants/context';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import AppUrl from '../../RestApi/AppUrl';
 import LoaderComp from '../LoaderComp/LoaderComp';
@@ -31,10 +31,10 @@ import styles from '../MarketPlace/AuctionProductCard/AuctionProductCardStyle';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AuctionAcquireModel from '../../Components/MODAL/AuctionAcquireModel';
 
-const AuctionDetails = ({route}) => {
+const AuctionDetails = ({ route }) => {
   const navigation = useNavigation();
-  const {socketData, axiosConfig} = useContext(AuthContext);
-  const {product} = route.params;
+  const { socketData, axiosConfig } = useContext(AuthContext);
+  const { product } = route.params;
   console.log(product);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [isShowResult, setIsShowResult] = useState(false);
@@ -45,12 +45,12 @@ const AuctionDetails = ({route}) => {
   const [auctionApply, setAuctionApply] = useState();
   const [paid, setPaid] = useState(false);
   const [showPass, setShowPass] = useState(true);
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const {
     control,
     handleSubmit,
     reset,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
   const source = {
     html: `<div style='color:#e6e6e6'>${product ? product?.details : ''}</div>`,
@@ -66,6 +66,8 @@ const AuctionDetails = ({route}) => {
     available: '',
   });
   const [data, setData] = React.useState('Bidnow');
+
+  const { currencyMulti, currencyCount, currency } = useContext(AuthContext);
   const modalOkBtn = () => {
     setModalObj({
       modalType: '',
@@ -112,24 +114,24 @@ const AuctionDetails = ({route}) => {
     setSecond(seconds);
   }, 1000);
 
-  const randerProductImageFlatListItem = ({index}) => {
+  const randerProductImageFlatListItem = ({ index }) => {
     return (
       <Image
-        style={{height: 200, width: width - 20}}
+        style={{ height: 200, width: width - 20 }}
         source={
           product?.product_image == null
             ? imagePath.Foot
             : {
-                uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
-              }
+              uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
+            }
         }
         key={index}
       />
     );
   };
-  const randerLiveBidFlatListItem = ({item, index}) => {
+  const randerLiveBidFlatListItem = ({ item, index }) => {
     return (
-      <View style={{marginRight: 8}}>
+      <View style={{ marginRight: 8 }}>
         <View style={styles.LiveBCarB}>
           <View style={styles.PriceLive}>
             <Image
@@ -137,8 +139,8 @@ const AuctionDetails = ({route}) => {
                 item?.user?.image == null
                   ? noImage
                   : {
-                      uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
-                    }
+                    uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
+                  }
               }
               style={styles.BidUser}
             />
@@ -258,7 +260,7 @@ const AuctionDetails = ({route}) => {
         .then(res => {
           if (res.data.status === 200) {
             reset(data);
-            socketData.emit('joinBiddingRoom', {room: product?.id});
+            socketData.emit('joinBiddingRoom', { room: product?.id });
             socketData.emit('sendLiveBidding', product?.id);
             socketData.on('getLiveBidding', sdata => {
               // console.log("data from socket", sdata);
@@ -290,7 +292,7 @@ const AuctionDetails = ({route}) => {
   };
 
   useEffect(() => {
-    socketData.emit('joinBiddingRoom', {room: product?.id});
+    socketData.emit('joinBiddingRoom', { room: product?.id });
     socketData.emit('sendLiveBidding', product?.id);
     socketData.on('getLiveBidding', sdata => {
       // console.log("data from socket", sdata);
@@ -303,7 +305,7 @@ const AuctionDetails = ({route}) => {
   }, [product?.id]);
 
   return (
-    <SafeAreaView horizontal style={{backgroundColor: 'blue'}}>
+    <SafeAreaView horizontal style={{ backgroundColor: 'blue' }}>
       <AlertModal
         modalObj={modalObj}
         modal={modal}
@@ -311,18 +313,18 @@ const AuctionDetails = ({route}) => {
         buttoPress={modalOkBtn}
       />
       <HeaderComp backFunc={() => navigation.goBack()} />
-      <View style={{height: '100%'}}>
+      <View style={{ height: '100%' }}>
         <ScrollView style={styles.container}>
           <SafeAreaView>
             {buffer ? (
               <LoaderComp />
             ) : (
               <>
-                <View style={{marginHorizontal: 8}}>
+                <View style={{ marginHorizontal: 8 }}>
                   <View style={styles.rowX}>
                     <LinearGradient
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       colors={[
                         '#FFAD00',
                         '#FFD273',
@@ -331,7 +333,7 @@ const AuctionDetails = ({route}) => {
                         '#E7A725',
                         '#FFAD00',
                       ]}
-                      style={{borderRadius: 50}}>
+                      style={{ borderRadius: 50 }}>
                       <Text style={styles.AuctionT}>Auction</Text>
                     </LinearGradient>
                   </View>
@@ -339,8 +341,8 @@ const AuctionDetails = ({route}) => {
                   <View style={styles.MaiN}>
                     <Text style={styles.PText}>Bidding End Time</Text>
                     <LinearGradient
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       colors={[
                         '#FFAD00',
                         '#FFD273',
@@ -429,7 +431,7 @@ const AuctionDetails = ({route}) => {
                       {' to '}
                       {moment(product?.bid_to).format('DD MMMM')}
                     </Text>
-                    <View style={{width: '100%'}}>
+                    <View style={{ width: '100%' }}>
                       <RenderHtml contentWidth={width} source={source} />
                     </View>
                     <View style={styles.BtnBox}>
@@ -482,10 +484,10 @@ const AuctionDetails = ({route}) => {
                   </View>
 
                   {countDownDate > nowDate ? (
-                    <View style={{paddingBottom: 110}}>
+                    <View style={{ paddingBottom: 110 }}>
                       <View style={styles.MaiN}>
                         <Text style={styles.LiveBidding}>Bid Now</Text>
-                        <View style={{marginHorizontal: 12, marginTop: 8}}>
+                        <View style={{ marginHorizontal: 12, marginTop: 8 }}>
                           <Text style={styles.LiveBiddingP}>
                             Price Your Bid
                           </Text>
@@ -494,7 +496,7 @@ const AuctionDetails = ({route}) => {
                             rules={{
                               required: true,
                             }}
-                            render={({field: {onChange, onBlur, value}}) => (
+                            render={({ field: { onChange, onBlur, value } }) => (
                               <TextInput
                                 onBlur={onBlur}
                                 onChangeText={onChange}
@@ -523,7 +525,7 @@ const AuctionDetails = ({route}) => {
                             rules={{
                               required: true,
                             }}
-                            render={({field: {onChange, onBlur, value}}) => (
+                            render={({ field: { onChange, onBlur, value } }) => (
                               <>
                                 <TextInput
                                   onBlur={onBlur}
@@ -574,8 +576,8 @@ const AuctionDetails = ({route}) => {
                           )}
                           <TouchableOpacity onPress={handleSubmit(onSubmit)}>
                             <LinearGradient
-                              start={{x: 0, y: 0}}
-                              end={{x: 1, y: 0}}
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
                               colors={[
                                 '#FFAD00',
                                 '#FFD273',
@@ -643,7 +645,7 @@ const AuctionDetails = ({route}) => {
                               </View>
                               <View style={styles.BidHBgA}>
                                 <Text style={styles.BidTextHiss}>
-                                  Tk {Number(singleHistory.amount)}
+                                  {currencyCount(singleHistory.amount) + " " + currency.symbol}
                                 </Text>
                               </View>
                             </View>
@@ -651,14 +653,14 @@ const AuctionDetails = ({route}) => {
                       </View>
                     </View>
                   ) : auctionApply?.applied_status == 0 && !paid ? (
-                    <View style={{paddingBottom: 110}}>
+                    <View style={{ paddingBottom: 110 }}>
                       {/* Page 82| Start */}
                       <View style={styles.MaiNApp}>
                         <View style={styles.Applied}>
                           <TouchableOpacity onPress={() => setLockModal(true)}>
                             <LinearGradient
-                              start={{x: 0, y: 0}}
-                              end={{x: 1, y: 0}}
+                              start={{ x: 0, y: 0 }}
+                              end={{ x: 1, y: 0 }}
                               colors={[
                                 '#FFAD00',
                                 '#FFD273',
@@ -686,7 +688,7 @@ const AuctionDetails = ({route}) => {
                       {auctionApply?.auction?.id == product?.id ? (
                         <>
                           {isShowResult === true ? (
-                            <View style={{paddingBottom: 110}}>
+                            <View style={{ paddingBottom: 110 }}>
                               {/* Page 82| Start */}
                               <View style={styles.MaiNApp}>
                                 <View style={styles.Applied}>
@@ -709,11 +711,10 @@ const AuctionDetails = ({route}) => {
                                             source={
                                               winner?.user?.image !== null
                                                 ? {
-                                                    uri: `${
-                                                      AppUrl.MediaBaseUrl +
-                                                      winner?.user?.image
+                                                  uri: `${AppUrl.MediaBaseUrl +
+                                                    winner?.user?.image
                                                     }`,
-                                                  }
+                                                }
                                                 : noImage
                                             }
                                             style={
@@ -734,8 +735,9 @@ const AuctionDetails = ({route}) => {
                                             {winner?.user?.last_name}
                                           </Text>
                                           <Text style={styles.UserTse1}>
-                                            Maximum Bit Price TK{' '}
-                                            {Number(winner?.amount)}
+                                            Maximum Bit Price {currency.symbol}{' '}
+
+                                            {currencyCount(winner?.amount)}
                                           </Text>
                                         </View>
                                       </ImageBackground>
@@ -774,7 +776,7 @@ const AuctionDetails = ({route}) => {
                               {/* Page 82| End         */}
                             </View>
                           ) : (
-                            <View style={{marginBottom: 100}}>
+                            <View style={{ marginBottom: 100 }}>
                               {/* Page 82| Start */}
                               <View style={styles.MaiNApp}>
                                 <View style={styles.Applied}>
@@ -822,19 +824,19 @@ const AuctionDetails = ({route}) => {
                                 }
                                 onPress={() => setIsShowResult(true)}>
                                 <LinearGradient
-                                  start={{x: 0, y: 0}}
-                                  end={{x: 1, y: 0}}
+                                  start={{ x: 0, y: 0 }}
+                                  end={{ x: 1, y: 0 }}
                                   colors={
                                     nowDate < resultPublishDate
                                       ? ['#343333', '#343333']
                                       : [
-                                          '#FFAD00',
-                                          '#FFD273',
-                                          '#E19A04',
-                                          '#FACF75',
-                                          '#E7A725',
-                                          '#FFAD00',
-                                        ]
+                                        '#FFAD00',
+                                        '#FFD273',
+                                        '#E19A04',
+                                        '#FACF75',
+                                        '#E7A725',
+                                        '#FFAD00',
+                                      ]
                                   }
                                   style={styles.LinerBGA}>
                                   <Text
@@ -854,12 +856,12 @@ const AuctionDetails = ({route}) => {
                       ) : (
                         <>
                           <View style={styles.MaiN}>
-                            <View style={{flexDirection: 'row'}}>
-                              <View style={{width: '50%'}}>
+                            <View style={{ flexDirection: 'row' }}>
+                              <View style={{ width: '50%' }}>
                                 <TouchableOpacity onPress={handleApplyButton}>
                                   <LinearGradient
-                                    start={{x: 0, y: 0}}
-                                    end={{x: 1, y: 0}}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
                                     colors={[
                                       '#FFAD00',
                                       '#FFD273',
@@ -876,12 +878,12 @@ const AuctionDetails = ({route}) => {
                                 </TouchableOpacity>
                               </View>
 
-                              <View style={{width: '50%'}}>
+                              <View style={{ width: '50%' }}>
                                 <TouchableOpacity
                                   onPress={() => navigation.navigate('Home')}>
                                   <LinearGradient
-                                    start={{x: 0, y: 0}}
-                                    end={{x: 1, y: 0}}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
                                     colors={[
                                       '#FFAD00',
                                       '#FFD273',
@@ -905,7 +907,7 @@ const AuctionDetails = ({route}) => {
                   )}
 
                   {data === 'Congratsbid' ? (
-                    <View style={{height: 200}}>
+                    <View style={{ height: 200 }}>
                       {/* Page 82| Start */}
                       <View style={styles.MaiNApp}>
                         <View style={styles.Applied}>

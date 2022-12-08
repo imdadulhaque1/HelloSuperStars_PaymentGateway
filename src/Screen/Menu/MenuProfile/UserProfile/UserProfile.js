@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,9 +9,12 @@ import {
   TouchableOpacity,
   View,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
+import CropImagePicker from 'react-native-image-crop-picker';
+import RNFS from 'react-native-fs';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import MatarialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -19,9 +22,9 @@ import FanGroupPost from '../../../../Components/GLOBAL/Card/PostCard/FanGroupPo
 import UserProPost from '../../../../Components/GLOBAL/Card/PostCard/UserProPost';
 import HeaderComp from '../../../../Components/HeaderComp';
 import CardSkeleton from '../../../../Components/Skeleton/CardSkeleton/CardSkeleton';
-import {AuthContext} from '../../../../Constants/context.js';
+import { AuthContext } from '../../../../Constants/context.js';
 import imagePath from '../../../../Constants/imagePath.js';
-import {useAxiosGet} from '../../../../CustomHooks/useAxiosGet';
+import { useAxiosGet } from '../../../../CustomHooks/useAxiosGet';
 import AppUrl from '../../../../RestApi/AppUrl.js';
 import EditProfileModal from './profileComp/EditProfileModal/EditProfileModal';
 import ProfilePhotos from './profileComp/ProfilePhotos/ProfilePhotos.js';
@@ -30,14 +33,15 @@ import ProfileVideos from './profileComp/ProfileVideos/ProfileVideos.js';
 import styles from './Styles.js';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import noImage from '../../../../Assets/Images/defult_image_profile.png';
+import { androidCameraPermission } from '../../../../../permission';
 const windowWidth = Dimensions.get('window').width;
 
 const UserProfile = () => {
   const Navigation = useNavigation();
   const [buffer, setBuffer] = useState(true);
-  const {resData} = useAxiosGet(AppUrl.UserInfo);
+  const { resData } = useAxiosGet(AppUrl.UserInfo);
 
-  const {useInfo, authContext, axiosConfig} = useContext(AuthContext);
+  const { useInfo, authContext, axiosConfig } = useContext(AuthContext);
   const [data, setData] = React.useState('posts');
   const [purchasedPhotos, setPurchasedPhotos] = useState([]);
   const [purchasedVideos, setPurchasedVideos] = useState([]);
@@ -154,68 +158,110 @@ const UserProfile = () => {
   /**
    * uplaod profile photo
    */
-  const uploadProfilePhoto = () => {
-    let options = {
-      storageOptions: {
-        path: 'images',
-        mediaType: 'image',
-      },
-      includeBase64: true,
-    };
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
+  const choseProfile = async () => {
+    const permissionStatus = await androidCameraPermission();
+    if (permissionStatus || Platform.OS == 'ios') {
+      Alert.alert('Profile Picture', 'Choose an option', [
+        { text: 'Camera', onPress: uploadProfilePhotoCamera },
+        { text: 'Gallery', onPress: uploadProfilePhoto },
+        { text: 'Cancel', onPress: () => { } },
+      ]);
+    }
+    clearInterval(progress);
+  };
+
+  const uploadProfilePhotoCamera = () => {
+    CropImagePicker.openCamera({
+      width: 300,
+      height: 300,
+      cropping: true,
+    }).then(image => {
+      RNFS.readFile(image.path, 'base64').then(res => {
         setProfileUpload({
           img: {
-            uri: response.assets[0].uri,
-            type: response.assets[0].type,
-            name: response.assets[0].fileName,
-            data: response.assets[0].base64,
+            uri: image.path,
+            type: image.mime,
+            data: res,
             oldImage: useInfo.image,
             for: 'profile',
           },
         });
-      }
+      });
+    });
+  };
+
+  const uploadProfilePhoto = () => {
+    CropImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+    }).then(image => {
+      RNFS.readFile(image.path, 'base64').then(res => {
+        setProfileUpload({
+          img: {
+            uri: image.path,
+            type: image.mime,
+            data: res,
+            oldImage: useInfo.image,
+            for: 'profile',
+          },
+        });
+      });
     });
   };
 
   /**
    * upload cover photo
    */
-  const uploadCoverPhoto = () => {
-    let options = {
-      storageOptions: {
-        path: 'images',
-        mediaType: 'image',
-      },
-      includeBase64: true,
-    };
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-        alert(response.customButton);
-      } else {
+
+  const choseCover = async () => {
+    const permissionStatus = await androidCameraPermission();
+    if (permissionStatus || Platform.OS == 'ios') {
+      Alert.alert('Profile Picture', 'Choose an option', [
+        { text: 'Camera', onPress: uploadCoverPhotoCamera },
+        { text: 'Gallery', onPress: uploadCoverPhoto },
+        { text: 'Cancel', onPress: () => { } },
+      ]);
+    }
+    clearInterval(progress);
+  };
+
+  const uploadCoverPhotoCamera = () => {
+    CropImagePicker.openCamera({
+      width: 300,
+      height: 300,
+      cropping: true,
+    }).then(image => {
+      RNFS.readFile(image.path, 'base64').then(res => {
         setCoverUpload({
           img: {
-            uri: response.assets[0].uri,
-            type: response.assets[0].type,
-            name: response.assets[0].fileName,
-            data: response.assets[0].base64,
+            uri: image.path,
+            type: image.mime,
+            data: res,
             oldImage: useInfo.image,
             for: 'cover',
           },
         });
-      }
+      });
+    });
+  };
+  const uploadCoverPhoto = () => {
+    CropImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+    }).then(image => {
+      RNFS.readFile(image.path, 'base64').then(res => {
+        setCoverUpload({
+          img: {
+            uri: image.path,
+            type: image.mime,
+            data: res,
+            oldImage: useInfo.image,
+            for: 'cover',
+          },
+        });
+      });
     });
   };
 
@@ -267,10 +313,10 @@ const UserProfile = () => {
               style={styles.image}
               source={
                 coverUpload.img.uri != ''
-                  ? {uri: coverUpload.img.uri}
+                  ? { uri: coverUpload.img.uri }
                   : useInfo?.cover_photo == null
-                  ? imagePath.coverNoImgae
-                  : {
+                    ? imagePath.coverNoImgae
+                    : {
                       uri: `${AppUrl.MediaBaseUrl + useInfo?.cover_photo}`,
                     }
               }
@@ -287,18 +333,18 @@ const UserProfile = () => {
                 }}>
                 <Image
                   source={imagePath.loadingBuffering}
-                  style={{height: 30, width: 30}}
+                  style={{ height: 30, width: 30 }}
                 />
               </View>
             )}
             <View style={styles.cameraIcon}>
-              <TouchableOpacity onPress={uploadCoverPhoto}>
+              <TouchableOpacity onPress={choseCover}>
                 <Icon name="camera" size={16} color="white" />
               </TouchableOpacity>
               {coverUpload.img.uri != '' && (
                 <TouchableOpacity
-                  style={{marginLeft: 25}}
-                  onPress={coverBuffer ? () => {} : () => UploadDone('cover')}>
+                  style={{ marginLeft: 25 }}
+                  onPress={coverBuffer ? () => { } : () => UploadDone('cover')}>
                   <Icon name="check" size={16} color="white" />
                 </TouchableOpacity>
               )}
@@ -337,8 +383,8 @@ const UserProfile = () => {
                   <Image
                     source={
                       profileUpload.img.uri != ''
-                        ? {uri: profileUpload.img.uri}
-                        : {uri: `${AppUrl.MediaBaseUrl + useInfo?.image}`}
+                        ? { uri: profileUpload.img.uri }
+                        : { uri: `${AppUrl.MediaBaseUrl + useInfo?.image}` }
                     }
                     style={styles.ProfileImg}
                   />
@@ -353,20 +399,20 @@ const UserProfile = () => {
                       }}>
                       <Image
                         source={imagePath.loadingBuffering}
-                        style={{height: 30, width: 30}}
+                        style={{ height: 30, width: 30 }}
                       />
                     </View>
                   )}
 
                   <View style={styles.cameraIcon2}>
-                    <TouchableOpacity onPress={uploadProfilePhoto}>
+                    <TouchableOpacity onPress={choseProfile}>
                       <Icon name="camera" size={18} color="white" />
                     </TouchableOpacity>
                     {profileUpload.img.uri != '' && (
                       <TouchableOpacity
-                        style={{marginLeft: 25}}
+                        style={{ marginLeft: 25 }}
                         onPress={
-                          imageBuffer ? () => {} : () => UploadDone('profile')
+                          imageBuffer ? () => { } : () => UploadDone('profile')
                         }>
                         <Icon name="check" size={18} color="white" />
                       </TouchableOpacity>
@@ -400,7 +446,7 @@ const UserProfile = () => {
                   onPress={() => {
                     console.log(data);
                   }}>
-                  @hss_{useInfo?.id}
+                  @{useInfo?.username}
                 </Text>
               )}
             </View>
@@ -437,7 +483,7 @@ const UserProfile = () => {
               <View style={styles.infoView}>
                 <View style={styles.infoChild}>
                   <>
-                    <View style={{marginRight: 10}}>
+                    <View style={{ marginRight: 10 }}>
                       <MatarialIcon
                         name="work-outline"
                         size={20}
@@ -445,7 +491,7 @@ const UserProfile = () => {
                       />
                     </View>
                     <View style={styles.infoChild}>
-                      <Text style={{color: 'white'}}>Occupation</Text>
+                      <Text style={{ color: 'white' }}>Occupation</Text>
                       <Text style={styles.infoTextmain}>
                         {useInfo?.user_info?.occupation}
                       </Text>
@@ -458,12 +504,12 @@ const UserProfile = () => {
             {useInfo?.user_info?.edu_level && (
               <View style={styles.infoView}>
                 <View style={styles.infoChild}>
-                  <View style={{marginRight: 10}}>
+                  <View style={{ marginRight: 10 }}>
                     <Icon name="graduation-cap" size={16} color="white" />
                   </View>
 
                   <View style={styles.infoChild}>
-                    <Text style={{color: 'white'}}>Education</Text>
+                    <Text style={{ color: 'white' }}>Education</Text>
                     <Text style={styles.infoTextmain}>
                       {useInfo?.user_info?.edu_level}
                     </Text>
@@ -474,11 +520,11 @@ const UserProfile = () => {
             {useInfo?.user_info?.gender && (
               <View style={styles.infoView}>
                 <View style={styles.infoChild}>
-                  <View style={{marginRight: 10}}>
+                  <View style={{ marginRight: 10 }}>
                     <Icon2 name="group" size={16} color="white" />
                   </View>
                   <View style={styles.infoChild}>
-                    <Text style={{color: 'white'}}>Gender</Text>
+                    <Text style={{ color: 'white' }}>Gender</Text>
                     <Text style={styles.infoTextmain}>
                       {useInfo.user_info.gender}
                     </Text>
@@ -489,11 +535,11 @@ const UserProfile = () => {
             {useInfo?.user_info?.dob && (
               <View style={styles.infoView}>
                 <View style={styles.infoChild}>
-                  <View style={{marginRight: 10}}>
+                  <View style={{ marginRight: 10 }}>
                     <Icon2 name="birthday-cake" size={16} color="white" />
                   </View>
                   <View style={styles.infoChild}>
-                    <Text style={{color: 'white'}}>Birth Date </Text>
+                    <Text style={{ color: 'white' }}>Birth Date </Text>
                     <Text style={styles.infoTextmain}>
                       {useInfo?.user_info?.dob}
                     </Text>
@@ -504,11 +550,11 @@ const UserProfile = () => {
             {useInfo?.user_info?.country && (
               <View style={styles.infoView}>
                 <View style={styles.infoChild}>
-                  <View style={{marginRight: 10}}>
+                  <View style={{ marginRight: 10 }}>
                     <Icon name="city" size={16} color="white" />
                   </View>
                   <View style={styles.infoChild}>
-                    <Text style={{color: 'white'}}>Lives in</Text>
+                    <Text style={{ color: 'white' }}>Lives in</Text>
                     <Text style={styles.infoTextmain}>
                       {useInfo?.user_info?.country}
                     </Text>
@@ -533,7 +579,7 @@ const UserProfile = () => {
               style={styles.bgNav}
               onPress={() => setData('posts')}>
               <Text
-                style={data === 'posts' ? {color: 'gold'} : {color: 'white'}}>
+                style={data === 'posts' ? { color: 'gold' } : { color: 'white' }}>
                 All Post
               </Text>
             </TouchableOpacity>
@@ -541,7 +587,7 @@ const UserProfile = () => {
               style={styles.bgNav}
               onPress={() => setData('photos')}>
               <Text
-                style={data === 'photos' ? {color: 'gold'} : {color: 'white'}}>
+                style={data === 'photos' ? { color: 'gold' } : { color: 'white' }}>
                 Photos
               </Text>
             </TouchableOpacity>
@@ -549,7 +595,7 @@ const UserProfile = () => {
               style={styles.bgNav}
               onPress={() => setData('videos')}>
               <Text
-                style={data === 'videos' ? {color: 'gold'} : {color: 'white'}}>
+                style={data === 'videos' ? { color: 'gold' } : { color: 'white' }}>
                 Videos
               </Text>
             </TouchableOpacity>
@@ -566,16 +612,16 @@ const UserProfile = () => {
             </View>
           )}
           {data === '' && (
-            <View style={{height: 600, justifyContent: 'center'}}>
+            <View style={{ height: 600, justifyContent: 'center' }}>
               <View>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Image
                     source={imagePath.lazyDog}
-                    style={{height: 100, width: 100}}
+                    style={{ height: 100, width: 100 }}
                   />
                 </View>
 
-                <Text style={{color: 'white', textAlign: 'center'}}>
+                <Text style={{ color: 'white', textAlign: 'center' }}>
                   Sorry No Data Available !
                 </Text>
               </View>
@@ -605,7 +651,7 @@ const UserProfile = () => {
                   <UserProPost
                     post={
                       item.type === 'greeting'
-                        ? item.greeting_registration.status > 2
+                        ? item?.greeting_registration?.status > 2
                           ? item
                           : null
                         : item
@@ -616,16 +662,16 @@ const UserProfile = () => {
               {/* <ProfilePost userActivites={userActivites} /> */}
             </>
           ) : (
-            <View style={{height: 200, justifyContent: 'center'}}>
+            <View style={{ height: 200, justifyContent: 'center' }}>
               <View>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   <Image
                     source={imagePath.lazyDog}
-                    style={{height: 100, width: 100}}
+                    style={{ height: 100, width: 100 }}
                   />
                 </View>
 
-                <Text style={{color: 'white', textAlign: 'center'}}>
+                <Text style={{ color: 'white', textAlign: 'center' }}>
                   Sorry No Data Available !
                 </Text>
               </View>

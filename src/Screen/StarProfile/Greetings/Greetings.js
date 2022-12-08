@@ -340,6 +340,14 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             }
                             mode="datetime"
                             onConfirm={date => {
+                              setInputData({
+                                ...inputData,
+                                time: date,
+                                greetings_id: GreetingInfo
+                                  ? GreetingInfo.id
+                                  : '',
+                              });
+
                               setOpen(false);
                               setDate(date);
                               setStartTime(date);

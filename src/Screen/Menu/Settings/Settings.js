@@ -1,37 +1,38 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import HeaderComp from '../../../Components/HeaderComp';
-import {Title} from 'react-native-paper';
+import { Title } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import navigationStrings from '../../../Constants/navigationStrings';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import TitleHeader from '../../../Components/TitleHeader';
 
-function SettingsTitle({title, icon, clickFunc}) {
+function SettingsTitle({ title, icon, clickFunc }) {
   return (
     <TouchableOpacity
-      style={{paddingHorizontal: 10, marginVertical: 8}}
+      style={{ paddingHorizontal: 10, marginVertical: 8 }}
       onPress={() => clickFunc(title)}>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <View style={{flexDirection: 'row'}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={styles.centerView}>{icon}</View>
           <View style={styles.centerView}>
-            <Title style={{fontSize: 15, color: '#fff'}}>{title}</Title>
+            <Title style={{ fontSize: 15, color: '#fff' }}>{title}</Title>
           </View>
         </View>
 
         <View style={styles.centerView}></View>
       </View>
       <View
-        style={{borderWidth: 0.2, borderColor: 'gray', marginVertical: 8}}
+        style={{ borderWidth: 0.2, borderColor: 'gray', marginVertical: 8 }}
       />
     </TouchableOpacity>
   );
 }
 
-const Settings = ({navigation}) => {
+const Settings = ({ navigation }) => {
   function handleRoute(title) {
     if (title === 'Personal Information') {
       return navigation.navigate(navigationStrings.PERSONALINFO);
@@ -57,16 +58,19 @@ const Settings = ({navigation}) => {
     if (title === 'Educational Information') {
       return navigation.navigate(navigationStrings.EDUCATIONINFO);
     }
+    if (title === 'Delete profile') {
+      return navigation.navigate(navigationStrings.DELETEWARNING);
+    }
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <View style={{margin: 10}}>
+        <View style={{ margin: 10 }}>
           {/* <Text style={styles.titile}>Settings</Text>
            */}
-           <TitleHeader title={'Settings'} />
+          <TitleHeader title={'Settings'} />
 
           <SettingsTitle
             title="Personal Information"
@@ -99,9 +103,14 @@ const Settings = ({navigation}) => {
             icon={<MaterialIcons name="report" size={20} color="#fff" />}
             clickFunc={handleRoute}
           />
+          <SettingsTitle
+            title="Delete profile"
+            icon={<AntDesign name="deleteuser" size={20} color="#fff" />}
+            clickFunc={handleRoute}
+          />
         </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -115,8 +124,8 @@ const styles = StyleSheet.create({
   titile: {
     color: '#fff',
     fontSize: 25,
-    marginLeft:15,
-    marginBottom:10
+    marginLeft: 15,
+    marginBottom: 10
   },
-  centerView: {marginHorizontal: 5, justifyContent: 'center'},
+  centerView: { marginHorizontal: 5, justifyContent: 'center' },
 });

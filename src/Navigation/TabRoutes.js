@@ -1,21 +1,20 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AuthContext } from '../Constants/context';
+import {AuthContext} from '../Constants/context';
 import navigationStrings from '../Constants/navigationStrings';
 import AppUrl from '../RestApi/AppUrl';
 import VideoSliderContainer from '../Screen/VideoSlider/VideoSliderContainer';
-import { HomeStackScreen } from './HomeStack/HomeStackScreen';
-import { MarketPlaceStackScreen } from './MarketPlaceStack/MarketPlaceStackScreen';
+import {HomeStackScreen} from './HomeStack/HomeStackScreen';
+import {MarketPlaceStackScreen} from './MarketPlaceStack/MarketPlaceStackScreen';
 import MenuStackScreen from './MenuStack/MenuStackScreen';
 import MenuStackScreenV2 from './MenuStackV2/MenuStackScreenV2';
-import { NotificationStackScreen } from './NotificationStack/NotificationStackScreen';
+import {NotificationStackScreen} from './NotificationStack/NotificationStackScreen';
 
 const Tab = createBottomTabNavigator();
-
 
 const TabRoutes = () => {
   const {
@@ -24,6 +23,7 @@ const TabRoutes = () => {
     axiosConfig,
     totalNotification,
     updateNotification,
+    setGreetingInfo,
   } = useContext(AuthContext);
   updateNotification();
 
@@ -37,6 +37,7 @@ const TabRoutes = () => {
       .get(AppUrl.CheckNotification, axiosConfig)
       .then(res => {
         setNotification(res?.data?.notifiction);
+        setGreetingInfo(res.data.greeting_info);
       })
       .catch(err => {
         console.log(err);
@@ -67,7 +68,7 @@ const TabRoutes = () => {
         name={navigationStrings.HOMESTACK}
         component={HomeStackScreen}
         options={{
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <>
                 {focused ? (
@@ -100,7 +101,7 @@ const TabRoutes = () => {
         component={NotificationStackScreen}
         options={{
           tabBarBadge: totalNotification > 0 ? totalNotification : null,
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <>
                 {focused ? (
@@ -133,7 +134,7 @@ const TabRoutes = () => {
         name="hekkpo"
         component={VideoSliderContainer}
         options={{
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <>
                 {focused ? (
@@ -165,7 +166,7 @@ const TabRoutes = () => {
         name={navigationStrings.MARKETPLACE}
         component={MarketPlaceStackScreen}
         options={{
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <>
                 {focused ? (
@@ -229,12 +230,11 @@ const TabRoutes = () => {
         }}
       /> */}
 
-
       <Tab.Screen
         name={navigationStrings.MENUSTACKSCREENV2}
         component={MenuStackScreenV2}
         options={{
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <>
                 {focused ? (
@@ -262,15 +262,7 @@ const TabRoutes = () => {
           },
         }}
       />
-
-
     </Tab.Navigator>
-
-
-
-
-
-
   );
 };
 const styles = StyleSheet.create({

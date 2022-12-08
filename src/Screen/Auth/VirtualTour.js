@@ -20,14 +20,14 @@ import AppUrl from '../../RestApi/AppUrl';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 // create a component
-const VirtualTour = ({route}) => {
+const VirtualTour = () => {
   const navigation = useNavigation();
   const [playing, setPlaying] = useState(false);
-  const {music, setMusic} = route.params;
+
   const [youtubeId, setYoutubeID] = useState(null);
   const [localVideo, setLocalVideo] = useState(null);
   useEffect(() => {
-    music && music.stop();
+
     axios
       .get(AppUrl.virtualTour)
       .then(res => {

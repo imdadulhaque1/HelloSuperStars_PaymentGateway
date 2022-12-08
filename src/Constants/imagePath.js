@@ -7,6 +7,10 @@ export default {
   loadingBuffering: require('../Assets/Icons/loading/loading-buffering.gif'),
   lazyDog: require('../Assets/Icons/loading/dogs.gif'),
 
+  pocketPay: require('../Assets/Icons/pocket-pay.png'),
+
+
+
   // loadingGold: require('../Assets/Icons/loading/loading1.gif'),
   //payment icons
 
@@ -316,5 +320,9 @@ export default {
   football: require('../Assets/Images/football001.png'),
   jersey: require('../Assets/Images/jersey.png'),
 
-  menuBanner2:require('../Assets/Images/goldBanner.png')
+  // menuBanner2: require('../Assets/Images/goldBanner.png'),
+
+
+  forgetPasswordImg:require('../Assets/Images/forgetPassword.png'),
+  confirmPasswordImg:require('../Assets/Images/ConfirmPass.png'),
 };

@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import moment from 'moment/moment';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -13,6 +14,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import noImage from '../../../Assets/Images/no-image.png';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
@@ -21,8 +23,11 @@ import styles from './AuctionProductCardStyle';
 const { width } = Dimensions.get('window');
 
 const AuctionProductCard = ({ data }) => {
+  console.log(data);
+  const { axiosConfig, currencyMulti, currencyCount, currency } = useContext(AuthContext);
   const Navigation = useNavigation();
   const { width } = useWindowDimensions();
+  const [isEnded, setIsEnded] = useState(null);
   const source = {
     html: `<div style='color:#e6e6e6'>${data ? data.details.slice(0, 100).concat(' ....') : ''
       }</div>`,
@@ -55,8 +60,25 @@ const AuctionProductCard = ({ data }) => {
       </>
     );
   };
+  const isComplete = async time => {
+    const now = await moment.utc();
+    console.log(time);
+    var end = await moment(time);
+    var hours = now.diff(end, 'hours');
+    console.log('time diff', hours);
+    if (hours < 0) {
+      setIsEnded(false);
+      return false;
+    } else {
+      setIsEnded(true);
+      return true;
+    }
+  };
+  useEffect(() => {
+    isComplete(data.bid_to);
+  }, []);
   return (
-    <ScrollView >
+    <ScrollView>
       <View style={styles.MaiN}>
         <View style={styles.mainView}>
           <View style={{ flexDirection: 'row', margin: 10 }}>
@@ -84,12 +106,11 @@ const AuctionProductCard = ({ data }) => {
 
               <View style={{ height: 100, width: '100%' }}>
                 <RenderHtml contentWidth={width} source={source} />
-               
               </View>
 
               <View style={styles.PriceRow}>
                 <View>
-                  <Text style={styles.Price}>Tk {data.base_price}</Text>
+                  <Text style={styles.Price}>{currencyCount(data?.base_price) + " " + currency.symbol}</Text>
                 </View>
                 <View>
                   <Text style={styles.PriceBest}>Best Price</Text>
@@ -128,7 +149,7 @@ const AuctionProductCard = ({ data }) => {
                   </View>
                 </View>
               </TouchableOpacity>
-              {new Date(data.bid_to).getTime() < new Date().getTime() ? (
+              {isEnded ? (
                 <TouchableOpacity disabled={true}>
                   <LinearGradient
                     start={{ x: 0, y: 0 }}

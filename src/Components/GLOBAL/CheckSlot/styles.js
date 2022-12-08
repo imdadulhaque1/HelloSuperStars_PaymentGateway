@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
   },
   formText: {
     color: 'white',
-    marginBottom: 15,
+
     // width:'50%'
   },
   formText2: {
     color: 'white',
-    marginBottom: 15,
+
   },
   textInputStyleTime: {
     width: 160,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 50,
     alignItems: 'center',
-  
+
 
     color: 'black',
   },

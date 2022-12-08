@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, SafeAreaView, View } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import HeaderComp from '../../Components/HeaderComp';
+import { AuthContext } from '../../Constants/context';
 import NotificationRender from '../../NotificationHandeler/NotificationRender';
 import AppUrl from '../../RestApi/AppUrl';
 import HomeOnlineStars from './HomeOnlineStars/HomeOnlineStars';
@@ -12,12 +13,22 @@ import styles from './styles';
 function Home() {
   const navigation = useNavigation();
   const [postPage, setPostPage] = useState(1);
-
+  const { setUserInfo, useInfo, setLoginStatus } = useContext(AuthContext);
 
   useEffect(() => {
     console.log(postPage);
     createChannels();
+    console.log('status', useInfo.status)
+    // if (useInfo.status == 0) {
+    //   setLoginStatus(false)
+    //   navigation.navigate('category')
+    // }
   }, []);
+
+
+  useEffect(() => {
+    console.log('post page', postPage)
+  }, [postPage])
 
   const createChannels = () => {
     PushNotification.createChannel(
@@ -75,7 +86,7 @@ function Home() {
         {/* ..........custom header end....................  */}
 
         {/* ...........online active stars................... */}
-        <NotificationRender />
+        {/* <NotificationRender /> */}
         <HomeOnlineStars />
         {/* ...........online active end................... */}
 
