@@ -59,6 +59,8 @@ const Participation = ({route}) => {
   const [videoType, setVideoType] = useState('general');
   const [refresh, setRefresh] = useState(false);
 
+  const [countAppealUpload, setCountAppealUpload] = useState(0);
+
   const fetchUploadedVideo = () => {
     console.log('click');
     axios
@@ -124,6 +126,9 @@ const Participation = ({route}) => {
     }
   };
   const onChooseAppeal = async () => {
+    if (countAppealUpload > roundInformation.appeal_video_slot_num) {
+      return Toast.show('No slots left', Toast.durations.SHORT);
+    }
     setRefresh(true);
     if (appealVideoList.length > roundInformation.appeal_video_slot_num - 1) {
       alert(`Only ${appealVideoList.length} slot are there for uploading`);
@@ -155,6 +160,7 @@ const Participation = ({route}) => {
           ]);
           submitVideo(type, res, 'appeal');
           Toast.show('Uploaded', Toast.durations.SHORT);
+          setCountAppealUpload(prevNum => prevNum + 1);
           return;
         }
         setVideos([...videos, {type: type, url: url, base64: res}]);
@@ -177,9 +183,13 @@ const Participation = ({route}) => {
       alert('Uploaded');
       RNFS.readFile(url, 'base64').then(res => {
         if (isAppealedForThisRound) {
-          setAppealVideos([...videos, {type: type, url: url, base64: res}]);
+          setAppealVideos([
+            ...appealVideos,
+            {type: type, url: url, base64: res},
+          ]);
           submitVideo(type, res, 'appeal');
           Toast.show('Uploaded', Toast.durations.SHORT);
+          setCountAppealUpload(prevNum => prevNum + 1);
           return;
         }
         setVideos([...videos, {type: type, url: url, base64: res}]);
@@ -290,18 +300,16 @@ const Participation = ({route}) => {
           auditionImage={auditionImage}
           remainingTime={remainTime}
         />
-<TitleHeader title={' Video Uploaded Details'} />
+        <TitleHeader title={' Video Uploaded Details'} />
         <View
           style={{
             backgroundColor: '#272727',
             borderRadius: 10,
-          marginTop:3,
+            marginTop: 3,
             position: 'relative',
-            marginHorizontal:10
+            marginHorizontal: 10,
           }}>
-          <View style={{marginHorizontal:10}}>
-       
-          </View>
+          <View style={{marginHorizontal: 10}}></View>
           <View style={{borderWidth: 0.5, borderBottomColor: 'black'}} />
           <View style={styles.uploadStyle}>
             <View>
@@ -353,7 +361,7 @@ const Participation = ({route}) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginVertical: 14,
-                  marginHorizontal:10
+                  marginHorizontal: 10,
                 }}>
                 <View
                   style={{
@@ -389,24 +397,35 @@ const Participation = ({route}) => {
                 backgroundColor: '#272727',
                 marginVertical: 10,
                 borderRadius: 10,
-                marginHorizontal:10
+                marginHorizontal: 10,
               }}>
               <View style={{flex: 1, flexDirection: 'row'}}>
                 {roundInformation.round_type === 0 &&
-                  videos.map((video, index) => {
-                    return (
-                      <View style={{flex: 1, flexDirection: 'column'}}>
-                        <VideoPlayer
-                          video={{
-                            uri: `${video.url}`,
-                          }}
-                          videoWidth={20}
-                          videoHeight={30}
-                          thumbnail={imagePath.AuditionTitleBanner}
-                        />
-                      </View>
-                    );
-                  })}
+                  (videos.length != 0 ? (
+                    <FlatGrid
+                      spacing={10}
+                      itemDimension={120}
+                      data={videos}
+                      renderItem={({item, index}) => (
+                        <>
+                          <View style={{width: '100%'}}>
+                            <VideoPlayer
+                              video={{
+                                uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                              }}
+                              videoWidth={200}
+                              videoHeight={200}
+                              autoplay={false}
+                              pauseOnPress
+                              hideControlsOnStart
+                              resizeMode="stretch"
+                              thumbnail={imagePath.AuditionTitleBanner}
+                            />
+                          </View>
+                        </>
+                      )}
+                    />
+                  ) : null)}
               </View>
               <View style={styles.uploadVideoStyle}>
                 {roundInformation.round_type === 0 &&
@@ -519,6 +538,35 @@ const Participation = ({route}) => {
                     }}>
                     Appeal Video
                   </Text>
+                  <View style={{flex: 1, flexDirection: 'row'}}>
+                    {roundInformation.round_type === 0 &&
+                      (appealVideos.length != 0 ? (
+                        <FlatGrid
+                          spacing={10}
+                          itemDimension={120}
+                          data={appealVideos}
+                          renderItem={({item, index}) => (
+                            <>
+                              <View style={{width: '100%'}}>
+                                <VideoPlayer
+                                  video={{
+                                    uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                                  }}
+                                  videoWidth={200}
+                                  videoHeight={200}
+                                  autoplay={false}
+                                  pauseOnPress
+                                  hideControlsOnStart
+                                  resizeMode="stretch"
+                                  thumbnail={imagePath.AuditionTitleBanner}
+                                />
+                              </View>
+                            </>
+                          )}
+                        />
+                      ) : null)}
+                  </View>
+
                   <View style={styles.uploadVideoStyle}>
                     {appealVideoList.length != 0 ? (
                       <FlatGrid
@@ -651,7 +699,6 @@ const styles = StyleSheet.create({
   },
   textColor: {
     color: '#E6E6E6',
-    
   },
   browse: {
     height: 100,

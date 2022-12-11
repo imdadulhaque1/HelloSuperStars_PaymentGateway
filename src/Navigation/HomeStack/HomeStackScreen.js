@@ -1,4 +1,4 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import AuditionRoundStart from '../../Components/AUDITION/AuditionRoundStart/AuditionRoundStart';
 import FangroupVoting from '../../Components/FANGROUP/FanGroupVotting/FangroupVoting';
@@ -8,7 +8,7 @@ import SouvenirInvoice from '../../Components/STAR_SHOWCASE/Souviner/SouvenirInv
 import AuditionTitle from '../../Components/AUDITION/UpcomingAudition/ActivityEventList';
 import UploadedVideoRound from '../../Components/AUDITION/UpcomingAudition/UploadedVideoRound';
 import navigationStrings from '../../Constants/navigationStrings';
-import {Home} from '../../Screen';
+import { Home } from '../../Screen';
 import Fangroup from '../../Screen/Fangroup/Fangroup';
 import LearningSession from '../../Screen/LearningSession/LearningSession';
 import OnlineLearning from '../../Screen/LearningSession/OnlineLearning';
@@ -23,11 +23,15 @@ import Souvenir from './../../Screen/StarProfile/ShowCase/Souvenir';
 import UpcomingAuditionsCard from '../../Components/GLOBAL/Card/PostCard/UpcomingAuditionsCard';
 import RegisterUpCoAudition from '../../Components/AUDITION/UpcomingAudition/RegisterUpCoAudition';
 import AuctionDetails from '../../Screen/Auction/AuctionDetails';
+import ShowCase from '../../Screen/StarProfile/ShowCase/ShowCase';
+import AuctionTab from '../../Screen/StarProfile/ShowCase/AuctionTab';
+import Participate from '../../Screen/StarProfile/ShowCase/Participate';
+import MarketPlaceShowcase from '../../Screen/StarProfile/ShowCase/MarketPlaceShowcase';
 const HomeStack = createNativeStackNavigator();
 
 export function HomeStackScreen() {
   return (
-    <HomeStack.Navigator screenOptions={{headerShown: false}}>
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name={navigationStrings.HOME} component={Home} />
       <HomeStack.Screen name={navigationStrings.MEETUP} component={MeetUp} />
       <HomeStack.Screen
@@ -90,7 +94,9 @@ export function HomeStackScreen() {
         component={UploadedVideoRound}
       />
 
-      <HomeStack.Screen name={'StarShowCase'} component={StarShowCase} />
+      <HomeStack.Screen 
+      name={'StarShowCase'}
+     component={StarShowCase} />
       {/* <HomeStack.Screen name={'Audition'} component={RegisterUpCoAudition} /> */}
       <HomeStack.Screen
         name={navigationStrings.AUDITIONREGISTER}
@@ -98,6 +104,14 @@ export function HomeStackScreen() {
       />
       <HomeStack.Screen name={'Souviner'} component={Souvenir} />
       <HomeStack.Screen name={'SouvinerInvoice'} component={SouvenirInvoice} />
+
+
+      <HomeStack.Screen name={navigationStrings.STARSHOWCASE} component={ShowCase} />
+
+      <HomeStack.Screen name={navigationStrings.AUCTIONTAB} component={AuctionTab} />
+      <HomeStack.Screen name={navigationStrings.PARTICIPATE} component={Participate} />
+      <HomeStack.Screen name={navigationStrings.MARKETPLACESHOWCASE} component={MarketPlaceShowcase} />
+      <HomeStack.Screen name={navigationStrings.SOUVENIR} component={Souvenir} />
     </HomeStack.Navigator>
   );
 }

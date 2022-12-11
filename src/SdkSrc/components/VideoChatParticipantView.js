@@ -132,7 +132,7 @@ export default function ParticipantView({
             position: "relative",
           }}
         >
-          {webcamOn ? (
+          {webcamOn && webcamStream  ? (
             <>
               <RTCView
               zOrder={isLocal?2:null}
@@ -259,7 +259,7 @@ overflow:'hidden',
     right:0,
     // borderRadius: 4,
     // overflow: "hidden",
-    height: windowHeight - 80,
+    height: windowHeight - 150,
     width: windowWidth - 15,
     // zIndex:1,
   }

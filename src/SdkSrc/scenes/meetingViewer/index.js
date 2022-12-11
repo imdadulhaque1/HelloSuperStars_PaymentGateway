@@ -127,7 +127,7 @@ export default function MeetingViewer({ videoOn }) {
 
   const exitMeeting = () => {
     leave();
-    return navigation.navigate(navigationStrings.MENU)
+    return navigation.navigate(navigationStrings.MENUV2)
     // navigation.dispatch(
     //   CommonActions.reset({
     //     index: 0,

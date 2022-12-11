@@ -10,11 +10,13 @@ import {
   ScrollView,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import CountDown from 'react-native-countdown-component';
 import RenderHtml from 'react-native-render-html';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import noImage from '../../../Assets/Images/no-image.png';
@@ -22,7 +24,6 @@ import HeaderComp from '../../../Components/HeaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
 import BidCongratulationModal from '../../../Components/MODAL/BidCongratulationModal';
 import ProductProcessModal from '../../../Components/MODAL/ProductProcessModal';
-import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
@@ -30,13 +31,16 @@ import LoaderComp from '../../LoaderComp/LoaderComp';
 import styles from '../AuctionProductCard/AuctionProductCardStyle';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AuctionAcquireModel from '../../../Components/MODAL/AuctionAcquireModel';
+import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
+// import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
+// import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 
 const AuctionParticipateNow = ({ route }) => {
   const navigation = useNavigation();
   const { socketData, axiosConfig } = useContext(AuthContext);
   const { product } = route.params;
-  console.log(product);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
+  const [resultTime, setResultTime] = useState(false);
   const [isShowResult, setIsShowResult] = useState(false);
   const [winner, setWinner] = useState([]);
   const [liveBidding, setLiveBidding] = useState([]);
@@ -45,6 +49,7 @@ const AuctionParticipateNow = ({ route }) => {
   const [auctionApply, setAuctionApply] = useState();
   const [showPass, setShowPass] = useState(true);
   const { width } = useWindowDimensions();
+  const { currencyMulti, currencyCount, currency } = useContext(AuthContext);
   const {
     control,
     handleSubmit,
@@ -92,25 +97,106 @@ const AuctionParticipateNow = ({ route }) => {
   const [minute, setMinute] = useState('');
   const [second, setSecond] = useState('');
   const [nowDate, setNowDate] = useState(new Date().getTime());
-
+  const [isEnded, setIsEnded] = useState(null);
   const countDownDate = new Date(product?.bid_to).getTime();
   const resultPublishDate = new Date(product?.result_date).getTime();
 
+  // setInterval(() => {
+  //   const now = new Date().getTime();
+  //   const distance = countDownDate - now;
+  //   const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  //   setDay(days);
+  //   var hours = Math.floor(
+  //     (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  //   );
+  //   setHour(hours);
+  //   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  //   setMinute(minutes);
+  //   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  //   setSecond(seconds);
+  // }, 1000);
 
-  setInterval(() => {
-    const now = new Date().getTime();
-    const distance = countDownDate - now;
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    setDay(days);
-    var hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    setHour(hours);
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    setMinute(minutes);
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    setSecond(seconds);
-  }, 1000);
+  const remainingTime = async time => {
+    // console.log('time', time);
+    const startTime = await new Date(time).getTime();
+
+    const currentTime = await new Date().getTime();
+    // console.log('startTime', startTime);
+    // console.log('currentTime', currentTime);
+    if (startTime >= currentTime) {
+      // console.log(
+      //   '-------------------------------remaining Time----------------------------------',
+      //   (startTime - currentTime) / 1000,
+      // );
+      return (startTime - currentTime) / 1000;
+    }
+    return 0;
+  };
+
+  const [countDownTime, setCountDownTime] = useState(null);
+  const calculateRemainingTime = async time => {
+    const now = await moment.utc();
+    console.log(time);
+    var end = await moment(time);
+    var hours = end.diff(now, 'seconds');
+    console.log('calculateRemainingTime for count', hours);
+    setCountDownTime(hours);
+  };
+
+  const isComplete = async time => {
+    const now = await moment.utc();
+    console.log(time);
+    var end = await moment(time);
+    var hours = now.diff(end, 'seconds');
+    console.log('time diff', hours);
+    if (hours < 0) {
+      setIsEnded(false);
+      return false;
+    } else {
+      setIsEnded(true);
+      return true;
+    }
+  };
+
+  const [maxBid, setMaxBid] = useState([]);
+  const getMaxBid = () => {
+    axios
+      .get(AppUrl.userMaxBid + product.id, axiosConfig)
+      .then(res => {
+        if (res.data.status === 200) {
+          console.log('max bit', res.data);
+          setMaxBid(res.data.maxBid);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const [showResult, setShowResult] = useState(null);
+
+  const resultView = async time => {
+    const now = await moment.utc();
+
+    var end = await moment(time);
+    console.log('current time', now);
+    console.log('result time', end);
+    var dif = now.diff(end, 'seconds');
+    console.log(' diff result', dif);
+    if (dif < 0) {
+      console.log('result dekhabe na false showResult', dif);
+      setShowResult(false);
+    } else {
+      console.log('result dekhabe true showResult', dif);
+      setShowResult(true);
+    }
+  };
+  useEffect(() => {
+    isComplete(product.bid_to);
+    calculateRemainingTime(product.bid_to);
+    getMaxBid();
+    resultView(product?.result_date);
+  }, []);
 
   const randerProductImageFlatListItem = ({ index }) => {
     return (
@@ -144,7 +230,7 @@ const AuctionParticipateNow = ({ route }) => {
             />
           </View>
           <View style={styles.PriceLiveDate}>
-            <Text style={styles.PriceBD}>Tk {Number(item?.amount)}</Text>
+            <Text style={styles.PriceBD}>{currencyCount(item?.amount) + " " + currency.symbol}</Text>
             <Text style={styles.BDname}>
               {item?.user?.first_name + ' ' + item?.user?.last_name}
             </Text>
@@ -211,7 +297,6 @@ const AuctionParticipateNow = ({ route }) => {
       .then(res => {
         if (res.data.status === 200) {
           setAuctionApply(res.data.auctionApply);
-          console.log('setAuctionApply', res.data.auctionApply);
           setWinner(res.data.winner);
         }
         setBuffer(false);
@@ -238,21 +323,26 @@ const AuctionParticipateNow = ({ route }) => {
   };
 
   const onSubmit = data => {
-    if (data.amount < product?.base_price) {
+    if (data.amount < currencyCount(product?.base_price)) {
       setModalObj({
         modalType: 'warning',
         buttonTitle: 'Ok',
         message:
-          'Opps...  price should more then ' + product?.base_price + ' !',
+          'Opps...  price should more then ' + currencyCount(product?.base_price) + ' !',
       });
       setModal(true);
     } else {
       // setData('Applybid');
+
+
+
       setBuffer(true);
       let aditionalData = {
-        ...data,
+        amount: Number(data.amount / currency.currency_value).toFixed(0),
+        password: data.password,
         auction_id: product?.id,
       };
+
       axios
         .post(AppUrl.AuctionBiddingProduct, aditionalData, axiosConfig)
         .then(res => {
@@ -265,6 +355,12 @@ const AuctionParticipateNow = ({ route }) => {
             });
             bidingHistory();
             getLiveBidding();
+            ToastAndroid.show('Bidding Success!!!', ToastAndroid.SHORT);
+            setModalObj({
+              modalType: 'success',
+              buttonTitle: 'Ok',
+              message: 'Bidding Success!',
+            });
           }
           if (res.data.status === 201) {
             setModalObj({
@@ -337,7 +433,14 @@ const AuctionParticipateNow = ({ route }) => {
                   </View>
 
                   <View style={styles.MaiN}>
-                    <Text style={styles.PText}>Bidding End Time</Text>
+                    <Text
+                      style={styles.PText}
+                      onPress={() => {
+                        console.log('wait');
+                        remainingTime(product?.bid_to);
+                      }}>
+                      Bidding End Time
+                    </Text>
                     <LinearGradient
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 0 }}
@@ -355,57 +458,24 @@ const AuctionParticipateNow = ({ route }) => {
                         paddingVertical: 8,
                         marginTop: 8,
                       }}>
-                      <>
-                        <View style={styles.DateHead}>
-                          <View style={styles.Clock}>
-                            <Image
-                              source={imagePath.ImgTimeC}
-                              style={styles.Img}
-                            />
-                          </View>
-                          <View style={styles.Clock1}>
-                            <View>
-                              <Text style={styles.TextDate}>DAY</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.TextDateB}>
-                                {day > 0 ? day : '00'}
-                              </Text>
-                            </View>
-                          </View>
-
-                          <View style={styles.Clock1}>
-                            <View>
-                              <Text style={styles.TextDate}>HOUR</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.TextDateB}>
-                                {hour > 0 ? hour : '00'}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.Clock1}>
-                            <View>
-                              <Text style={styles.TextDate}>MIN</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.TextDateB}>
-                                {minute > 0 ? minute : '00'}
-                              </Text>
-                            </View>
-                          </View>
-                          <View style={styles.Clock1}>
-                            <View>
-                              <Text style={styles.TextDate}>SEC</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.TextDateB}>
-                                {second > 0 ? second : '00'}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </>
+                      <CountDown
+                        // until={totalSecond}
+                        until={countDownTime}
+                        onFinish={() => { }}
+                        // onPress={() => alert('hello')}
+                        digitStyle={{
+                          backgroundColor: 'black',
+                          borderWidth: 2,
+                          borderColor: '#FFAD00',
+                          borderRadius: 20,
+                        }}
+                        digitTxtStyle={{ color: '#FFAD00' }}
+                        timeLabelStyle={{
+                          color: 'black',
+                          fontWeight: 'bold',
+                        }}
+                        size={18}
+                      />
                     </LinearGradient>
                   </View>
 
@@ -446,7 +516,7 @@ const AuctionParticipateNow = ({ route }) => {
                             Minimum Bid Price
                           </Text>
                           <Text style={styles.PriceDollarTextB}>
-                            Tk {product.base_price}
+                            {currencyCount(product.base_price) + " " + currency.symbol}
                           </Text>
                         </View>
                       </View>
@@ -481,7 +551,7 @@ const AuctionParticipateNow = ({ route }) => {
                     </View>
                   </View>
 
-                  {countDownDate > nowDate ? (
+                  {!isEnded ? (
                     <View style={{ paddingBottom: 110 }}>
                       <View style={styles.MaiN}>
                         <Text style={styles.LiveBidding}>Bid Now</Text>
@@ -644,7 +714,9 @@ const AuctionParticipateNow = ({ route }) => {
                               </View>
                               <View style={styles.BidHBgA}>
                                 <Text style={styles.BidTextHiss}>
-                                  Tk {Number(singleHistory.amount)}
+                                  {/* {currencyCount(singleHistory?.amount + " " + currency.symbol)} */}
+                                  {currencyCount(singleHistory.amount) + " " + currency.symbol}
+                                  {/* Tk {Number(singleHistory.amount)} */}
                                 </Text>
                               </View>
                             </View>
@@ -656,7 +728,8 @@ const AuctionParticipateNow = ({ route }) => {
                       {/* Page 82| Start */}
                       <View style={styles.MaiNApp}>
                         <View style={styles.Applied}>
-                          <TouchableOpacity onPress={() => setLockModal(true)}>
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
                             <LinearGradient
                               start={{ x: 0, y: 0 }}
                               end={{ x: 1, y: 0 }}
@@ -817,15 +890,13 @@ const AuctionParticipateNow = ({ route }) => {
                               </View>
 
                               <TouchableOpacity
-                                disabled={
-                                  nowDate < resultPublishDate ? true : false
-                                }
+                                disabled={showResult ? false : true}
                                 onPress={() => setIsShowResult(true)}>
                                 <LinearGradient
                                   start={{ x: 0, y: 0 }}
                                   end={{ x: 1, y: 0 }}
                                   colors={
-                                    nowDate < resultPublishDate
+                                    !showResult
                                       ? ['#343333', '#343333']
                                       : [
                                         '#FFAD00',
@@ -839,7 +910,7 @@ const AuctionParticipateNow = ({ route }) => {
                                   style={styles.LinerBGA}>
                                   <Text
                                     style={
-                                      nowDate < resultPublishDate
+                                      !showResult
                                         ? styles.ApplyTextReWhite
                                         : styles.ApplyTextRe
                                     }>
@@ -962,27 +1033,30 @@ const AuctionParticipateNow = ({ route }) => {
                     </View>
                   ) : null}
                 </View>
-                <ProductProcessModal
+                {/* <ProductProcessModal
                   instruction={instruction}
                   processModal={processModal}
                   setProcessModal={setProcessModal}
                   setIsShowPaymentComp={setIsShowPaymentComp}
                   setData={setData}
-                />
-                <AuctionAcquireModel
+                /> */}
+
+                {isShowPaymentComp && (
+                  <RegisPaymentModal
+                    eventType="auction"
+                    modelName="auction"
+                    isShowPaymentComp={isShowPaymentComp}
+                    setIsShowPaymentComp={setIsShowPaymentComp}
+                    eventId={product?.id}
+                    fee={maxBid?.amount}
+                  />
+                )}
+
+                {/* <AuctionAcquireModel
                   lockModal={lockModal}
                   setLockModal={setLockModal}
                   auctionId={product?.id}
-                />
-                <RegisPaymentModal
-                  eventType="auction"
-                  eventId={product?.id}
-                  modelName="auction"
-                  isShowPaymentComp={isShowPaymentComp}
-                  setIsShowPaymentComp={setIsShowPaymentComp}
-                  event_registration_id={auctionApply && auctionApply?.id}
-                  fetchAllDataAfterPayment={fetchAllDataAfterPayment}
-                />
+                /> */}
 
                 <BidCongratulationModal
                   showModal={showModal}

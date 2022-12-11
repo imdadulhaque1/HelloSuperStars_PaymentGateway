@@ -19,8 +19,8 @@ export default function ParticipantView({
   presstoHide,
   participantId,
 }) {
-  const onStreamEnabled = (stream) => { };
-  const onStreamDisabled = (stream) => { };
+  const onStreamEnabled = (stream) => {};
+  const onStreamDisabled = (stream) => {};
 
   const {
     displayName,
@@ -119,7 +119,7 @@ export default function ParticipantView({
           position: "relative",
         }}
       >
-        {webcamOn ? (
+        {webcamOn && webcamStream ? (
           <>
             <RTCView
               onLayout={(event) => {

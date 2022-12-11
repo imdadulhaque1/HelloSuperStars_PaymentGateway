@@ -121,7 +121,7 @@ const Wallet = ({ navigation }) => {
                 style={{ height: 20, width: 20 }}
               />
             </View>
-            <View style={{ width:'80%'}}>
+            <View style={{ width: '80%' }}>
               <View>
                 <LinearGradient
                   colors={[
@@ -131,14 +131,14 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 ,width:80}}>
+                  style={{ borderRadius: 5, width: 80 }}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Your status
                   </Text>
                 </LinearGradient>
 
                 <Text
-                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15,paddingRight:3 }}>
+                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15, paddingRight: 3 }}>
                   {waletInfo?.type}
                 </Text>
               </View>
@@ -154,15 +154,15 @@ const Wallet = ({ navigation }) => {
               marginLeft: 5,
               marginRight: 4,
             }}>
-        
+
             <View style={Styles.fourthRow}>
               <Image
                 source={imagePath.onlyStar}
                 style={{ height: 20, width: 20 }}
               />
             </View>
-         
-            <View style={{width:'80%' }}>
+
+            <View style={{ width: '80%' }}>
               <View>
                 <LinearGradient
                   colors={[
@@ -172,7 +172,7 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 ,width:'70%'}}>
+                  style={{ borderRadius: 5, width: '70%' }}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Club Point
                   </Text>
@@ -185,7 +185,7 @@ const Wallet = ({ navigation }) => {
               </View>
             </View>
           </View>
-  
+
 
 
           <View
@@ -201,7 +201,7 @@ const Wallet = ({ navigation }) => {
             <View style={Styles.fourthRow}>
               <Icon4 name="heart" color={'#FFC448'} size={15} />
             </View>
-            <View style={{width:'80%' }}>
+            <View style={{ width: '80%' }}>
               <View>
                 <LinearGradient
                   colors={[
@@ -211,15 +211,15 @@ const Wallet = ({ navigation }) => {
                     '#E7A725',
                     '#FFAD00',
                   ]}
-                  style={{ borderRadius: 5 ,width:'70%'}}>
+                  style={{ borderRadius: 5, width: '70%' }}>
                   <Text style={{ paddingHorizontal: 5, fontWeight: 'bold', fontSize: 10 }}>
                     Love bundle
                   </Text>
                 </LinearGradient>
 
                 <Text
-                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15, paddingRight:3,width:'80%' }}>
-                  {waletInfo?.love_points} 
+                  style={{ color: '#FFAD00', fontWeight: 'bold', fontSize: 15, paddingRight: 3, width: '80%' }}>
+                  {waletInfo?.love_points}
                 </Text>
               </View>
             </View>

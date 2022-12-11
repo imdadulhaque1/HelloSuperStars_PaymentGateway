@@ -3,18 +3,24 @@ import * as React from 'react';
 import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import HeaderComp from '../../../Components/HeaderComp';
 import {AuthContext} from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import AuctionProductCard from './AuctionPorductCard';
 import styles from './styles';
 
-function AuctionTab(props) {
+function AuctionTab({route,navigation}) {
+
+  const {starId,setProduct,product}=route.params;
+
+  console.log('product =====<<<<',product);
+
   const {axiosConfig} = React.useContext(AuthContext);
-  const {setProduct} = props.setProduct;
+  // const {setProduct} = props.setProduct;
   const [productInfo, setProductInfo] = React.useState([]);
   React.useEffect(() => {
-    axios.get(`${AppUrl.AuctionStar}${props.starId}`, axiosConfig).then(res => {
+    axios.get(`${AppUrl.AuctionStar}${starId}`, axiosConfig).then(res => {
       console.log(res.data);
       if (res.data.status === 200) {
         setProductInfo(res.data.product);
@@ -22,7 +28,10 @@ function AuctionTab(props) {
     });
   }, []);
   return (
+    <>
+     <HeaderComp backFunc={()=>navigation.goBack()} />
     <View style={styles.container}>
+   
       <SafeAreaView>
         <View style={styles.row1}>
           <LinearGradient
@@ -37,10 +46,11 @@ function AuctionTab(props) {
         <ScrollView>
           {productInfo.length > 0 ? (
             productInfo.map(item => {
-              console.log(item);
+           
               return (
                 <AuctionProductCard
-                  setView={props.setView}
+                 starId={starId}
+                 product={product}
                   name={item.title}
                   productImg={item.product_image}
                   price={item.base_price}
@@ -49,7 +59,7 @@ function AuctionTab(props) {
                   key={item.id}
                   productDetails={item}
                   buttonText="Participate"
-                  setProduct={props.setProduct}
+                  setProduct={setProduct}
                 />
               );
             })
@@ -72,6 +82,7 @@ function AuctionTab(props) {
         </ScrollView>
       </SafeAreaView>
     </View>
+    </>
   );
 }
 

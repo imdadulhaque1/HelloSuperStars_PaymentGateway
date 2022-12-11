@@ -12,6 +12,8 @@ import { AuthContext } from '../Constants/context';
 import AppUrl from '../RestApi/AppUrl';
 import Loader from '../Screen/Auth/Loader';
 import axios from 'axios';
+import linking from '../SdkSrc/navigators/linking';
+import publicIP from 'react-native-public-ip';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +32,16 @@ const Routes = () => {
   const [activities, setActivities] = useState([]);
 
   const [totalNotification, setTotalNotification] = useState();
+  const [greetingInfo, setGreetingInfo] = useState([]);
   const [shurjoPayment, setShurjoPayment] = useState(false);
+
+  const [loactionInfo, setLoactionInfo] = useState();
+  const [currency, setCurrency] = useState({
+    country_code: "",
+    currency_value: "",
+    symbol: ""
+
+  });
   //socket connection
   useEffect(() => {
     //socket connection
@@ -41,6 +52,20 @@ const Routes = () => {
 
     retrieveData();
     LoginStatusGet();
+
+
+    publicIP()
+      .then(ip => {
+        console.log(ip);
+        getLoactionInformation(ip);
+        // '47.122.71.234'
+      })
+      .catch(error => {
+        console.log(error);
+        // 'Unable to get IP address.'
+      });
+
+
   }, []);
 
   //token set
@@ -100,9 +125,44 @@ const Routes = () => {
         setWaletInfo(res.data.userWallet);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   };
+  // '104.44.7.192'
+  // "162.210.194.38" usa
+  //get location information
+  const getLoactionInformation = (ip) => {
+    axios
+      .get(AppUrl.MyLoaction + ip, axiosConfig)
+      .then(res => {
+        setLoactionInfo(res?.data?.locationData)
+        setCurrency({
+          country_code: res?.data?.currencyDetails?.country_code,
+          currency_value: res?.data?.currencyDetails?.currency_value,
+          symbol: res?.data?.currencyDetails?.symbol
+
+        })
+        console.log('my location', res.data)
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  //get countrybase currency
+  const currencyCount = (valu) => {
+    return (Number(valu) * Number(currency?.currency_value)).toFixed(0)
+  }
+
+  //get currency valu * number
+  const currencyMulti = (valu, number) => {
+
+    console.log('cost_____', valu)
+    console.log('number_____', number)
+
+    return ((Number(valu) * Number(currency?.currency_value)) * number).toFixed(0)
+  }
+
 
   //activity information
   const getActivity = () => {
@@ -112,7 +172,7 @@ const Routes = () => {
         setActivities(res.data);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   };
 
@@ -140,7 +200,7 @@ const Routes = () => {
         }
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
       });
   };
 
@@ -219,6 +279,8 @@ const Routes = () => {
     } catch (error) { }
   };
 
+
+
   if (loading) {
     return (
       <>
@@ -230,6 +292,7 @@ const Routes = () => {
   return (
     <AuthContext.Provider
       value={{
+        loactionInfo,
         authContext,
         userToken,
         axiosConfig,
@@ -251,9 +314,16 @@ const Routes = () => {
         setUserInfo,
         getWaletInformation,
         shurjoPayment,
-        setShurjoPayment
+        setShurjoPayment,
+        setLoginStatus,
+        currency,
+        currencyCount,
+        currencyMulti,
+
+        greetingInfo,
+        setGreetingInfo,
       }}>
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {/* !!loginStatus */}
           {!!loginStatus ? <>{MainStack(Stack)}</> : <>{AuthStack(Stack)}</>}

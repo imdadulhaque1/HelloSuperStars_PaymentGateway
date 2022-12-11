@@ -18,10 +18,12 @@ import LinearGradient from 'react-native-linear-gradient';
 // import {LinearTextGradient} from 'react-native-text-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import LoaderComp from '../../Components/LoaderComp';
 import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import AppUrl from '../../RestApi/AppUrl';
+import navigationStrings from '../../Constants/navigationStrings';
 // create a component
 const Login = () => {
   const navigation = useNavigation();
@@ -32,6 +34,7 @@ const Login = () => {
   const [buffer, setBuffer] = useState(false);
   const [error, setError] = useState(null);
   const [showPass, setShowPass] = useState(true);
+  const [customCheck,setCustomCheck]=useState(false)
 
   const HandelLogin = () => {
     setBuffer(true);
@@ -47,9 +50,18 @@ const Login = () => {
         .then(res => {
           //console.log(res.data)
           if (res.data.status === 200) {
-            if (res.data.user.otp_verified_at) {
+            if (res.data.user.status == 0) {
+              setBuffer(false);
+              authContext.signUp(res.data.token, res.data.user);
+              navigation.navigate('category')
+
+            } else if (res.data.user.otp_verified_at) {
+
               setBuffer(false);
               authContext.signIn(res.data.token, res.data.user);
+
+
+
             } else {
               authContext.signUp(res.data.token, res.data.user);
               navigation.navigate('Otp', {
@@ -148,6 +160,22 @@ const Login = () => {
                 )}
               </TouchableOpacity>
             </View>
+
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10,flexDirection:'row',justifyContent:'space-between' }}>
+              
+            <TouchableOpacity onPress={() => setCustomCheck(!customCheck)}>
+                <Text style={{ color: '#ddd', fontSize: 13,letterSpacing:1 }}>
+                
+                <Ionicons name={customCheck?'checkbox-outline':'checkbox'} color={'#ffaa00'} size={15} />
+                Remember me</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.FORGETPASSWORD)}>
+                <Text style={{ color: '#ddd', fontSize: 13,letterSpacing:1 }}>Forgot Password?</Text>
+              </TouchableOpacity>
+           
+
+            </View>
+
             {/* button */}
             <View style={styles.btn_container}>
               <TouchableOpacity
@@ -247,7 +275,7 @@ const styles = StyleSheet.create({
 
   btn_container: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 3,
     justifyContent: 'space-between',
 
   },

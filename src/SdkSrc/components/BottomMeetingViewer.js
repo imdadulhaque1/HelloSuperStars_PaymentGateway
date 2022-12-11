@@ -180,7 +180,11 @@ const BottomMeetingViewer = forwardRef(
                 );
               }}
             />
-            <MeetingControlsTouchable
+
+{/*===================>>bottom chat disable <<<============================ */}
+
+
+            {/* <MeetingControlsTouchable
               outlineWidth={1}
               outline
               outlineColor={Colors.WHITE_OPACITY_20}
@@ -192,8 +196,13 @@ const BottomMeetingViewer = forwardRef(
               Icon={() => {
                 return <ChatEnable fill={Colors.WHITE} />;
               }}
-            />
-            <MeetingControlsTouchable
+            /> */}
+{/*===================>>bottom chat disable <<<============================ */}
+
+
+{/* hand raised disable  */}
+
+            {/* <MeetingControlsTouchable
               outlineWidth={1}
               outline
               outlineColor={Colors.WHITE_OPACITY_20}
@@ -207,7 +216,9 @@ const BottomMeetingViewer = forwardRef(
                   <More />
                 );
               }}
-            />
+            /> */}
+
+            {/* hand raised disable  */}
           </View>
         </Animated.View>
         <Animated.View

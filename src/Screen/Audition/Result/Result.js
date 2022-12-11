@@ -27,6 +27,7 @@ import {AuthContext} from '../../../Constants/context';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import Toast from 'react-native-root-toast';
 import TitleHeader from '../../../Components/TitleHeader';
+import {FlatGrid} from 'react-native-super-grid';
 const Result = ({route}) => {
   const {
     roundName,
@@ -40,10 +41,12 @@ const Result = ({route}) => {
   const Navigation = useNavigation();
   const [show, setShow] = useState(false);
   const {axiosConfig} = useContext(AuthContext);
+  console.log('roundInformation', roundInformation);
 
   const [customShow, setCustomShow] = useState(false);
   const [isPaymentComplete, setIsPaymentComplete] = useState(true);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
+  const [isShowPaymentCompAppeal, setIsShowPaymentCompAppeal] = useState(false);
 
   const [appeal, setAppeal] = useState(false);
   const [apply, setApply] = useState(false);
@@ -54,10 +57,11 @@ const Result = ({route}) => {
   const [videoList, setVideoList] = React.useState([]);
   const [appealVideoList, setAppealVideoList] = useState([]);
   const [markTracking, setMarkTracking] = useState({});
-  const [appealMarkTracking, setAppealMarkTracking] = useState({});
+  const [appealMarkTracking, setAppealMarkTracking] = useState(null);
 
   const [isAppealedForThisRound, setIsAppealedForThisRound] = useState(false);
   const [appealedRegistration, setAppealedRegistration] = useState(null);
+  const [appealedPaid, setAppealPaid] = useState(null);
   const [certificateFee, setCertificateFee] = useState([]);
   const [roundInfo, setRoundInfo] = useState(null);
 
@@ -67,6 +71,7 @@ const Result = ({route}) => {
       .get(`${AppUrl.roundInstruction}${auditionId}/${roundId}`, axiosConfig)
       .then(res => {
         setRoundInfo(res.data.roundInfo);
+        console.log('appeal_fee', res.data.roundInfo?.appeal_fee);
       });
   }, []);
   const downloadCertificate = () => {
@@ -145,6 +150,8 @@ const Result = ({route}) => {
     setVideoType('general');
   };
   const handleAppealRegister = () => {
+    setIsShowPaymentCompAppeal(true);
+    return;
     console.log('------------appealing-----------');
     setShow(true);
     const data = {
@@ -191,9 +198,9 @@ const Result = ({route}) => {
               />
             ) : (
               <>
-              <TitleHeader title={'Your Upload videos'} />
-              <View style={styles.topCard}>
-                {/* <Text
+                <TitleHeader title={'Your Upload videos'} />
+                <View style={styles.topCard}>
+                  {/* <Text
                   style={styles.fonts}
                   onPress={() => {
                     console.log('-----------------');
@@ -213,29 +220,54 @@ const Result = ({route}) => {
                 </Text>
                 <UnderlineImage /> */}
 
-                <View style={styles.VideoT}>
-                  {videoList.map((item, index) => {
-                    return (
-                      <>
-                        <View style={{width: '30%'}}>
-                          <VideoPlayer
-                            video={{
-                              uri: `${AppUrl.MediaBaseUrl + item.video}`,
-                            }}
-                            videoWidth={100}
-                            videoHeight={100}
-                            autoplay={false}
-                            pauseOnPress
-                            hideControlsOnStart
-                            resizeMode="stretch"
-                            thumbnail={imagePath.AuditionTitleBanner}
-                          />
-                        </View>
-                      </>
-                    );
-                  })}
+                  <View style={styles.VideoT}>
+                    {videoList.length != 0 ? (
+                      <FlatGrid
+                        spacing={10}
+                        itemDimension={120}
+                        data={videoList}
+                        renderItem={({item, index}) => (
+                          <>
+                            <View style={{width: '100%'}}>
+                              <VideoPlayer
+                                video={{
+                                  uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                                }}
+                                videoWidth={200}
+                                videoHeight={200}
+                                autoplay={false}
+                                pauseOnPress
+                                hideControlsOnStart
+                                resizeMode="stretch"
+                                thumbnail={imagePath.AuditionTitleBanner}
+                              />
+                            </View>
+                          </>
+                        )}
+                      />
+                    ) : null}
+                    {/* {videoList.map((item, index) => {
+                      return (
+                        <>
+                          <View style={{width: '30%'}}>
+                            <VideoPlayer
+                              video={{
+                                uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                              }}
+                              videoWidth={100}
+                              videoHeight={100}
+                              autoplay={false}
+                              pauseOnPress
+                              hideControlsOnStart
+                              resizeMode="stretch"
+                              thumbnail={imagePath.AuditionTitleBanner}
+                            />
+                          </View>
+                        </>
+                      );
+                    })} */}
+                  </View>
                 </View>
-              </View>
               </>
             )}
             {isAppealedForThisRound &&
@@ -295,10 +327,10 @@ const Result = ({route}) => {
                   <View>
                     <Text style={styles.Input}>
                       {markTracking?.type === 'general'
-                        ? 'Your Total Mark'
+                        ? 'Your Total Mark '
                         : markTracking?.type === 'wildcard'
                         ? 'Your Total Video Feed Vote'
-                        : appealedRegistration != null
+                        : appealMarkTracking
                         ? 'Your Appeal Mark'
                         : 'Your Total Mark'}
                     </Text>
@@ -333,48 +365,50 @@ const Result = ({route}) => {
                         fontSize: 13,
                         height: 40,
                       }}>
-                      {markTracking?.wining_status === 1 &&
-                      markTracking?.type === 'general' ? (
+                      {(markTracking?.wining_status === 1 &&
+                        markTracking?.type === 'general') ||
+                      appealMarkTracking?.wining_status === 1 ? (
                         <>
                           {/* <Text style={{color: '#E19A04'}}>
                           Congratulation!!!
                         </Text> */}
                           <Text style={styles.winingCard}>
-                            You are Qualified {'\n'}for the next Round
+                            You are Winner {'\n'}for the Round
                           </Text>
                         </>
                       ) : markTracking?.wining_status === 1 &&
                         markTracking?.type === 'wildcard' ? (
                         <>
                           <Text style={styles.winingCard}>
-                            You are Qualified {'\n'}for via wildcard
+                            You are Winner {'\n'}for via wildcard
                           </Text>
                         </>
                       ) : markTracking?.wining_status === 1 &&
                         markTracking?.type === 'oxygen' ? (
                         <>
                           <Text style={styles.winingCard}>
-                            You are Qualified {'\n'}for via Oxygen
+                            You are Winner {'\n'}for via Oxygen
                           </Text>
                         </>
                       ) : markTracking?.wining_status === 0 &&
                         markTracking?.type === 'rejected' ? (
                         <>
                           <Text style={styles.Input2}>
-                            You are not Qualified {'\n'}for the next Round
+                            You are not Winner {'\n'}for the Round
                           </Text>
                         </>
                       ) : (
                         <>
                           <Text style={styles.Input2}>
-                            You are not Qualified {'\n'}for the next Round
+                            You are not Winner {'\n'}for the Round
                           </Text>
                         </>
                       )}
                     </View>
                   </View>
                 </View>
-                {markTracking?.wining_status === 1 ? (
+                {markTracking?.wining_status === 1 ||
+                appealMarkTracking?.wining_status === 1 ? (
                   isPaymentComplete ? (
                     <TouchableOpacity
                       style={{backgroundColor: '#000000'}}
@@ -409,7 +443,7 @@ const Result = ({route}) => {
                       </LinearGradient>
                     </TouchableOpacity>
                   )
-                ) : isAppealedForThisRound ? (
+                ) : isAppealedForThisRound || appealedPaid ? (
                   <Text style={{color: 'white', textAlign: 'center'}}>
                     Already appealed in this round
                   </Text>
@@ -469,6 +503,18 @@ const Result = ({route}) => {
                 setIsShowPaymentComp={setIsShowPaymentComp}
                 setIsPaymentComplete={setIsPaymentComplete}
                 fee={certificateFee}
+              />
+            )}
+
+            {isShowPaymentCompAppeal && (
+              <RegisPaymentModal
+                eventType="auditionAppeal"
+                eventId={roundInfo.id}
+                modelName="auditionAppeal"
+                isShowPaymentCompAppeal={isShowPaymentCompAppeal}
+                setIsShowPaymentCompAppeal={setIsShowPaymentCompAppeal}
+                fee={roundInfo?.appeal_fee}
+                setAppealPaid={setAppealPaid}
               />
             )}
 

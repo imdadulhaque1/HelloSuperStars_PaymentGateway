@@ -1,28 +1,41 @@
 class AppUrl {
-  static BaseUrl = 'https://backend.test.hellosuperstars.com/api/';
-  static MediaBaseUrl = 'https://backend.test.hellosuperstars.com/';
+  // static BaseUrl = 'https://tfpbackend.hellosuperstars.com/api/';
+  // static MediaBaseUrl = 'https://tfpbackend.hellosuperstars.com/';
 
   // static SoketUrl = 'http://10.10.10.142:3005';
-  // static SoketUrl = 'http://localhost:3005';
-  static SoketUrl = 'https://socket.hellosuperstars.com';
+  static SoketUrl = 'https://socket.hellosuperstars.com/';
+  // static SoketUrl = 'http://10.10.10.103:3005';
 
-  // static BaseUrl =
-  //   'http://192.168.0.105/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
-  // static MediaBaseUrl =
-  //   'http://192.168.0.105/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
+
+  static BaseUrl =
+    'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
+  static MediaBaseUrl =
+    'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
+
+
 
   // static demo instruction = 'http://your pc ip/project name on www-htdocs folder/public/';
   static virtualTour = this.BaseUrl + 'mobile/getVirtualTourVideo';
   static UserLogin = this.BaseUrl + 'login';
+  static UserForgetPassword = this.BaseUrl + 'user_forget_password';
+  static UserForgetPasswordStore = this.BaseUrl + 'user_forget_password_store';
+
+  static MyLoaction = this.BaseUrl + 'user/current-location/';
+
   static VerifyUser = this.BaseUrl + 'verify_user';
   static CreateUser = this.BaseUrl + 'register';
   static UserInfo = this.BaseUrl + 'user_info';
   static UserActivityData = this.BaseUrl + 'user/activitiesData';
   static userPersonalData = this.BaseUrl + 'user/personal/list/check';
-  static userEducationalData = this.BaseUrl + 'user/educational/list/check';
-  static userEmploymentData = this.BaseUrl + 'user/employment/list/check';
+  static allCountry = this.BaseUrl + 'user/allCountry';
+  static userEducationalData = this.BaseUrl + 'user_info';
+  static allDegree = this.BaseUrl + 'user/educationlavel';
+  static userEmploymentData = this.BaseUrl + 'user_info';
   static userEmploymentDataSubmit = this.BaseUrl + 'user/employment/store';
+  static occupationData = this.BaseUrl + 'user/occupation';
   static userEducationalDataSubmit = this.BaseUrl + 'user/educational/store';
+  static InterestData = this.BaseUrl + 'user/interest/type';
+  static InterestDataSubmit = this.BaseUrl + 'user/interest/store';
   static userPersonalDataSubmit = this.BaseUrl + 'user/personal-data/store';
   static passwordChange = this.BaseUrl + 'user/password/changes';
 
@@ -35,6 +48,9 @@ class AppUrl {
   static AllPostWithPagination = this.BaseUrl + 'user/all_post/with-paginate/';
   static SingleStarPost = this.BaseUrl + 'user/getAllPostWithForSingleStar/'; //star
   static SubmitLike = this.BaseUrl + 'submit_react/'; //post id
+
+  //delete user
+  static UserDelete = this.BaseUrl + 'delet-user';
 
   //walet information
   static WaletInfo = this.BaseUrl + 'user/wallet/details';
@@ -82,7 +98,7 @@ class AppUrl {
   static OrderStore = this.BaseUrl + 'user/marketplace/order/store';
   static getPDF = this.BaseUrl + 'mobile/getInvoice/data';
   // Auction
-
+  static singleAuction = this.BaseUrl + 'mobile/getProduct/'; //{product_id}
   static userMaxBid = this.BaseUrl + 'user/maxbid/auction/'; //${auctionId}
   static AuctionAcquire = this.BaseUrl + 'user/aquired/auction';
   static AuctionBiddingProduct = this.BaseUrl + 'user/bidding/auction/product';
@@ -225,11 +241,10 @@ class AppUrl {
   static VideoFeedReactPayment = this.BaseUrl + 'buy-video-feed-react';
 
   /**
-   *shurjo pay 
+   *shurjo pay
    */
   static shujroPayPaymentInitiata = this.BaseUrl + 'initiata-shurjo-payment';
   static shujoPaymentStatus = this.BaseUrl + 'shurjo-payment-status/'; //oreder_id
-
 
   /**
    * get oxygen video

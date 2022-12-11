@@ -79,12 +79,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   row1: {
-    marginBottom: 10,
-    marginTop: -8,
+   marginVertical:10,
     width: '100%',
   },
   rowX: {
-    marginBottom: 10,
+   marginVertical:10,
     width: '100%',
   },
   AuctionT: {

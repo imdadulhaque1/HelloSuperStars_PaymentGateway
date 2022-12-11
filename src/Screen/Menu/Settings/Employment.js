@@ -22,10 +22,11 @@ const Employment = ({navigation}) => {
   const [salary, setSalary] = useState('');
   const [position, setPosition] = useState('');
   const [company, setCompany] = useState('');
+  const [allOccupation, setAllOccupation] = useState([]);
   const {axiosConfig} = useContext(AuthContext);
   const handleUpdate = () => {
     const data = {
-      salary,
+      salery_range: salary,
       position,
       company,
     };
@@ -42,27 +43,60 @@ const Employment = ({navigation}) => {
         console.log(err.message);
       });
   };
-  useEffect(() => {
+  const loadUserData = () => {
     axios
       .get(AppUrl.userEmploymentData, axiosConfig)
       .then(res => {
+        console.log(res.data);
+        console.log(res.data?.info?.salery_range);
         if (res.status === 200) {
-          console.log(res.data);
-          setSalary(res.data?.employmentList?.salary);
-          setPosition(res.data?.employmentList?.occupation);
-          setCompany(res.data?.employmentList?.company);
+          setSalary(res.data?.info?.salery_range);
+          setPosition(res.data?.info?.occupation);
+          setCompany(res.data?.info?.company);
         }
       })
       .catch(err => {
         console.log(err);
       });
+  };
+  const loadOccupation = () => {
+    axios
+      .get(AppUrl.occupationData, axiosConfig)
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res.data);
+          setAllOccupation(res.data.occupation);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    loadUserData();
+    loadOccupation();
   }, []);
+  const renderOccupation = () => {
+    return allOccupation.map(item => {
+      return <Picker.Item label={item.title} value={item.title} />;
+    });
+  };
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-        <TitleHeader title={'Employment information'} />
-        <View style={{marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
+        <TitleHeader
+          title={'Employment information'}
+          onPress={() => {
+            console.log('salary', salary);
+          }}
+        />
+        <View
+          style={{
+            marginHorizontal: 10,
+            backgroundColor: '#202020',
+            borderRadius: 10,
+          }}>
           {/* <Text style={{fontSize: 18, color: 'white', textAlign: 'center'}}>
             EMPLOYMENT INFORMATION
           </Text> */}
@@ -92,11 +126,7 @@ const Employment = ({navigation}) => {
                   setPosition(itemValue)
                 }>
                 <Picker.Item label="Select Role" value="" />
-                <Picker.Item label="Student" value="Student" />
-                <Picker.Item label="Businessman" value="Businessman" />
-                <Picker.Item label="Engineer" value="Engineer" />
-                <Picker.Item label="Doctor" value="Doctor" />
-                <Picker.Item label="Others" value="Others" />
+                {renderOccupation()}
               </Picker>
             </View>
           </TouchableOpacity>

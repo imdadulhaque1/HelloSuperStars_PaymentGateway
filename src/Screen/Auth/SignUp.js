@@ -1,7 +1,7 @@
 //import liraries
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Dimensions,
@@ -16,8 +16,10 @@ import {
 import * as Animatable from 'react-native-animatable';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
+import PhoneInput from 'react-native-phone-number-input';
 // import {LinearTextGradient} from 'react-native-text-gradient';
 import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LoaderComp from '../../Components/LoaderComp';
 import { AuthContext } from '../../Constants/context';
@@ -34,44 +36,80 @@ const SignUp = () => {
   } = useForm();
   const windowWidth = Dimensions.get('window').width;
   const [showPass, setShowPass] = useState(true);
-  const { authContext } = useContext(AuthContext);
+  const { authContext, loactionInfo } = useContext(AuthContext);
   const [buffer, setBuffer] = useState(false);
-  const [serverError, setServerError] = useState({});
+  const [serverError, setServerError] = useState([]);
   const screen = Dimensions.get('screen');
   const [passwordError, setPasswordError] = useState();
+
+
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [formSubmit, setFormSubmit] = useState(false);
+
+
+  const [country, setCountry] = useState({
+    code: '',
+    calling: ''
+  });
+
+  const phoneInput = useRef(null);
   const onSubmit = data => {
-    if (data.cpassword === data.password) {
-      setBuffer(true);
-      setPasswordError(false)
-      axios
-        .post(AppUrl.CreateUser, data)
-        .then(res => {
-          //console.log(res.data.validation_errors)
-          if (res.data.status === 200) {
-            // alert('hello')
-            setBuffer(false);
-            authContext.signUp(res.data.token, res.data.user);
-            navigation.navigate('Otp', {
-              phone: data.phone,
-            });
-            // navigation.navigate('userInformation');
-          } else {
-            console.log(res.data.validation_errors)
-            setServerError(res.data.validation_errors);
-            setBuffer(false);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          setBuffer(false);
-          navigation.navigate('Otp', {
-            phone: data.phone
+
+    setFormSubmit(true)
+    let isNumber = phoneInput.current?.isValidNumber(phoneNumber);
+
+
+    if (isNumber) {
+
+      if (data.cpassword == data.password) {
+
+
+        let signUpData = {
+          ...data,
+          phone: phoneNumber,
+          countryCode: phoneInput.current?.getCountryCode(),
+        }
+
+        // return console.log(signUpData)
+
+        setBuffer(true);
+        setPasswordError(false)
+        axios
+          .post(AppUrl.CreateUser, signUpData)
+          .then(res => {
+            //console.log(res.data.validation_errors)
+            if (res.data.status === 200) {
+              // alert('hello')
+              setBuffer(false);
+              authContext.signUp(res.data.token, res.data.user);
+
+              navigation.navigate('userInformation');
+
+              // navigation.navigate('Otp', {
+              //   phone: data.phone,
+              // });
+              // navigation.navigate('userInformation');
+            } else {
+              console.log(res.data.validation_errors)
+              setServerError(res.data.validation_errors);
+              setBuffer(false);
+            }
           })
-        });
-    } else {
-      setPasswordError(true)
+          .catch(err => {
+            console.log(err);
+            setBuffer(false);
+            // navigation.navigate('Otp', {
+            //   phone: data.phone
+            // })
+          });
+      } else {
+
+        setPasswordError(true)
+      }
     }
   };
+
 
   return (
     <KeyboardAwareScrollView>
@@ -175,7 +213,7 @@ const SignUp = () => {
 
               <View style={styles.input}>
                 <Entypo
-                  name="email"
+                  name="mail"
                   color={'#ffaa00'}
                   size={20}
                   style={styles.Icon}
@@ -224,54 +262,46 @@ const SignUp = () => {
               )}
               {/* password input  */}
               <Text style={styles.inputText}>Phone</Text>
-              <View style={styles.input}>
-                <Icon
-                  name="phone"
-                  color={'#ffaa00'}
-                  size={20}
-                  style={styles.Icon}
-                />
-                <Controller
-                  control={control}
-                  rules={{
-                    required: true,
-                    pattern: {
-                      value:
-                        /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
-                      message: 'Please enter a valid phone number',
-                    },
+
+
+              <View
+                style={styles.inputPhone}
+              >
+                <PhoneInput
+                  containerStyle={{ backgroundColor: '#24242400' }}
+                  ref={phoneInput}
+                  textContainerStyle={{ paddingVertical: 0, justifyContent: 'center', alignItems: 'center', borderWidth: 0, backgroundColor: '#24242400' }}
+                  codeTextStyle={{ fontSize: 13, color: '#ffaa00', padding: 0, fontWeight: 'normal' }}
+                  textInputStyle={{ fontSize: 13, color: '#ffaa00', padding: 0, }}
+
+                  flagButtonStyle={{ width: 48 }}
+
+                  defaultValue={phoneNumber}
+                  defaultCode={loactionInfo?.countryCode ? loactionInfo.countryCode : "BD"}
+                  withDarkTheme
+                  onChangeFormattedText={(number) => {
+
+                    setPhoneNumber(number);
+
                   }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      onBlur={onBlur}
-                      onChangeText={onChange}
-                      value={value}
-                      placeholderTextColor="#9e9e9e"
-                      placeholder="Your Phone Number"
-                      style={styles.input_fild}
-                    />
-                  )}
-                  name="phone"
                 />
               </View>
-              {errors.phone && (
-                <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
-                  {errors.phone?.type === 'pattern'
-                    ? 'provide valid phone number'
-                    : 'This field is required !'}
-                </Text>
-              )}
-              {serverError?.phone && (
+              {formSubmit &&
                 <Text
                   style={{
                     color: 'red',
                     marginLeft: 8,
-                    marginBottom: -10,
-                    marginTop: 10,
+                    marginBottom: -15,
+                    marginTop: 5,
                   }}>
                   {serverError?.phone}
+                  {phoneNumber != "" ? (phoneInput.current?.isValidNumber(phoneNumber) ? '' : 'Phone Number is not valid!') : ""}
                 </Text>
-              )}
+              }
+
+
+
+
               {/* password input  */}
               <Text style={styles.inputText}>Password</Text>
               <View style={styles.input}>
@@ -289,10 +319,7 @@ const SignUp = () => {
                       value: 5,
                       message: ', Min length is 5',
                     },
-                    maxLength: {
-                      value: 10,
-                      message: ', Max length is 10',
-                    },
+
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
@@ -317,6 +344,7 @@ const SignUp = () => {
                   )}
                 </TouchableOpacity>
               </View>
+
               {errors.password && (
                 <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
                   This field is required {errors.password.message}
@@ -337,12 +365,9 @@ const SignUp = () => {
                     required: true,
                     minLength: {
                       value: 5,
-                      message: ', Min length is 5',
+                      message: 'Min length is 5',
                     },
-                    maxLength: {
-                      value: 10,
-                      message: ', Max length is 10',
-                    },
+
 
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
@@ -368,11 +393,15 @@ const SignUp = () => {
                   )}
                 </TouchableOpacity>
               </View>
-              {passwordError && (
+              <Text style={{ color: 'red', marginLeft: 8, marginBottom: 0 }}>
+                {errors.cpassword && errors.cpassword.message}
+              </Text>
+
+              {passwordError &&
                 <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
                   Password not match !
                 </Text>
-              )}
+              }
 
               {/* button */}
               <View style={styles.btn_container}>
@@ -440,6 +469,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
+  inputPhone: {
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    borderWidth: 1,
+    height: 40,
+    borderColor: '#ffaa00',
+    borderRadius: 50,
+    paddingLeft: 8,
+    paddingVertical: 2,
+    marginTop: 10,
+    color: '#ffaa00',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
   input_title: {
     color: '#ffff',
   },
@@ -456,7 +499,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 4,
-    backgroundColor: 'Loadergba(0, 0, 0, 0.212)',
+    backgroundColor: 'rgba(0, 0, 0, 0.212)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 40,
@@ -486,7 +529,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     marginTop: 30,
-    marginHorizontal:5,
+    marginHorizontal: 5,
 
     color: 'black',
   },
