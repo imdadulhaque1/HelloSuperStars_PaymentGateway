@@ -34,6 +34,7 @@ import styles from './Styles.js';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import noImage from '../../../../Assets/Images/defult_image_profile.png';
 import { androidCameraPermission } from '../../../../../permission';
+import navigationStrings from '../../../../Constants/navigationStrings';
 const windowWidth = Dimensions.get('window').width;
 
 const UserProfile = () => {
@@ -435,7 +436,10 @@ const UserProfile = () => {
                   {' '}
                   {useInfo?.first_name} {useInfo?.last_name}
                 </Text>
-                <TouchableOpacity onPress={() => setEditProfile(true)}>
+                <TouchableOpacity
+                  onPress={() =>
+                    Navigation.navigate(navigationStrings.SETTINGS)
+                  }>
                   <Text style={styles.editTxt}>Edit </Text>
                 </TouchableOpacity>
               </View>

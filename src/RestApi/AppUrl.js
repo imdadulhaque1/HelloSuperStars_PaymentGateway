@@ -1,16 +1,16 @@
 class AppUrl {
-  // static BaseUrl = 'https://tfpbackend.hellosuperstars.com/api/';
-  // static MediaBaseUrl = 'https://tfpbackend.hellosuperstars.com/';
+  static BaseUrl = 'https://tfpbackend.hellosuperstars.com/api/';
+  static MediaBaseUrl = 'https://tfpbackend.hellosuperstars.com/';
 
   // static SoketUrl = 'http://10.10.10.142:3005';
   static SoketUrl = 'https://socket.hellosuperstars.com/';
   // static SoketUrl = 'http://10.10.10.103:3005';
 
 
-  static BaseUrl =
-    'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
-  static MediaBaseUrl =
-    'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
+  // static BaseUrl =
+  //   'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
+  // static MediaBaseUrl =
+  //   'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
 
 
 
@@ -41,7 +41,7 @@ class AppUrl {
 
   static categoryAdd = this.BaseUrl + 'user/selected/category/store';
 
-  static OtpVerification = this.BaseUrl + 'otp_verify';
+  static OtpVerification = this.BaseUrl + 'otpp_verify';
   static VerifyToRegisterEvent = this.BaseUrl + 'verify_to_register_event';
   static SignUpInforUpdate = this.BaseUrl + 'mobile/userInformation_update';
   static AllPost = this.BaseUrl + 'user/all_post';
