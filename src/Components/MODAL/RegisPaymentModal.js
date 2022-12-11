@@ -59,23 +59,29 @@ const RegisPaymentModal = ({
   setParentStep = null,
   job = null,
   setUnlocked = null,
+  setIsShowPaymentCompAppeal = null,
+  setAppealPaid = null,
 }) => {
   const { setNotification } = useContext(AuthContext);
-  const { axiosConfig, setWaletInfo, getActivity } = useContext(AuthContext);
+  const { axiosConfig, currencyMulti, currencyCount, currency } = useContext(AuthContext);
   const Navigation = useNavigation();
   const [regBuffer, setRegBuffer] = useState(false);
   const [walletInfo, setWalletInfo] = useState([]);
+
 
   const [paytmDat, setPaytmDat] = useState({
     token: '',
     order_id: '',
     mid: '',
     amount: '',
-    mode: ''
+    mode: '',
   });
 
+
+  let countryBaseFee = currencyCount(fee)
+
   const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(
-    AppUrl.getTokenPaytm + fee,
+    AppUrl.getTokenPaytm + countryBaseFee,
   );
 
   const {
@@ -85,12 +91,12 @@ const RegisPaymentModal = ({
     openPaymentSheet,
     stripePaymentStatus,
   } = useStripePayment({
-    amount: fee,
+    amount: countryBaseFee,
     event_type: modelName,
     event_id: eventId,
   });
 
-  console.log(fee + '  ' + modelName + '  ' + eventId);
+  // console.log(fee + '  ' + modelName + '  ' + eventId);
 
   const [regComBuffer, setRegComBuffer] = useState(false);
   const [modal, setModal] = useState(false);
@@ -117,13 +123,17 @@ const RegisPaymentModal = ({
       mid: resData?.mid,
       amount: resData?.amount,
       callBackUrl: resData?.callBackUrl,
-      mode: resData?.takePaymentMode
+      mode: resData?.takePaymentMode,
     });
 
-    console.log('payment status', resData?.takePaymentMode)
+    console.log('payment status', resData?.takePaymentMode);
     console.log(
       'paytm token',
-      resData?.Token_data?.body?.txnToken + ' fee  :' + fee + "  payment mode" + resData?.takePaymentMode,
+      resData?.Token_data?.body?.txnToken +
+      ' fee  :' +
+      fee +
+      '  payment mode' +
+      resData?.takePaymentMode,
     );
   }, [resData]);
 
@@ -154,7 +164,7 @@ const RegisPaymentModal = ({
       notification_id: notification_id ? notification_id : null,
       event_id: Number(eventId),
       model_name: modelName,
-      fee: fee,
+      fee: countryBaseFee,
       start_time: start_time,
       end_time: end_time,
 
@@ -202,7 +212,7 @@ const RegisPaymentModal = ({
       notification_id: notification_id ? notification_id : null,
       event_id: Number(eventId),
       model_name: modelName,
-      fee: fee,
+      fee: countryBaseFee,
       start_time: start_time,
       end_time: end_time,
       room_id: '',
@@ -256,7 +266,7 @@ const RegisPaymentModal = ({
         notification_id: notification_id ? notification_id : null,
         eventId: Number(eventId),
         model_name: modelName,
-        fee: fee,
+        fee: countryBaseFee,
         start_time: start_time,
         end_time: end_time,
         greetingId: greetingId,
@@ -313,7 +323,7 @@ const RegisPaymentModal = ({
       let data = {
         souvenir_create_id: souvenirId,
         souvenir_apply_id: id,
-        total_amount: fee,
+        total_amount: countryBaseFee,
         card_no: '123',
         card_holder_name: 'abc',
         card_expire_date: '23-04-22',
@@ -348,7 +358,7 @@ const RegisPaymentModal = ({
       let Data = {
         videoId: modalPara[0],
         reactNum: modalPara[1],
-        fee: fee,
+        fee: countryBaseFee,
         type: type,
       };
       console.log(Data);
@@ -398,7 +408,7 @@ const RegisPaymentModal = ({
         notification_id: notification_id ? notification_id : null,
         event_id: Number(eventId),
         model_name: modelName,
-        fee: fee,
+        fee: countryBaseFee,
         start_time: start_time,
         end_time: end_time,
         // room_id: event_type === 'livechat' ? firepadRef.key : '',
@@ -460,7 +470,11 @@ const RegisPaymentModal = ({
    * paytm payment
    */
   const payTmPayment = () => {
+    console.log('bidding idddddddddddddddd', eventId);
     console.log('--------paytmDat', paytmDat);
+
+
+
     if (!buffer) {
       AllInOneSDKManager.startTransaction(
         paytmDat.order_id,
@@ -469,7 +483,7 @@ const RegisPaymentModal = ({
         paytmDat.amount,
         paytmDat.callBackUrl + paytmDat.order_id,
         // paytmDat.mode,
-        false,
+        true,
         false,
         '',
       )
@@ -497,6 +511,13 @@ const RegisPaymentModal = ({
               Navigation.navigate(navigationStrings.MARKETPLACE);
               return;
             }
+            if (eventType == 'auditionAppeal') {
+              return setIsShowPaymentCompAppeal(false);
+            }
+            if (eventType == 'auction') {
+              setIsShowPaymentComp(false);
+              return Navigation.goBack();
+            }
             setIsShowPaymentComp(false);
 
             setModal(true);
@@ -517,7 +538,7 @@ const RegisPaymentModal = ({
    *paytm payment success to backend
    */
   const paytmScucess = data => {
-    console.log('payment data success');
+    console.log('payment data success', data);
     axios
       .post(AppUrl.paytmPaymentSuccess, data, axiosConfig)
       .then(res => {
@@ -535,8 +556,10 @@ const RegisPaymentModal = ({
           Navigation.navigate(navigationStrings.HOME);
           return;
         } else if (eventType == 'auditionCertificate') {
-          setIsShowPaymentComp(false);
-          Navigation.navigate(navigationStrings.MENU);
+          return setIsShowPaymentComp(false);
+        } else if (eventType == 'auditionAppeal') {
+          setAppealPaid(true);
+          return setIsShowPaymentCompAppeal(false);
         }
       })
       .catch(err => {
@@ -555,7 +578,7 @@ const RegisPaymentModal = ({
       notification_id: notification_id ? notification_id : null,
       event_id: Number(eventId),
       model_name: modelName,
-      fee: fee,
+      fee: countryBaseFee,
       start_time: start_time,
       end_time: end_time,
       // room_id: event_type === 'livechat' ? firepadRef.key : '',
@@ -599,6 +622,10 @@ const RegisPaymentModal = ({
         return payTmPayment();
       } else if (eventType === 'auditionCertificate') {
         return payTmPayment();
+      } else if (eventType === 'auditionAppeal') {
+        return payTmPayment();
+      } else if (eventType === 'auction') {
+        return payTmPayment();
       } else {
         eventReg('paytm');
       }
@@ -610,7 +637,7 @@ const RegisPaymentModal = ({
       videoId: modalPara !== null ? modalPara[0] : 0,
       reactNum: modalPara !== null ? modalPara[1] : 0,
       modelName: modelName,
-      amount: fee,
+      amount: countryBaseFee,
     };
     axios
       .post(AppUrl.VideoFeedReactPayment, data, axiosConfig)
@@ -652,40 +679,36 @@ const RegisPaymentModal = ({
     }
   };
 
-  const [shujoBuffer, setShujoBuffer] = useState(true)
+  const [shujoBuffer, setShujoBuffer] = useState(true);
 
   //shurjo pay click
   const shurjoPayMakePayment = () => {
-    setShujoBuffer(false)
+    setShujoBuffer(false);
     let info = {
-      amount: fee,
+      amount: countryBaseFee,
       event_type: modelName,
       event_id: eventId,
       reactNum: modalPara !== null ? modalPara[1] : 0,
-    }
-    axios.post(AppUrl.shujroPayPaymentInitiata, info, axiosConfig).then(res => {
-      // console.log('cjeck out url', res.data.checkout_url)
-      Navigation.navigate(navigationStrings.SHURJOPAY, {
-        checkOutUrl: res?.data?.checkout_url
+    };
+    axios
+      .post(AppUrl.shujroPayPaymentInitiata, info, axiosConfig)
+      .then(res => {
+        // console.log('cjeck out url', res.data.checkout_url)
+        Navigation.navigate(navigationStrings.SHURJOPAY, {
+          checkOutUrl: res?.data?.checkout_url,
+        });
+        setShujoBuffer(true);
       })
-      setShujoBuffer(true)
-    })
       .catch(err => {
-        setShujoBuffer(true)
+        setShujoBuffer(true);
         console.log(err);
       });
-
-
-
-
-  }
+  };
 
   const shurjoPayClick = () => {
-
     job != 'pay-again' ? eventReg() : null;
     shurjoPayMakePayment();
-
-  }
+  };
   return (
     <>
       <AlertModal
@@ -705,7 +728,12 @@ const RegisPaymentModal = ({
           <View style={styles.warning_modal}>
             <View style={styles.topCard}>
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                <Pressable onPress={() => setIsShowPaymentComp(false)}>
+                <Pressable
+                  onPress={() =>
+                    eventType === 'auditionAppeal'
+                      ? setIsShowPaymentCompAppeal(false)
+                      : setIsShowPaymentComp(false)
+                  }>
                   <Text
                     style={{
                       color: '#000',
@@ -736,7 +764,7 @@ const RegisPaymentModal = ({
                 }}>
                 {/* surjo pay */}
                 <TouchableOpacity
-                  onPress={() => shujoBuffer ? shurjoPayClick() : null}>
+                  onPress={() => (shujoBuffer ? shurjoPayClick() : null)}>
                   <Image source={imagePath.Surjo} style={styles.payment_icon} />
                 </TouchableOpacity>
                 {/* paytm */}
@@ -864,7 +892,7 @@ const RegisPaymentModal = ({
                         paddingVertical: 8,
                         color: '#292929',
                       }}>
-                      Price: {fee}
+                      Price: {countryBaseFee}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -880,14 +908,14 @@ const RegisPaymentModal = ({
                       setIsShowPaymentComp(false);
                       setModal(true);
                     }}>
-                    {/* <Text
+                    <Text
                       style={{
                         textAlign: 'center',
                         paddingVertical: 8,
                         color: '#292929',
                       }}>
                       Confirm Payment
-                    </Text> */}
+                    </Text>
                   </TouchableOpacity>
                 ) : (
                   <TouchableOpacity

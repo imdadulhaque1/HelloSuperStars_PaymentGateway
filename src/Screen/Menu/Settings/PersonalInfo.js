@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -29,29 +30,51 @@ const PersonalInfo = ({navigation}) => {
   const [birthday, setBirthday] = useState('');
   const [country, setCountry] = useState('');
   const {axiosConfig, setUserInfo, useInfo} = useContext(AuthContext);
-  useEffect(() => {
+  const [allCountry, setAllCountry] = useState([]);
+  const loadInfo = () => {
     axios
       .get(AppUrl.userPersonalData, axiosConfig)
       .then(res => {
+        console.log('all info', res.data);
         if (res.status === 200) {
-          console.log(res.data);
           setFullName(res.data?.userList?.first_name);
           setPhone(res.data?.userList?.phone);
           setEmail(res.data?.userList?.email);
-          console.log(moment(res.data?.employmentList?.dob, 'DD-MM-YYYY'));
+          setBirthday(
+            moment(res.data?.employmentList?.dob).format('yyyy-MM-DD'),
+          );
+          console.log(
+            moment(res.data?.employmentList?.dob).format('yyyy-MM-DD HH:mm:ss'),
+          );
+          console.log('default', res.data?.employmentList?.dob);
+          // console.log(moment(res.data?.employmentList?.dob, 'DD-MM-YYYY'));
           setCountry(res.data?.employmentList?.country);
         }
       })
       .catch(err => {
         console.log(err);
       });
+  };
+  const loadCountries = () => {
+    axios.get(AppUrl.allCountry, axiosConfig).then(res => {
+      console.log(res.data);
+      if (res.status === 200) {
+        setAllCountry(res.data.country);
+      }
+    });
+  };
+  useEffect(() => {
+    loadInfo();
+    loadCountries();
   }, []);
   const handleUpdate = () => {
     const data = {
       first_name: fullName,
       last_name: null,
+      phone,
       country,
-      birthday: moment(date).format('yyyy-MM-DD HH:mm:ss'),
+      // birthday: moment(birthday).format('yyyy-MM-DD HH:mm:ss'),
+      birthday: birthday,
     };
     console.log(data);
     axios
@@ -60,6 +83,7 @@ const PersonalInfo = ({navigation}) => {
         if (res.data.status === 200) {
           // setUserInfo(useInfo);
           setUserInfo(res.data.userInfo);
+          ToastAndroid.show('Updated', ToastAndroid.SHORT);
           navigation.goBack();
         }
       })
@@ -67,15 +91,23 @@ const PersonalInfo = ({navigation}) => {
         console.log(err.message);
       });
   };
+  const renderCountries = () => {
+    return allCountry.map(item => {
+      return <Picker.Item label={item.name} value={item.name} />;
+    });
+  };
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
-    
+
         <TitleHeader title={'Personal Information'} />
-        <View style={{backgroundColor: '#202020',marginHorizontal:10, borderRadius:10}}>
-        
-       
+        <View
+          style={{
+            backgroundColor: '#202020',
+            marginHorizontal: 10,
+            borderRadius: 10,
+          }}>
           <View style={{marginVertical: 5}}>
             <View
               style={{
@@ -166,7 +198,19 @@ const PersonalInfo = ({navigation}) => {
                 height: 50,
                 justifyContent: 'center',
               }}>
-              <Text style={{textAlign: 'center', color: '#fff'}}>Birthday</Text>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Icon name="birthday-cake" size={20} color="#ffaa00" />
+                <Text
+                  style={{textAlign: 'center', color: '#fff', marginStart: 10}}>
+                  {birthday}
+                </Text>
+              </View>
             </View>
           </TouchableOpacity>
 
@@ -178,8 +222,10 @@ const PersonalInfo = ({navigation}) => {
             theme="dark"
             onConfirm={date => {
               setOpen(false);
-              setDate(date);
+              setBirthday(moment(date).format('DD-MM-YYYY'));
+              console.log(date);
             }}
+            // selected={moment(birthday).format('DD-MM-YYYY')}
             onCancel={() => {
               setOpen(false);
             }}
@@ -198,16 +244,30 @@ const PersonalInfo = ({navigation}) => {
                 height: 50,
                 justifyContent: 'center',
               }}>
-              <Picker
-                style={{color: '#fff'}}
-                selectedValue={setCountry}
-                onValueChange={(itemValue, itemIndex) =>
-                  setSelectedLanguage(itemValue)
-                }>
-                <Picker.Item label="Bangladesh" value="Bd" />
-                <Picker.Item label="Dubai" value="Du" />
-                <Picker.Item label="India" value="In" />
-              </Picker>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  // flexDirection: 'row',
+                  // alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Icon name="globe" size={20} color="#ffaa00" />
+                </View>
+                <View style={{width: '90%'}}>
+                  <Picker
+                    style={{color: '#fff'}}
+                    selectedValue={country}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setCountry(itemValue)
+                    }>
+                    {renderCountries()}
+                  </Picker>
+                </View>
+              </View>
             </View>
           </TouchableOpacity>
 

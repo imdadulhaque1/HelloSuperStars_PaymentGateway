@@ -35,10 +35,13 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   const [packageBuffer, setPackageBuffer] = useState(false)
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
   const [modal, setModal] = useState(false);
-  const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(AppUrl.getTokenPaytm + singlePackage?.price)
+  const { currencyMulti, currencyCount, currency } = useContext(AuthContext);
+
+  let countryBaseFee = currencyCount(singlePackage?.price);
+  const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(AppUrl.getTokenPaytm + countryBaseFee)
 
   const { stripeBuffer, stripeError, HandelStripePayment, openPaymentSheet, stripePaymentStatus } = useStripePayment({
-    amount: singlePackage?.price,
+    amount: countryBaseFee,
     event_type: buyFor,
     event_id: PackegeId,
     redirect: false
@@ -70,7 +73,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
       'callBackUrl': resData?.callBackUrl,
       'mode': resData?.takePaymentMode
     })
-    console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + singlePackage?.price)
+    console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + countryBaseFee)
 
   }, [resData])
 
@@ -127,7 +130,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
 
   useEffect(() => {
     // alert(buyFor + " " + PackegeId)
-    console.log(singlePackage.price)
+    console.log(countryBaseFee)
   }, [PackegeId])
   // buy package
   const handelBuyPackage = () => {
@@ -261,7 +264,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   const shurjoPayMakePayment = () => {
     setShujoBuffer(false)
     let info = {
-      amount: singlePackage?.price,
+      amount: countryBaseFee,
       event_type: buyFor,
       event_id: PackegeId,
     }
@@ -284,6 +287,9 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   }
 
 
+  const pocketPay = () => {
+    Navigation.navigate(navigationStrings.POCKETPAY)
+  }
 
 
   return (
@@ -335,7 +341,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
           </TouchableOpacity>
 
           {/* pocket pay */}
-          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+          <TouchableOpacity onPress={pocketPay}>
             <Image
               source={imagePath.Pocket}
               style={styles.payment_icon}

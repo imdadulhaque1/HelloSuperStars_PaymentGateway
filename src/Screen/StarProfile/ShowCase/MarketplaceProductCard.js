@@ -8,13 +8,20 @@ import styles from './styles';
 import AppUrl from '../../../RestApi/AppUrl';
 import BuyNowShowcase from './BuyNowShowcase';
 import navigationStrings from '../../../Constants/navigationStrings';
+import { MarketPlaceStackScreen } from '../../../Navigation/MarketPlaceStack/MarketPlaceStackScreen';
 const MarketplaceProductCard = props => {
   const {product} = props;
   const Navigation = useNavigation();
   // const [view, SetView] = useState(props.setView);
   const handleProductBuy = () => {
-    return Navigation.navigate(navigationStrings.BUYMARKETPLACEPRODUCT, {
-      product: product,
+    // return Navigation.navigate(navigationStrings.BUYMARKETPLACEPRODUCT, {
+    //   product: product,
+    // });
+
+
+    Navigation.navigate(navigationStrings.MARKETPLACE, {
+      screen: navigationStrings.BUYMARKETPLACEPRODUCT,
+      params: { product: product },
     });
   };
   return (

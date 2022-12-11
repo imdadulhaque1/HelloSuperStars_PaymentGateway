@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   Text,
@@ -8,17 +8,18 @@ import {
   Dimensions,
 } from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import InfiniteScroll from 'react-native-infinite-scrolling';
 // import PostCard from '../../../Components/Card/PostCard/PostCard';
 import CardSkeleton from '../../../Components/Skeleton/CardSkeleton/CardSkeleton';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import StarPromoVedio from '../StarPromoVideo/StarPromoVedio';
 import PostCard from '../../../Components/GLOBAL/Card/PostCard/PostCard';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {RefreshControl} from 'react-native';
+import { RefreshControl } from 'react-native';
+import AppUrl from '../../../RestApi/AppUrl';
 
 const PostContainer = ({
   path = null,
@@ -29,7 +30,7 @@ const PostContainer = ({
   type = null,
 }) => {
   const Navigation = useNavigation();
-  const {axiosConfig, authContext} = useContext(AuthContext);
+  const { axiosConfig, authContext } = useContext(AuthContext);
   const windowHeight = Dimensions.get('window').height;
   const [buffer, setBuffer] = useState(true);
   const [loadMore, setLoadMore] = useState(true);
@@ -87,11 +88,33 @@ const PostContainer = ({
   };
 
   const onRefresh = () => {
-    setPostPage(1);
-    setBuffer(true);
-    setRefreshing(true);
-    getAllPost();
+    // setPostPage(1);
+    // setBuffer(true);
+
+    // getAllPost();
+    freshDataGet()
   };
+
+  const freshDataGet = () => {
+    setBuffer(true);
+    setPosts([])
+    setRefreshing(true);
+    axios.get(AppUrl.AllPostWithPagination + 1 + `?page=1`, axiosConfig).then(res => {
+      setRefreshing(false);
+      setBuffer(false);
+      if (res.data.status === 200) {
+        setPosts(res.data.posts);
+        setPostPage(1)
+      }
+    })
+      .catch(err => {
+        setRefreshing(false);
+        setBuffer(false);
+        console.log(err);
+      });
+  }
+
+
 
   useEffect(() => {
     if (
@@ -106,7 +129,7 @@ const PostContainer = ({
     }
   }, [type]);
 
-  const renderData = ({item, index}) => {
+  const renderData = ({ item, index }) => {
     return (
       <>
         {type !== null ? (
@@ -144,8 +167,8 @@ const PostContainer = ({
         <View
           style={
             !noUpcommingEvent
-              ? {marginBottom: 130}
-              : {marginBottom: 130, minHeight: windowHeight}
+              ? { marginBottom: 130 }
+              : { marginBottom: 130, minHeight: windowHeight }
           }>
           {/* <InfiniteScroll
             onScroll={() => console.log('jekhae')}
@@ -159,7 +182,7 @@ const PostContainer = ({
             renderItem={renderData}
             onEndReached={getAllPost}
             ListFooterComponent={() => (
-              <View style={{height: 250}}>
+              <View style={{ height: 250 }}>
                 {loadMore && <CardSkeleton />}
                 {emptyPost && (
                   <View
@@ -170,12 +193,12 @@ const PostContainer = ({
                     }}>
                     <Image
                       source={imagePath.lazyDog}
-                      style={{height: 70, width: 70}}
+                      style={{ height: 70, width: 70 }}
                     />
                     <TouchableOpacity
-                      style={{alignItems: 'center', marginTop: 10}}
+                      style={{ alignItems: 'center', marginTop: 10 }}
                       onPress={pageReload}>
-                      <Text style={{color: '#ffaa00'}}>
+                      <Text style={{ color: '#ffaa00' }}>
                         No more post yet{' '}
                         <Icon name="reload" color={'#ffaa00'} size={20} />
                       </Text>

@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext } from 'react';
 import {
   Image,
   Text,
@@ -10,19 +10,20 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import RenderHtml from 'react-native-render-html';
 import noImage from '../../../Assets/Images/no-image.png';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import styles from './MarketProductCardStyle';
 
-const MarketProductCard = ({data}) => {
-  const {width} = useWindowDimensions();
+const MarketProductCard = ({ data }) => {
+  const { width } = useWindowDimensions();
   const Navigation = useNavigation();
+  const { currencyCount, currency } = useContext(AuthContext);
 
   const source = {
-    html: `<div style='color:#e6e6e6'>${
-      data ? data.description.slice(0, 100).concat(' ....') : ''
-    }</div>`,
+    html: `<div style='color:#e6e6e6'>${data ? data.description.slice(0, 100).concat(' ....') : ''
+      }</div>`,
   };
 
   const handleProductBuy = () => {
@@ -48,15 +49,15 @@ const MarketProductCard = ({data}) => {
         marginBottom: 13,
       }}>
       <View style={styles.mainView}>
-        <View style={{flexDirection: 'row', margin: 10}}>
-          <View style={{width: '45%', position: 'relative'}}>
+        <View style={{ flexDirection: 'row', margin: 10 }}>
+          <View style={{ width: '45%', position: 'relative' }}>
             <Image
               source={
                 data.image == null
                   ? noImage
                   : {
-                      uri: `${AppUrl.MediaBaseUrl + data.image}`,
-                    }
+                    uri: `${AppUrl.MediaBaseUrl + data.image}`,
+                  }
               }
               style={{
                 width: '100%',
@@ -69,11 +70,11 @@ const MarketProductCard = ({data}) => {
             />
           </View>
           <View style={styles.mainView2}>
-            <Text style={{color: 'white', fontSize: 18, marginBottom: -8}}>
+            <Text style={{ color: 'white', fontSize: 18, marginBottom: -8 }}>
               {data.title}
             </Text>
 
-            <View style={{height: 100, width: '100%'}}>
+            <View style={{ height: 100, width: '100%' }}>
               <RenderHtml contentWidth={width} source={source} />
             </View>
             <Text
@@ -83,17 +84,17 @@ const MarketProductCard = ({data}) => {
                 fontSize: 25,
                 marginTop: -10,
               }}>
-              {data.unit_price}
-              <Text style={{color: 'white', fontSize: 12}}> TK</Text>
+              {currencyCount(data.unit_price)}
+              <Text style={{ color: 'white', fontSize: 12 }}> {currency.symbol}</Text>
             </Text>
             <TouchableOpacity
               onPress={() => handleStarProfile(data?.superstar)}>
               <View style={styles.View3}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                   {data?.superstar?.image == null ? (
                     <Image
                       source={imagePath.defultImage}
-                      style={{width: 30, height: 30, borderRadius: 50}}
+                      style={{ width: 30, height: 30, borderRadius: 50 }}
                     />
                   ) : (
                     <Image
@@ -111,10 +112,10 @@ const MarketProductCard = ({data}) => {
                     />
                   )}
                 </View>
-                <View style={{justifyContent: 'center', marginLeft: 5}}>
-                  <Text style={{color: 'gray', marginLeft: 2}}>Superstar</Text>
+                <View style={{ justifyContent: 'center', marginLeft: 5 }}>
+                  <Text style={{ color: 'gray', marginLeft: 2 }}>Superstar</Text>
                   <Text
-                    style={{color: 'white', marginLeft: 2, fontWeight: 'bold'}}>
+                    style={{ color: 'white', marginLeft: 2, fontWeight: 'bold' }}>
                     {data?.superstar?.first_name} {data?.superstar?.last_name}
                   </Text>
                 </View>
@@ -122,7 +123,7 @@ const MarketProductCard = ({data}) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={handleProductBuy}>
               <LinearGradient
-                style={{borderRadius: 18}}
+                style={{ borderRadius: 18 }}
                 colors={[
                   '#FFAD00',
                   '#FFD273',

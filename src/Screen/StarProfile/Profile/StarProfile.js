@@ -1,17 +1,17 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-root-toast';
 import LinearGradient from 'react-native-linear-gradient';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import UpcomingAuditionsCard from '../../../Components/GLOBAL/Card/PostCard/UpcomingAuditionsCard';
 import HeaderComp from '../../../Components/HeaderComp';
 import LoaderComp from '../../../Components/LoaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
 import CardSkeleton from '../../../Components/Skeleton/CardSkeleton/CardSkeleton';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
@@ -24,21 +24,25 @@ import profileNavigatr from './profileNavigatr';
 import styles from './Styles';
 import Photos from '../TopNav/Photos';
 import VIdeos from '../TopNav/VIdeos';
+import showcaseNavigator from '../ShowCase/showcaseNavigator';
 
-const StarProfile = ({route}) => {
+const StarProfile = ({ route }) => {
   const [filterPost, setFilterPost] = useState(null);
-  const {useInfo} = useContext(AuthContext);
-  const {payload} = route.params;
+  const { useInfo } = useContext(AuthContext);
+  const { payload } = route.params;
   const navigation = useNavigation();
   const [profileNavigate, setProfileNavigate] = useState(profileNavigatr.POST);
   const [buffer, setBuffer] = useState(false);
   const [selectedLiveChat, setSelectedLiveChat] = useState(null);
   const [greetings, setGreetings] = useState({});
   const [greetingRegistration, setGreetingRegistration] = useState({});
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [postPage, setPostPage] = useState(1);
   const [toggle, setToggle] = useState(false);
+
+
+  const [view, setView] = useState(showcaseNavigator.HOME);
 
   const [modalObj, setModalObj] = useState({
     modalType: '',
@@ -110,9 +114,21 @@ const StarProfile = ({route}) => {
     });
     setModal(false);
   };
+
+
   const handleBackFunction = () => {
-    return navigation.goBack();
+    navigation.goBack()
+
+
+
+
+
+
   };
+
+
+
+
 
   return (
     <>
@@ -123,8 +139,8 @@ const StarProfile = ({route}) => {
         buttonPress={modalOkBtn}
       />
       {buffer ? <LoaderComp /> : <></>}
-      <HeaderComp backFunc={()=>navigation.goBack()} />
-      <ScrollView style={{backgroundColor: 'black'}}>
+      <HeaderComp backFunc={handleBackFunction} />
+      <ScrollView style={{ backgroundColor: 'black' }}>
         <View style={styles.topContainer}>
           <View style={styles.banner}>
             <Image
@@ -132,10 +148,10 @@ const StarProfile = ({route}) => {
                 data.star.cover_photo == null
                   ? imagePath.coverNoImgae
                   : {
-                      uri: AppUrl.MediaBaseUrl + data.star.cover_photo,
+                    uri: AppUrl.MediaBaseUrl + data.star.cover_photo,
 
-                      // uri: `https://backend.hellosuperstars.com/uploads/images/setting/cover.png`,
-                    }
+                    // uri: `https://backend.hellosuperstars.com/uploads/images/setting/cover.png`,
+                  }
               }
               style={styles.bannerImage}
             />
@@ -153,16 +169,16 @@ const StarProfile = ({route}) => {
               <Image
                 source={
                   data.star.image
-                    ? {uri: AppUrl.MediaBaseUrl + data.star.image}
+                    ? { uri: AppUrl.MediaBaseUrl + data.star.image }
                     : {
-                        uri: `https://backend.hellosuperstars.com/uploads/images/setting/user.png`,
-                      }
+                      uri: `https://backend.hellosuperstars.com/uploads/images/setting/user.png`,
+                    }
                 }
                 style={styles.proImage}
               />
             </View>
 
-            <View style={{marginLeft: 10}}>
+            <View style={{ marginLeft: 10 }}>
               <Text style={styles.title}>
                 {data.star?.first_name} {data.star?.last_name}
               </Text>
@@ -188,7 +204,7 @@ const StarProfile = ({route}) => {
                 style={
                   profileNavigate == profileNavigatr.POST
                     ? styles.active
-                    : {color: 'white'}
+                    : { color: 'white' }
                 }>
                 Posts
               </Text>
@@ -208,7 +224,7 @@ const StarProfile = ({route}) => {
                 style={
                   profileNavigate == profileNavigatr.PHOTOSTAR
                     ? styles.active
-                    : {color: 'white'}
+                    : { color: 'white' }
                 }>
                 Photos
               </Text>
@@ -227,7 +243,7 @@ const StarProfile = ({route}) => {
                 style={
                   profileNavigate == profileNavigatr.VIDEOSTAR
                     ? styles.active
-                    : {color: 'white'}
+                    : { color: 'white' }
                 }>
                 Videos
               </Text>
@@ -235,9 +251,50 @@ const StarProfile = ({route}) => {
           </View>
 
           {/* autoplay autoplayDelay={5} autoplayLoop */}
-          <SwiperFlatList autoplay autoplayDelay={5} autoplayLoop>
+<View>
+<SwiperFlatList autoplay index={0} autoplayDelay={5} autoplayLoop   >
             {/* star show case */}
+
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate(navigationStrings.STARSHOWCASE, {
+                  data: data?.star
+                })
+
+                // setProfileNavigate(profileNavigatr.STARSHOWCASE)
+              }}>
+              <LinearGradient
+              style={styles.sliderItem}
+                colors={
+                  profileNavigate === profileNavigatr.STARSHOWCASE
+                    ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                    : ['#282828', '#282828']
+                }>
+                <View>
+                  <View style={styles.topView}>
+                    <LinearGradient
+                      colors={
+                        profileNavigate === profileNavigatr.STARSHOWCASE
+                          ? ['#ffffff', '#ffffff']
+                          : ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
+                      }
+                      style={styles.iconView2}>
+                      <Image
+                        source={imagePath.StarShowcase}
+                        style={{ height: 30, width: 30 }}
+                      />
+                    </LinearGradient>
+                  </View>
+
+                  <Text style={styles.TextView}>Star show case</Text>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+
+
+
+
+            {/* <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.STARSHOWCASE)}>
               <LinearGradient
                 style={{
@@ -264,7 +321,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.StarShowcase}
-                        style={{height: 30, width: 30}}
+                        style={{ height: 30, width: 30 }}
                       />
                     </LinearGradient>
                   </View>
@@ -272,21 +329,14 @@ const StarProfile = ({route}) => {
                   <Text style={styles.TextView}>StarShowCase</Text>
                 </View>
               </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* meet up */}
 
             <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.MEETUP)}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+              style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.MEETUP
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -303,7 +353,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.MeetUp}
-                        style={{height: 30, width: 40}}
+                        style={{ height: 30, width: 40 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -318,14 +368,7 @@ const StarProfile = ({route}) => {
             <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.AUDITION)}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+              style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.AUDITION
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -342,7 +385,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.Auditions}
-                        style={{height: 30, width: 40}}
+                        style={{ height: 30, width: 40 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -356,14 +399,7 @@ const StarProfile = ({route}) => {
             {/* Greetings */}
             <TouchableOpacity onPress={() => greetingsCheck()}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+               style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.GREETINGS
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -380,7 +416,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.Greetings}
-                        style={{height: 40, width: 40}}
+                        style={{ height: 40, width: 40 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -395,14 +431,7 @@ const StarProfile = ({route}) => {
             <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.QNA)}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+               style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.QNA
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -419,7 +448,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.QA}
-                        style={{height: 30, width: 40}}
+                        style={{ height: 30, width: 40 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -434,14 +463,7 @@ const StarProfile = ({route}) => {
             <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.LIVECHAT)}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+             style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.LIVECHAT
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -458,7 +480,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.LiveChat}
-                        style={{height: 30, width: 30}}
+                        style={{ height: 30, width: 30 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -474,14 +496,7 @@ const StarProfile = ({route}) => {
                 setProfileNavigate(profileNavigatr.LARNINGSESSION)
               }>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+               style={styles.sliderItem}
                 // colors={['#282828', '#282828']}
                 colors={
                   profileNavigate === profileNavigatr.LARNINGSESSION
@@ -499,7 +514,7 @@ const StarProfile = ({route}) => {
                       style={styles.iconView2}>
                       <Image
                         source={imagePath.Learning}
-                        style={{height: 30, width: 30}}
+                        style={{ height: 30, width: 30 }}
                       />
                       {/* <Icon name="gift" size={30} color="black" /> */}
                     </LinearGradient>
@@ -513,14 +528,7 @@ const StarProfile = ({route}) => {
             <TouchableOpacity
               onPress={() => setProfileNavigate(profileNavigatr.FANGROUP)}>
               <LinearGradient
-                style={{
-                  height: 90,
-                  width: 90,
-                  margin: 3,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                style={styles.sliderItem}
                 colors={
                   profileNavigate === profileNavigatr.FANGROUP
                     ? ['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']
@@ -549,6 +557,9 @@ const StarProfile = ({route}) => {
               </LinearGradient>
             </TouchableOpacity>
           </SwiperFlatList>
+</View>
+
+        
         </View>
         <View style={styles.postContainer}>
           {profileNavigate == profileNavigatr.POST ? (

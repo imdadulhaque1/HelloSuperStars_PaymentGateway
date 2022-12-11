@@ -68,14 +68,12 @@ const stylesActive = StyleSheet.create({
   },
 
   content: {
-    
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-backgroundColor:'#2D2F33',
-borderRadius:15,
-paddingVertical:10
-
+    backgroundColor: '#2D2F33',
+    borderRadius: 15,
+    paddingVertical: 10,
   },
   ContentItems: {
     flexDirection: 'row',
@@ -99,7 +97,16 @@ paddingVertical:10
   // ToNotify:{
   //   position: 'relative',
   // },
-  NotifyText: { height: 15, width: 15, backgroundColor: '#ED3B3B', justifyContent: 'center', alignItems: 'center', borderRadius: 20, position: 'absolute', right: -5 },
+  NotifyText: {
+    height: 15,
+    width: 15,
+    backgroundColor: '#ED3B3B',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    position: 'absolute',
+    right: -5,
+  },
   Bar: {
     height: 38,
     width: 3,

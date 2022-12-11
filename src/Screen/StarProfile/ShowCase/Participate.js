@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -23,9 +24,11 @@ import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import noImage from '../../../Assets/Images/no-image.png';
-const Participate = props => {
-  const product = props.product;
-  console.log('product from props', product);
+import HeaderComp from '../../../Components/HeaderComp';
+const Participate = ({route,navigation}) => {
+  // const product = props.product;
+  const {product}=route.params;
+  console.log('product from props=====>', product);
   const {socketData, axiosConfig} = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [isShowResult, setIsShowResult] = useState(false);
@@ -290,8 +293,9 @@ const Participate = props => {
   }, [product?.id]);
 
   return (
-    <>
-      <View style={{marginHorizontal: 8}}>
+    <ScrollView>
+      <View style={{flex:1,backgroundColor:'black'}}>
+      <HeaderComp backFunc={()=>navigation.goBack()}/>
         <View style={styles.rowX}>
           <LinearGradient
             start={{x: 0, y: 0}}
@@ -844,7 +848,7 @@ const Participate = props => {
         processModal={processModal}
         setProcessModal={setProcessModal}
       />
-    </>
+    </ScrollView>
   );
 };
 

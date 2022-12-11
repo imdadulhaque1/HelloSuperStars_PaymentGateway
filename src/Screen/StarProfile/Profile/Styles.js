@@ -127,6 +127,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 
+  sliderItem:{
+    height:80,
+    width: 80,
+    margin: 3,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    
+  }
+
 
 });
 

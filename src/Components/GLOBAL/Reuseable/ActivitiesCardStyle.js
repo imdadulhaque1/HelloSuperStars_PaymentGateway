@@ -1,7 +1,6 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const ActivitiesCardStyle = StyleSheet.create({
-
   gridView: {
     marginTop: 20,
     flex: 1,
@@ -30,7 +29,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   Container: {
@@ -43,7 +42,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     borderRadius: 15,
     borderWidth: 1,
     borderColor: '#ffaa00',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   ContainerPad: {
     marginVertical: 0,
@@ -70,7 +69,7 @@ const ActivitiesCardStyle = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     paddingVertical: 4,
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
 
   DateBox: {
@@ -98,9 +97,8 @@ const ActivitiesCardStyle = StyleSheet.create({
     backgroundColor: '#ffaa00',
     borderRadius: 50,
     color: 'black',
-    fontWeight: "500"
+    fontWeight: '500',
   },
-
 
   DateColorRed: {
     margin: 2,
@@ -142,7 +140,6 @@ const ActivitiesCardStyle = StyleSheet.create({
     color: 'white',
   },
 
-
   Join: {
     position: 'absolute',
     zIndex: 9,
@@ -153,7 +150,6 @@ const ActivitiesCardStyle = StyleSheet.create({
     alignItems: 'center',
     borderTopRightRadius: 14,
     borderBottomLeftRadius: 14,
-
   },
 
   JoinText: {
@@ -163,6 +159,16 @@ const ActivitiesCardStyle = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     paddingVertical: 3,
+  },
+  JoinTextAuction: {
+    fontWeight: 'bold',
+    width: 'auto',
+    padding: 10,
+    color: 'black',
+    textAlign: 'center',
+    paddingVertical: 3,
+    zIndex: 3,
+    elevation: 3,
   },
 
   Activities: {
@@ -183,10 +189,8 @@ const ActivitiesCardStyle = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
-
-
 });
 
 export default ActivitiesCardStyle;

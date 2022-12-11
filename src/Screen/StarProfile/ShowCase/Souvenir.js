@@ -17,8 +17,11 @@ import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp/LoaderComp';
 import styles from './styles';
 import Entypo from 'react-native-vector-icons/Entypo';
+import HeaderComp from '../../../Components/HeaderComp';
+import { ScrollView } from 'react-native-gesture-handler';
 
-const Souvenir = ({star}) => {
+const Souvenir = ({route}) => {
+  const {star}=route.params;
   const navigation = useNavigation();
   const [formImage, setFormImage] = useState({});
   const [document, setDocument] = useState(null);
@@ -199,7 +202,8 @@ const Souvenir = ({star}) => {
     // console.log('star-----Souvenir----', star);
   }, [star]);
   return (
-    <>
+    <View style={{flex:1,backgroundColor:'black'}}>
+    <HeaderComp backFunc={()=>navigation.goBack()}  />
       <AlertModal
         modalObj={modalObj}
         modal={modal}
@@ -210,8 +214,9 @@ const Souvenir = ({star}) => {
       {buffer ? (
         <LoaderComp />
       ) : souvinerInfo !== null ? (
-        <>
-          <View style={styles.MaiNAS}>
+        <ScrollView>
+        <View style={{marginVertical:10}}>
+        <View style={styles.MaiNAS}>
             <Text style={styles.Instruction}>Souvenir Instructions</Text>
           </View>
           <View style={styles.MaiNASr}>
@@ -695,7 +700,8 @@ const Souvenir = ({star}) => {
               </LinearGradient>
             </TouchableOpacity>
           </View>
-        </>
+        </View>
+        </ScrollView>
       ) : (
         <View style={{height: 200, justifyContent: 'center'}}>
           <View>
@@ -712,7 +718,7 @@ const Souvenir = ({star}) => {
           </View>
         </View>
       )}
-    </>
+    </View>
   );
 };
 

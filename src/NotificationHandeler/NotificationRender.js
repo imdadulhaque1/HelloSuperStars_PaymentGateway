@@ -1,13 +1,13 @@
-import { View, Text } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../Constants/context';
+import {View, Text} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {AuthContext} from '../Constants/context';
 import PushNotification from 'react-native-push-notification';
 import AppUrl from '../RestApi/AppUrl';
 import moment from 'moment';
 
 const NotificationRender = () => {
-  const { activities, socketData } = useContext(AuthContext);
-  const { useInfo } = useContext(AuthContext);
+  const {activities, socketData, updateNotification} = useContext(AuthContext);
+  const {useInfo} = useContext(AuthContext);
 
   useEffect(() => {
     handelLearningSessionNotification();
@@ -18,7 +18,10 @@ const NotificationRender = () => {
   useEffect(() => {
     socketData.on('greeting_data', data => {
       console.log('recive data', data);
-      handleGreetingNotification(data);
+      return handleGreetingNotification(data);
+    });
+    socketData.on('reRenderNotification', () => {
+      return updateNotification();
     });
   }, [socketData]);
 

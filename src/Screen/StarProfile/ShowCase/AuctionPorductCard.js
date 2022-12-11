@@ -5,8 +5,13 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import showcaseNavigator from './showcaseNavigator';
 import styles from './styles';
 import AppUrl from '../../../RestApi/AppUrl';
-const AuctionProductCard = props => {
-  const {setView, setProduct} = props;
+import { useNavigation } from '@react-navigation/native';
+import navigationStrings from '../../../Constants/navigationStrings';
+const AuctionProductCard =(props) => {
+
+  const navigation=useNavigation()
+  const {setProduct, starId, product} = props;
+
   return (
     <>
       <View style={styles.MaiN}>
@@ -66,8 +71,12 @@ const AuctionProductCard = props => {
               ) : (
                 <TouchableOpacity
                   onPress={() => {
-                    setView(showcaseNavigator.PARTICIPATE);
                     setProduct(props.productDetails);
+                  navigation.navigate(navigationStrings.PARTICIPATE,{
+                    product:props.productDetails,
+
+                  })
+                   
                   }}>
                   <LinearGradient
                     start={{x: 0, y: 0}}

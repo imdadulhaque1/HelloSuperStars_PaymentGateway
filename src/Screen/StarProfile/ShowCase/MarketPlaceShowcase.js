@@ -12,10 +12,13 @@ import styles from './styles';
 // import MarketplaceProductCard from './MarketplaceProductCard';
 import showcaseNavigator from './showcaseNavigator';
 import MarketplaceProductCard from './MarketplaceProductCard';
-function MarketPlaceShowcase({star}, props) {
+import HeaderComp from '../../../Components/HeaderComp';
+function MarketPlaceShowcase({route,navigation}) {
+const {star}=route.params;
+
   const [buffer, setBuffer] = React.useState(false);
   const [Data, SetData] = React.useState([]);
-  const [view, setView] = React.useState(props.setView);
+
   const {axiosConfig} = React.useContext(AuthContext);
   React.useEffect(() => {
     setBuffer(true);
@@ -40,7 +43,10 @@ function MarketPlaceShowcase({star}, props) {
         <></>
       ) : (
         <>
+        <HeaderComp backFunc={()=>navigation.goBack()} />
           <View style={styles.container}>
+
+          
             <SafeAreaView>
               <View style={styles.row1}>
                 <LinearGradient
@@ -64,7 +70,8 @@ function MarketPlaceShowcase({star}, props) {
                   Data.map(item => {
                     return (
                       <MarketplaceProductCard
-                        setView={props.setView}
+                      
+
                         name={item.title}
                         productImg={item.image}
                         price={item.unit_price}
@@ -100,7 +107,7 @@ function MarketPlaceShowcase({star}, props) {
             </SafeAreaView>
           </View>
           {/* <BuyNowShowcase /> */}
-          {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>}
+          {/* {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>} */}
         </>
       )}
     </>

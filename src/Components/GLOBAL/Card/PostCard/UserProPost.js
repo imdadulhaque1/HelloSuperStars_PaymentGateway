@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 
 import moment from 'moment';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 
 import {
   Dimensions,
@@ -22,13 +22,30 @@ import imagePath from '../../../../Constants/imagePath';
 import navigationStrings from '../../../../Constants/navigationStrings';
 import AppUrl from '../../../../RestApi/AppUrl';
 import noImage from '../../../../Assets/Images/no-image.png';
-
+import Video from 'react-native-video';
 import {AuthContext} from '../../../../Constants/context';
 
 import LockPaymentModal from '../../../MODAL/LockPaymentModal';
 import styles from './styles';
 
 const UserProPost = ({post, callform = null}) => {
+  const vedioRef = useRef(null);
+  const windowHight = Dimensions.get('window').height;
+  const windowWidth = Dimensions.get('window').width;
+  let halfWidth = windowWidth / 2 - 20;
+  const [videoUrl, setVideoUrl] = useState();
+
+  const [Play, setPlay] = useState(false);
+  const [videoLoad, setVideoLoad] = useState(false);
+  const onBuffer = buffer => {
+    console.log('buffring', buffer);
+  };
+  const onError = error => {
+    console.log('error', error);
+  };
+  const loadVideo = () => {
+    setVideoLoad(true);
+  };
   const {width} = useWindowDimensions();
   console.log('all post', post);
 
@@ -38,7 +55,6 @@ const UserProPost = ({post, callform = null}) => {
 
   const [share, setShare] = useState(false);
 
-  const windowWidth = Dimensions.get('window').width;
   const [lockModal, setLockModal] = useState(false);
 
   const postLock = true;
@@ -202,12 +218,12 @@ const UserProPost = ({post, callform = null}) => {
     textLength = 0;
   }
 
-  const onShare = async () => {
+  const onShare = async link => {
     try {
       const result = await Share.share({
         title: 'app Link',
-        message: `https://www.hellosuperstars.com/ `,
-        url: `https://www.hellosuperstars.com`,
+        message: link,
+        url: link,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -562,18 +578,43 @@ const UserProPost = ({post, callform = null}) => {
                   )}
                 </View>
               ) : post?.type == 'greeting' ? (
-                <VideoPlayer
-                  video={{
-                    uri: `${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`,
-                  }}
-                  videoWidth={1600}
-                  videoHeight={900}
-                  thumbnail={{
-                    uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}`,
-                  }}
-                  // blurRadius={1}
-                />
+                <View style={{width: 380, height: 250}}>
+                  <Video
+                    source={{
+                      uri: `${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`,
+                    }}
+                    ref={vedioRef} // Store reference
+                    onBuffer={onBuffer}
+                    onError={onError} // Callback when video cannot be loaded
+                    // resizeMode={windowWidth < 600 ? 'cover' : 'contain'}
+                    onLoad={loadVideo}
+                    onEnd={() => console.log('end')}
+                    // controls
+                    pictureInPicture
+                    // paused={currentIndex != index || Play ? true : false}
+                    paused={false}
+                    repeat={true}
+                    height={250}
+                    resizeMode={'stretch'}
+                    style={{
+                      height: 250,
+                      width: 380,
+                      position: 'absolute',
+                    }}
+                  />
+                </View>
               ) : (
+                // <VideoPlayer
+                //   video={{
+                //     uri: `${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`,
+                //   }}
+                //   videoWidth={1600}
+                //   videoHeight={900}
+                //   thumbnail={{
+                //     uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}`,
+                //   }}
+                //   // blurRadius={1}
+                // />
                 <View>
                   <Image
                     style={
@@ -584,7 +625,9 @@ const UserProPost = ({post, callform = null}) => {
                     source={{
                       uri: `${AppUrl.MediaBaseUrl}${
                         postContent?.banner
-                          ? postContent?.banner
+                          ? post?.type === 'auction'
+                            ? postContent?.product_image
+                            : postContent?.banner
                           : postContent?.image
                       }`,
                     }}
@@ -860,7 +903,11 @@ const UserProPost = ({post, callform = null}) => {
                 style={styles.likeBtn}
                 onPress={() => {
                   setShare(!share);
-                  onShare();
+                  onShare(
+                    post?.type === 'greeting'
+                      ? `${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`
+                      : null,
+                  );
                 }}>
                 <View
                   style={{

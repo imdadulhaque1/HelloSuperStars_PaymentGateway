@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -22,19 +23,22 @@ const EducationInfo = ({navigation}) => {
   const [degree, setDegree] = useState('');
   const [institute, setInstitute] = useState('');
   const [subject, setSubject] = useState('');
+  const [allDegree, setAllDegree] = useState([]);
   const {axiosConfig} = useContext(AuthContext);
   const handleUpdate = () => {
     const data = {
-      degree,
+      edu_level: degree,
       institute,
       subject,
     };
     console.log(data);
     console.log(AppUrl.userEducationalData);
+
     axios
       .post(AppUrl.userEducationalDataSubmit, data, axiosConfig)
       .then(res => {
         if (res.data.status === 200) {
+          ToastAndroid.show('Updated', ToastAndroid.SHORT);
           navigation.goBack();
         }
       })
@@ -42,30 +46,55 @@ const EducationInfo = ({navigation}) => {
         console.log(err.message);
       });
   };
-  useEffect(() => {
+  const getEducationInfo = () => {
     axios
       .get(AppUrl.userEducationalData, axiosConfig)
       .then(res => {
         if (res.status === 200) {
           console.log(res.data);
-          setDegree(res.data?.educationList?.grade);
-          setInstitute(res.data?.educationList?.institute);
-          setSubject(res.data?.educationList?.subject);
+          setDegree(res.data?.info?.edu_level);
+          setInstitute(res.data?.info?.institute);
+          setSubject(res.data?.info?.subject);
         }
       })
       .catch(err => {
         console.log(err);
       });
+  };
+  const getDegrees = () => {
+    axios
+      .get(AppUrl.allDegree, axiosConfig)
+      .then(res => {
+        if (res.status === 200) {
+          setAllDegree(res.data.education);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  useEffect(() => {
+    getEducationInfo();
+    getDegrees();
   }, []);
+
+  const renderDegrees = () => {
+    return allDegree.map(item => {
+      return <Picker.Item label={item.name} value={item.name} />;
+    });
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: 'black'}}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
         <TitleHeader title={'Educational information'} />
-        <View style={{ marginHorizontal:10,backgroundColor: '#202020',borderRadius:10}}>
-   
-         
+        <View
+          style={{
+            marginHorizontal: 10,
+            backgroundColor: '#202020',
+            borderRadius: 10,
+          }}>
           <TouchableOpacity style={{marginVertical: 5}}>
             <View
               style={{
@@ -90,12 +119,7 @@ const EducationInfo = ({navigation}) => {
                 selectedValue={degree}
                 onValueChange={(itemValue, itemIndex) => setDegree(itemValue)}>
                 <Picker.Item label="Select One" value="" />
-                <Picker.Item label="JSC" value="JSC" />
-                <Picker.Item label="SSC" value="SSC" />
-                <Picker.Item label="SSC" value="SSC" />
-                <Picker.Item label="HSC" value="HSC" />
-                <Picker.Item label="Honours/Degree" value="Honours/Degree" />
-                <Picker.Item label="PHD" value="PHD" />
+                {renderDegrees()}
               </Picker>
             </View>
           </TouchableOpacity>

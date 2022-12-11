@@ -1,9 +1,9 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {StyleSheet, Text, View} from 'react-native';
+import React from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import navigationStrings from '../../Constants/navigationStrings';
 import MenuV2 from '../../Screen/MenuV2/MenuV2';
 import About from '../../Screen/Menu/Privacy/About';
@@ -40,12 +40,13 @@ import VideoUploadLearningSession from '../../Components/LEARNINGSESSION/VideoUp
 import ResultLearningSession from '../../Components/LEARNINGSESSION/ResultLearningSession/ResultLearningSession';
 import ApplyForCertificate from '../../Components/LEARNINGSESSION/ApplyForCertificate';
 import SouvenirOrderStatus from '../../Components/GLOBAL/Reuseable/SouvenirOrderStatus';
-
+import DeleteWarning from '../../Screen/Menu/Settings/DeleteWarning';
+import AuctionParticipateNow from '../../Screen/MarketPlace/AuctionParticipateNow/AuctionParticipateNow';
 
 const MenuStackV2 = createNativeStackNavigator();
 const MenuStackScreenV2 = () => {
   return (
-    <MenuStackV2.Navigator screenOptions={{ headerShown: false }}>
+    <MenuStackV2.Navigator screenOptions={{headerShown: false}}>
       <MenuStackV2.Screen name={navigationStrings.MENUV2} component={MenuV2} />
 
       <MenuStackV2.Screen
@@ -57,7 +58,6 @@ const MenuStackScreenV2 = () => {
         name={navigationStrings.VIDEOUPLOADLEARNINGSESSION}
         component={VideoUploadLearningSession}
       />
-
 
       <MenuStackV2.Screen
         name={navigationStrings.RESULTLEARNINGSESSION}
@@ -125,9 +125,20 @@ const MenuStackScreenV2 = () => {
         name={navigationStrings.REPORTINFO}
         component={ReportInfo}
       />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.DELETEWARNING}
+        component={DeleteWarning}
+      />
       <MenuStackV2.Screen name={navigationStrings.WALLET} component={Wallet} />
-      <MenuStackV2.Screen name={navigationStrings.MENUFOLLOWERS} component={MenuFollowers} />
-      <MenuStackV2.Screen name={navigationStrings.MENUACTIVITES} component={MenuActivities} />
+      <MenuStackV2.Screen
+        name={navigationStrings.MENUFOLLOWERS}
+        component={MenuFollowers}
+      />
+      <MenuStackV2.Screen
+        name={navigationStrings.MENUACTIVITES}
+        component={MenuActivities}
+      />
 
       {/* Audition */}
       <MenuStackV2.Screen
@@ -153,7 +164,10 @@ const MenuStackScreenV2 = () => {
         component={Participation}
       />
       <MenuStackV2.Screen name={navigationStrings.RESULT} component={Result} />
-      <MenuStackV2.Screen name={navigationStrings.ACTIVITESCARD} component={ActivitiesCard} />
+      <MenuStackV2.Screen
+        name={navigationStrings.ACTIVITESCARD}
+        component={ActivitiesCard}
+      />
       <MenuStackV2.Screen
         name={navigationStrings.GREETINGS}
         component={Greeting}
@@ -168,11 +182,14 @@ const MenuStackScreenV2 = () => {
         name={navigationStrings.POSTSHOWBYTYPE}
         component={UpCommingPost}
       />
-
+      <MenuStackV2.Screen
+        name={navigationStrings.AUCTIONPARTICIOATENOW}
+        component={AuctionParticipateNow}
+      />
     </MenuStackV2.Navigator>
-  )
-}
+  );
+};
 
-export default MenuStackScreenV2
+export default MenuStackScreenV2;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

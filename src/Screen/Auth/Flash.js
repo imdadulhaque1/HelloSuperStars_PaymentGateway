@@ -1,7 +1,7 @@
 //import liraries
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -11,65 +11,73 @@ import {
   View,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { cleanSingle } from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import MatarialIcon from 'react-native-vector-icons/MaterialIcons';
 import imagePath from '../../Constants/imagePath';
-// create a component
+
 const Flash = () => {
-  const [clickTour, setClickTour] = useState(true);
+
   const navigation = useNavigation();
   const [music, setMusic] = React.useState(null);
   const [seconds, setSeconds] = React.useState(5);
   const [check, setCheck] = React.useState(false);
+  const redirect = useRef(null);
+
+
   React.useEffect(() => {
     retrieveData();
     play();
-  }, []);
-  useEffect(
-    () => {
-      timer();
-      if (seconds === 'redirect') {
-        redirectLoginPage();
-      }
-    },
-    check ? [] : null,
-  );
+    redirect.current = setTimeout(() => {
+      navigation.navigate('Login')
+    }, 10000)
 
-  function timer() {
-    if (seconds > 0) {
-      setTimeout(() => setSeconds(seconds - 1), 1000);
-    } else {
-      setSeconds('redirect');
-    }
-  }
+  }, []);
+
+
+
+
+  // useEffect(
+  //   () => {
+  //     timer();
+  //     if (seconds === 'redirect') {
+  //       redirectLoginPage();
+  //     }
+  //   },
+  //   check ? [] : null,
+  // );
+
+  // function timer() {
+  //   if (seconds > 0) {
+  //     setTimeout(() => setSeconds(seconds - 1), 1000);
+  //   } else {
+  //     setSeconds('redirect');
+  //   }
+  // }
 
   const retrieveData = async () => {
-    // play()
+
     try {
       const value = await AsyncStorage.getItem('auth_token');
       if (value !== null) {
         navigation.navigate('Login');
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
-  const redirectLoginPage = () => {
-    // clearInterval(redirectToLogin)
-    navigation.navigate('Login');
-  };
+  // const redirectLoginPage = () => {
 
-  // auto redirect to login
-  // const redirectToLogin = setTimeout(redirectLoginPage, 5000)
+  //   navigation.navigate('Login');
+  // };
+
+
 
   const handelTour = () => {
-    setCheck(true);
-    // clearInterval(redirectToLogin)
-
-    navigation.navigate('virtualTour', {
-      music,
-      setMusic,
-    });
+    // setCheck(true);
+    clearInterval(redirect.current);
+    music.stop()
+    navigation.navigate('virtualTour');
   };
 
   const play = () => {
@@ -90,31 +98,27 @@ const Flash = () => {
     <ImageBackground
       source={imagePath.background}
       resizeMode="cover"
-      style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      {/* <Button title='play' onPress={()=>{play()}}  />
-   <Button title='pause' onPress={()=>{music.pause()}}  />
-   <Button title='play' onPress={()=>{music.play()}}  />
-   <Button title='stop' onPress={()=>{music.stop()}}  /> */}
+      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+
       <View>
-        {/* <Text style={{color:'white'}}>{seconds}</Text> */}
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+
+        <TouchableOpacity onPress={() => {
+          music.stop();
+          clearInterval(redirect.current);
+          navigation.navigate('Login');
+        }}>
           <Animatable.Image
             animation="pulse"
             iterationCount="infinite"
-            // animation="zoomIn"
-            // easing="ease-out"
-            // iterationCount="infinite"
+
 
             source={imagePath.logo}
-            style={{height: 200, width: 200}}
+            style={{ height: 200, width: 200 }}
           />
         </TouchableOpacity>
 
         <Animatable.View
           style={styles.virtual_tour_btn}
-          // animation="pulse"
-          // easing="ease-out"
-          // iterationCount="infinite"
         >
           <TouchableOpacity
             style={styles.virtualContainer}
@@ -122,7 +126,7 @@ const Flash = () => {
             <LinearGradient
               style={styles.virtualBtn}
               colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <MatarialIcon name="play-circle-fill" color="black" size={20} />
               </View>
               <View
@@ -141,15 +145,15 @@ const Flash = () => {
   );
 };
 
-// define your styles
-const {height} = Dimensions.get('screen');
-const height_logo = height * 0.28;
+
+const { height } = Dimensions.get('screen');
+
 
 const styles = StyleSheet.create({
-  // linearGradient: {
+
 
   virtual_tour_btn: {
-    // backgroundColor: '#ffaa00',
+
     alignItems: 'center',
 
     marginTop: 40,
@@ -171,5 +175,5 @@ const styles = StyleSheet.create({
   },
 });
 
-//make this component available to the app
+
 export default Flash;
