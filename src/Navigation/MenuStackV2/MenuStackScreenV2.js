@@ -21,6 +21,7 @@ import Employment from '../../Screen/Menu/Settings/Employment';
 import InterestInfo from '../../Screen/Menu/Settings/InterestInfo';
 import SecurityInfo from '../../Screen/Menu/Settings/SecurityInfo';
 import ReportInfo from '../../Screen/Menu/Settings/ReportInfo';
+import ContactUs from '../../Screen/Menu/Settings/ContactUs';
 import Wallet from '../../Screen/Menu/Wallet/Wallet';
 import MenuFollowers from '../../Screen/Menu/Content/MenuFollowers';
 import MenuActivities from '../../Screen/Menu/Content/MenuActivities';
@@ -124,6 +125,11 @@ const MenuStackScreenV2 = () => {
       <MenuStackV2.Screen
         name={navigationStrings.REPORTINFO}
         component={ReportInfo}
+      />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.CONTACTUS}
+        component={ContactUs}
       />
 
       <MenuStackV2.Screen

@@ -111,6 +111,7 @@ export default {
   SECURITYINFO: 'Securityinfo',
   REPORTINFO: 'ReportInfo',
   DELETEWARNING: 'DeleteWarnign',
+  CONTACTUS: 'ContactUs',
 
   //MenuV2
   MENUV2: 'MenuV2',
@@ -122,9 +123,9 @@ export default {
   //Forget password
   FORGETPASSWORD: 'ForgetPassword',
   CREATEPASSWORD: 'CreatePassword',
-  STARSHOWCASE:'Starcase',
-  AUCTIONTAB:'AuctionTab',
-  PARTICIPATE:'Participate',
-  MARKETPLACESHOWCASE:'Marketplaceshowcase',
-  SOUVENIR:'Souvenir'
+  STARSHOWCASE: 'Starcase',
+  AUCTIONTAB: 'AuctionTab',
+  PARTICIPATE: 'Participate',
+  MARKETPLACESHOWCASE: 'Marketplaceshowcase',
+  SOUVENIR: 'Souvenir',
 };
