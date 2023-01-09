@@ -1,7 +1,7 @@
 //import liraries
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -15,10 +15,11 @@ import { cleanSingle } from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import Sound from 'react-native-sound';
 import MatarialIcon from 'react-native-vector-icons/MaterialIcons';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 
 const Flash = () => {
-
+  const { getActivity } = useContext(AuthContext);
   const navigation = useNavigation();
   const [music, setMusic] = React.useState(null);
   const [seconds, setSeconds] = React.useState(5);
@@ -27,6 +28,7 @@ const Flash = () => {
 
 
   React.useEffect(() => {
+    getActivity();
     retrieveData();
     play();
     redirect.current = setTimeout(() => {

@@ -6,18 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import imagePath from '../../../Constants/imagePath';
-import {FlatGrid} from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import LinearGradient from 'react-native-linear-gradient';
 import LockPaymentModal from '../../../Components/MODAL/LockPaymentModal';
 import RegistrationComp from '../../../Components/QnA/RegistrationComp/Registration';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 
-export default function Photos({starId, toggle}) {
+export default function Photos({ starId, toggle }) {
   const [post, setPost] = useState([]);
   const [photosUpdate, setUnlocked] = useState(false);
   const [lockStatus, setLockStatus] = useState([]);
@@ -28,18 +28,18 @@ export default function Photos({starId, toggle}) {
   const [parentData, setParentData] = useState({});
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [payment_status, setPaymentStatus] = useState([]);
-  const {useInfo, axiosConfig} = useContext(AuthContext);
+  const { useInfo, axiosConfig } = useContext(AuthContext);
   const windowWidth = Dimensions.get('window').width;
-  const makePayment = id => {
-    setPostId(id[0]);
-    setFee(id[1]);
+  const makePayment = (id, fee) => {
+    setPostId(id);
+    setFee(fee);
     // setSuccessShow(true);
     setIsShowPaymentComp(true);
   };
   useEffect(() => {
     axios.get(`${AppUrl.starPhotos}+${starId}`).then(res => {
       if (res.data.status === 200) {
-        console.log(res.data.post);
+        //console.log(res.data.post);
         setPost(res.data.post);
       }
     });
@@ -70,7 +70,7 @@ export default function Photos({starId, toggle}) {
             spacing={15}
             itemDimension={110}
             data={post}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return item.type === 'paid' ? (
                 item.image && (
                   <View>
@@ -107,13 +107,13 @@ export default function Photos({starId, toggle}) {
                 )
               ) : (
                 <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
                   colors={['#ffa825', '#ffce48', '#ab6616']}
-                  style={{borderRadius: 10}}>
+                  style={{ borderRadius: 10 }}>
                   <TouchableOpacity>
                     <Image
-                      source={{uri: `${AppUrl.MediaBaseUrl + item.image}`}}
+                      source={{ uri: `${AppUrl.MediaBaseUrl + item.image}` }}
                       style={{
                         height: 130,
                         width: 180,
@@ -129,16 +129,16 @@ export default function Photos({starId, toggle}) {
           />
         </View>
       ) : (
-        <View style={{height: 200, justifyContent: 'center'}}>
+        <View style={{ height: 200, justifyContent: 'center' }}>
           <View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Image
                 source={imagePath.lazyDog}
-                style={{height: 100, width: 100}}
+                style={{ height: 100, width: 100 }}
               />
             </View>
 
-            <Text style={{color: 'white', textAlign: 'center'}}>
+            <Text style={{ color: 'white', textAlign: 'center' }}>
               Sorry No Data Available !
             </Text>
           </View>

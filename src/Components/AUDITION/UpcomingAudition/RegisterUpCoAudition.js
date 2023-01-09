@@ -17,6 +17,7 @@ import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 import axios from 'axios';
 import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
+import VideoPlayerComp from '../../VIDEO/VideoPlayerComp';
 // import CostComp from '../../GLOBAL/CostComp/CostComp';
 const RegisterUpCoAudition = ({ route }) => {
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
@@ -33,7 +34,7 @@ const RegisterUpCoAudition = ({ route }) => {
       if (res.data.status === 200) {
         setPostContent(res.data.audition);
         console.log('-----------');
-        console.log(res.data.audition);
+        //console.log(res.data.audition);
         console.log('-----------');
       }
     });
@@ -42,7 +43,7 @@ const RegisterUpCoAudition = ({ route }) => {
       .get(AppUrl.auditionRegisterCheck + `${slug}`, axiosConfig)
       .then(res => {
         if (res.data.status === 200) {
-          console.log(res.data.participant);
+          //console.log(res.data.participant);
           setIsAlreadyRegistered(res.data.participant);
         }
       });
@@ -54,18 +55,28 @@ const RegisterUpCoAudition = ({ route }) => {
     <ScrollView style={{ backgroundColor: '#282828' }}>
       <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.topCard}>
-        <VideoPlayer
-          style={styles.BannerCardImg}
+
+        {/* <VideoPlayerComp url={`${AppUrl.MediaBaseUrl}${postContent?.video}`} thumbnail={`${AppUrl.MediaBaseUrl}${postContent?.banner}`} /> */}
+        <ImageBackground source={{ uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}` }} style={{ height: 200, width: '100%' }}>
+          <VideoPlayerComp url={`${AppUrl.MediaBaseUrl}${postContent?.video}`} thumbnail={`${AppUrl.MediaBaseUrl}${postContent?.banner}`} />
+        </ImageBackground>
+
+        {/* <VideoPlayer
+         
           video={{
             uri: `${AppUrl.MediaBaseUrl}${postContent?.video}`,
           }}
-          videoWidth={120}
-          videoHeight={70}
+          style={{height:200}}
+        // thumbnail={{ uri: thumbnail }}
+        endThumbnail={{uri:`${AppUrl.MediaBaseUrl}${postContent?.banner}`}}
+        showDuration={true}
+        resizeMode={'stretch'}
+        blurRadius={15}
           thumbnail={{
             uri: `${AppUrl.MediaBaseUrl}${postContent?.banner}`,
           }}
-          blurRadius={10}
-        />
+      
+        /> */}
       </View>
       <InstructionComp
         title={`${postContent?.title}`}

@@ -61,13 +61,32 @@ const RegisPaymentModal = ({
   setUnlocked = null,
   setIsShowPaymentCompAppeal = null,
   setAppealPaid = null,
+  event_id = null,
 }) => {
-  const { setNotification } = useContext(AuthContext);
-  const { axiosConfig, currencyMulti, currencyCount, currency } = useContext(AuthContext);
+  const { setNotification, quantity, setQuantity, loactionInfo } = useContext(AuthContext);
+  const {
+    axiosConfig,
+    currencyMulti,
+    currencyCount,
+    currency,
+    getActivity,
+    setWaletInfo,
+    useInfo,
+  } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (modelName === 'livechat' || modelName === 'qna') {
+      null;
+    } else {
+      setQuantity(0);
+    }
+  }, [modelName]);
+  // console.log('module name____', modelName);
+  // console.log('module name quna____', quantity);
+
   const Navigation = useNavigation();
   const [regBuffer, setRegBuffer] = useState(false);
   const [walletInfo, setWalletInfo] = useState([]);
-
 
   const [paytmDat, setPaytmDat] = useState({
     token: '',
@@ -77,8 +96,7 @@ const RegisPaymentModal = ({
     mode: '',
   });
 
-
-  let countryBaseFee = currencyCount(fee)
+  let countryBaseFee = currencyCount(fee);
 
   const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(
     AppUrl.getTokenPaytm + countryBaseFee,
@@ -91,12 +109,13 @@ const RegisPaymentModal = ({
     openPaymentSheet,
     stripePaymentStatus,
   } = useStripePayment({
-    amount: countryBaseFee,
+    amount: quantity > 0 ? fee * quantity : fee,
     event_type: modelName,
-    event_id: eventId,
+    event_id:
+      eventType === 'greeting' || eventType === 'marketplace'
+        ? event_id
+        : eventId,
   });
-
-  // console.log(fee + '  ' + modelName + '  ' + eventId);
 
   const [regComBuffer, setRegComBuffer] = useState(false);
   const [modal, setModal] = useState(false);
@@ -104,9 +123,9 @@ const RegisPaymentModal = ({
     axios
       .get(AppUrl.auditionRegistrationWallet, axiosConfig)
       .then(res => {
-        console.log(res);
+        //console.log(res);
         if (res.data.status === 200) {
-          console.log(res.data.userWallet);
+          //console.log(res.data.userWallet);
           setWalletInfo(res.data.userWallet);
         }
       })
@@ -126,15 +145,15 @@ const RegisPaymentModal = ({
       mode: resData?.takePaymentMode,
     });
 
-    console.log('payment status', resData?.takePaymentMode);
-    console.log(
-      'paytm token',
-      resData?.Token_data?.body?.txnToken +
-      ' fee  :' +
-      fee +
-      '  payment mode' +
-      resData?.takePaymentMode,
-    );
+    //console.log('payment status', resData?.takePaymentMode);
+    // console.log(
+    //   'paytm token',
+    //   resData?.Token_data?.body?.txnToken +
+    //   ' fee  :' +
+    //   fee +
+    //   '  payment mode ' +
+    //   resData?.takePaymentMode,
+    // );
   }, [resData]);
 
   useEffect(() => {
@@ -179,8 +198,9 @@ const RegisPaymentModal = ({
     axios
       .post(AppUrl.EventRegister, finalData, axiosConfig)
       .then(res => {
-        console.log(res);
+        //console.log(res);
         if (res.data.status === 200) {
+          setQuantity(0);
           reset(data);
           setWaletInfo(res.data.waletInfo);
           // setModalObj({
@@ -224,43 +244,11 @@ const RegisPaymentModal = ({
     };
 
     if (type === 'card') {
-      axios
-        .post(AppUrl.EventRegister, finalData, axiosConfig)
-        .then(res => {
-          setRegBuffer(false);
-          console.log(res.data);
-          if (res.data.status === 200) {
-            reset(data);
-            setModalObj({
-              modalType: 'success',
-              buttonTitle: 'Ok',
-              message: 'Registration completed successfully !',
-            });
-
-            setModal(true);
-            return;
-          } else {
-            setModalObj({
-              modalType: 'warning',
-              buttonTitle: 'OK',
-              message: 'Something Went Wrong',
-            });
-            setModal(true);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          setRegBuffer(false);
-          setModalObj({
-            modalType: 'warning',
-            buttonTitle: 'OK',
-            message: 'Something Went Wrong',
-          });
-          setModal(true);
-        });
+      eventReg();
     }
 
     if (type === 'wallet') {
+      // eventType === 'livechat' && eventReg();
       let data = {
         event_type: eventType,
         notification_id: notification_id ? notification_id : null,
@@ -271,19 +259,21 @@ const RegisPaymentModal = ({
         end_time: end_time,
         greetingId: greetingId,
       };
-      console.log('data-------------', data);
+      // console.log('data-------------', data);
       axios
         .post(AppUrl.walletQnaLearningRegister, data, axiosConfig)
         .then(res => {
           setRegBuffer(false);
-          console.log(res.data);
+          //console.log(res.data);
           if (res.data.status === 200) {
             reset(data);
+
             setModalObj({
               modalType: 'success',
               buttonTitle: 'Ok',
               message: 'Registration completed successfully !',
             });
+            getActivity();
             // setWaletInfo()
             setWaletInfo(res.data.waletInfo);
             setModal(true);
@@ -473,8 +463,6 @@ const RegisPaymentModal = ({
     console.log('bidding idddddddddddddddd', eventId);
     console.log('--------paytmDat', paytmDat);
 
-
-
     if (!buffer) {
       AllInOneSDKManager.startTransaction(
         paytmDat.order_id,
@@ -495,6 +483,7 @@ const RegisPaymentModal = ({
               ...result,
               modelName,
               eventId,
+              event_id,
               souvenir_create_id: souvenirId ? souvenirId : 0,
               souvenir_apply_id: id ? id : 0,
               videoId: modalPara !== null ? modalPara[0] : 0,
@@ -517,6 +506,14 @@ const RegisPaymentModal = ({
             if (eventType == 'auction') {
               setIsShowPaymentComp(false);
               return Navigation.goBack();
+            }
+            if (eventType === 'learningSessionCertificate') {
+              setPaymentComplete(true);
+              return setIsShowPaymentComp(false);
+            }
+            if (eventType === 'greeting') {
+              setIsShowPaymentComp(true);
+              return Navigation.navigate(navigationStrings.NOTIFICATION);
             }
             setIsShowPaymentComp(false);
 
@@ -543,7 +540,7 @@ const RegisPaymentModal = ({
       .post(AppUrl.paytmPaymentSuccess, data, axiosConfig)
       .then(res => {
         getActivity();
-        console.log('my data succes', res);
+        console.log('my data succes', res.data);
         if (eventType == 'generalpost') {
           setUnlocked(true);
           setIsShowPaymentComp(false);
@@ -560,6 +557,12 @@ const RegisPaymentModal = ({
         } else if (eventType == 'auditionAppeal') {
           setAppealPaid(true);
           return setIsShowPaymentCompAppeal(false);
+        } else if (eventType === 'learningSessionCertificate') {
+          return setModalObj({
+            modalType: 'success',
+            buttonTitle: 'OK',
+            message: 'Registration completed successfully !',
+          });
         }
       })
       .catch(err => {
@@ -571,6 +574,7 @@ const RegisPaymentModal = ({
    * event reg live chat, learning session, meeetup, qna,souvenir,greetings
    */
   const eventReg = (type = null) => {
+    console.log('i hittt bro chill');
     let aditionalData = {
       event_registration_id: event_registration_id
         ? event_registration_id
@@ -581,13 +585,17 @@ const RegisPaymentModal = ({
       fee: countryBaseFee,
       start_time: start_time,
       end_time: end_time,
+      quantity: quantity,
       // room_id: event_type === 'livechat' ? firepadRef.key : '',
-      room_id: '',
+      // room_id: '',
     };
+    console.log('backend data jacche', aditionalData);
     // return console.log('audition type', aditionalData)
     axios
       .post(AppUrl.EventRegister, aditionalData, axiosConfig)
       .then(res => {
+        setQuantity(0);
+        console.log('event reg api hittting -------------->', res.data);
         setRegComBuffer(false);
         type == 'paytm' ? payTmPayment() : null;
 
@@ -626,6 +634,10 @@ const RegisPaymentModal = ({
         return payTmPayment();
       } else if (eventType === 'auction') {
         return payTmPayment();
+      } else if (eventType === 'marketplace') {
+        return payTmPayment();
+      } else if (eventType === 'learningSessionCertificate') {
+        return payTmPayment();
       } else {
         eventReg('paytm');
       }
@@ -656,8 +668,13 @@ const RegisPaymentModal = ({
     if (eventType == 'videoFeed') {
       if (stripePaymentStatus) {
         setIsShowPaymentComp(false);
+
         handelVideoFeedReactBuy();
       } else if (eventType == 'greeting') {
+        setIsShowPaymentComp(false);
+      } else if (eventType === 'learningSessionCertificate') {
+        setIsShowPaymentComp(false);
+      } else if (eventType === 'marketplace') {
         setIsShowPaymentComp(false);
       }
     }
@@ -666,6 +683,27 @@ const RegisPaymentModal = ({
   //stripe click
   const handelClickStripe = () => {
     if (stripeBuffer) {
+      if (eventType === 'souvenir') {
+        return openPaymentSheet();
+      } else if (modelName === 'generalpost') {
+        console.log(modelName);
+        return openPaymentSheet();
+      } else if (eventType === 'videoFeed') {
+        return openPaymentSheet();
+      } else if (eventType === 'greeting') {
+        return openPaymentSheet();
+      } else if (eventType === 'auditionCertificate') {
+        return openPaymentSheet();
+      } else if (eventType === 'auditionAppeal') {
+        return openPaymentSheet();
+      } else if (eventType === 'auction') {
+        return openPaymentSheet();
+      } else if (eventType === 'learningSessionCertificate') {
+        return openPaymentSheet();
+      } else if (eventType === 'marketplace') {
+        return openPaymentSheet();
+      }
+
       job != 'pay-again' ? eventReg() : null;
       openPaymentSheet();
     } else {
@@ -677,6 +715,9 @@ const RegisPaymentModal = ({
     if (eventType == 'greeting') {
       return Navigation.navigate(navigationStrings.NOTIFICATION);
     }
+    setIsShowPaymentComp(false);
+    Navigation.navigate(navigationStrings.HOME);
+    Toast.show('Registered Successfully ', Toast.durations.SHORT);
   };
 
   const [shujoBuffer, setShujoBuffer] = useState(true);
@@ -687,9 +728,14 @@ const RegisPaymentModal = ({
     let info = {
       amount: countryBaseFee,
       event_type: modelName,
-      event_id: eventId,
+      event_id:
+        eventType === 'greeting' || eventType === 'marketplace'
+          ? event_id
+          : eventId,
       reactNum: modalPara !== null ? modalPara[1] : 0,
     };
+    console.log('backend data', info);
+
     axios
       .post(AppUrl.shujroPayPaymentInitiata, info, axiosConfig)
       .then(res => {
@@ -706,9 +752,118 @@ const RegisPaymentModal = ({
   };
 
   const shurjoPayClick = () => {
+    if (eventType === 'souvenir') {
+      return shurjoPayMakePayment();
+    } else if (modelName === 'generalpost') {
+      console.log(modelName);
+      return shurjoPayMakePayment();
+    } else if (eventType === 'videoFeed') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'greeting') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'auditionCertificate') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'auditionAppeal') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'auction') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'learningSessionCertificate') {
+      return shurjoPayMakePayment();
+    } else if (eventType === 'marketplace') {
+      return shurjoPayMakePayment();
+    }
     job != 'pay-again' ? eventReg() : null;
     shurjoPayMakePayment();
   };
+
+  const handelIpay88 = () => {
+    eventReg();
+    Navigation.navigate(navigationStrings.IPAY88PAY, {
+      checkOutUrl: `https://backend.hellosuperstars.com/ipay88-make-payment/${useInfo.id}/${countryBaseFee}/${modelName}/${eventId}/0/mobile`,
+    });
+  };
+
+
+
+
+  // global payment getways
+  const globalPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => handelClickStripe()}>
+          <Image
+            source={imagePath.Stripe}
+            style={styles.payment_icon}
+          />
+        </TouchableOpacity>
+      </>
+    )
+  }
+
+  // bangla deshi payment getways
+  const bdpayment = () => {
+    return (
+      <>
+        <TouchableOpacity
+          onPress={() => (shujoBuffer ? shurjoPayClick() : null)}>
+          <Image source={imagePath.Surjo} style={styles.payment_icon} />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+  }
+
+  //indian payment getways
+  const indPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => handelSubmitPaytm()}>
+          <Image source={imagePath.paytm} style={styles.payment_icon} />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+
+  }
+
+  // malaysia payment getways
+  const mymPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => handelIpay88()}>
+          <Image source={imagePath.Ipay} style={styles.payment_icon} />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+  }
+
+  const renderPaymentGetways = () => {
+
+    if (loactionInfo?.countryCode == "BD") {
+
+      return bdpayment();
+
+    } else if (loactionInfo?.countryCode == 'IN') {
+
+      return indPayment();
+
+    } else if (loactionInfo?.countryCode == 'MY') {
+
+      return mymPayment();
+
+    } else {
+
+      return globalPayment();
+
+    }
+
+
+  }
+
+
+
+
   return (
     <>
       <AlertModal
@@ -762,41 +917,34 @@ const RegisPaymentModal = ({
                   paddingHorizontal: 20,
                   paddingTop: 25,
                 }}>
-                {/* surjo pay */}
-                <TouchableOpacity
-                  onPress={() => (shujoBuffer ? shurjoPayClick() : null)}>
-                  <Image source={imagePath.Surjo} style={styles.payment_icon} />
-                </TouchableOpacity>
-                {/* paytm */}
-                <TouchableOpacity onPress={() => handelSubmitPaytm()}>
-                  <Image source={imagePath.paytm} style={styles.payment_icon} />
-                </TouchableOpacity>
-                {/* ipay 88 */}
-                <TouchableOpacity
-                  onPress={() =>
-                    Toast.show('Under Development', Toast.durations.SHORT)
-                  }>
-                  <Image source={imagePath.Ipay} style={styles.payment_icon} />
-                </TouchableOpacity>
 
+
+                {/* surjo pay */}
+
+
+
+                {/* paytm */}
+
+
+                {/* ipay 88 */}
+
+
+                {renderPaymentGetways()}
                 {/* pocket pay */}
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() =>
                     Toast.show('Under Development', Toast.durations.SHORT)
                   }>
+
+
                   <Image
                     source={imagePath.Pocket}
                     style={styles.payment_icon}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 {/* stripe */}
-                <TouchableOpacity onPress={() => handelClickStripe()}>
-                  <Image
-                    source={imagePath.Stripe}
-                    style={styles.payment_icon}
-                  />
-                </TouchableOpacity>
+
               </View>
 
               {/* <Controller

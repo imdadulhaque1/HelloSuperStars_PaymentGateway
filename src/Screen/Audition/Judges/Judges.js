@@ -1,17 +1,17 @@
 import React from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import Heading from '../../../Components/GLOBAL/Reuseable/Heading';
 import HeaderComp from '../../../Components/HeaderComp';
-import {FlatGrid} from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import UnderlineImage from '../../../Components/GLOBAL/Reuseable/UnderlineImage';
 import imagePath from '../../../Constants/imagePath';
 
 import RoundTopBanner from '../Round1/RoundTopBanner';
-import {Text} from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import AppUrl from '../../../RestApi/AppUrl';
 import TitleHeader from '../../../Components/TitleHeader';
 
-const Judges = ({navigation, route}) => {
+const Judges = ({ navigation, route }) => {
   const {
     title,
     roundName,
@@ -41,8 +41,8 @@ const Judges = ({navigation, route}) => {
             backgroundColor: '#272727',
             paddingBottom: 10,
             borderRadius: 10,
-            marginTop:5,
-            marginHorizontal:10
+            marginTop: 5,
+            marginHorizontal: 10
           }}>
           {/* <Heading heading="Who will judge you" />
           <UnderlineImage /> */}
@@ -50,24 +50,24 @@ const Judges = ({navigation, route}) => {
           <FlatGrid
             itemDimension={180}
             data={judges}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return (
                 <View style={styles.borderBg}>
                   {item.user.image === null ? (
                     <Image
                       source={imagePath.noImageUser}
-                      style={{height: '90%', width: '100%'}}
+                      style={{ height: '90%', width: '100%' }}
                     />
                   ) : (
                     <Image
                       source={{
                         uri: AppUrl.MediaBaseUrl + item.user.image,
                       }}
-                      style={{height: '90%', width: '100%'}}
+                      style={{ height: '90%', width: '100%' }}
                     />
                   )}
-                  <Text style={{color: 'white', textAlign: 'center'}}>
-                    {item.user.first_name} {item.user.last_name}
+                  <Text style={{ color: 'white', textAlign: 'center' }}>
+                    {item.user?.first_name} {item.user?.last_name}
                   </Text>
                 </View>
               );
@@ -75,28 +75,28 @@ const Judges = ({navigation, route}) => {
           />
           {/* <Heading heading="Incredible jury waiting for you" /> */}
           <TitleHeader title={'Increadible jury waiting for you'} />
-      
+
           <FlatGrid
             itemDimension={180}
             data={juries}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return (
                 <View style={styles.borderBg}>
                   {item.user.image === null ? (
                     <Image
                       source={imagePath.noImageUser}
-                      style={{height: '90%', width: '100%'}}
+                      style={{ height: '90%', width: '100%' }}
                     />
                   ) : (
                     <Image
                       source={{
                         uri: AppUrl.MediaBaseUrl + item.user.image,
                       }}
-                      style={{height: '90%', width: '100%'}}
+                      style={{ height: '90%', width: '100%' }}
                     />
                   )}
-                  <Text style={{color: 'white', textAlign: 'center'}}>
-                    {item.user.first_name} {item.user.last_name}
+                  <Text style={{ color: 'white', textAlign: 'center' }}>
+                    {item.user?.first_name} {item.user?.last_name}
                   </Text>
                 </View>
               );

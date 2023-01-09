@@ -7,7 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import InformationComp from '../../../../Components/GLOBAL/InformationComp/InformationComp';
 // import InformationComp from '../../../../Components/InformationComp/InformationComp';
@@ -74,7 +74,7 @@ const GreetingRegistration = ({
   const onSubmit = data => {
     let aditionalData = {
       ...data,
-      name: useInfo.first_name + useInfo.last_name,
+      name: useInfo?.first_name + useInfo?.last_name,
       phone: useInfo.phone,
     };
     // setBuffer(true)
@@ -82,7 +82,7 @@ const GreetingRegistration = ({
     axios
       .post(AppUrl.GreetingRegistrationUpdate, aditionalData, axiosConfig)
       .then(res => {
-        // console.log(res.data)
+        // //console.log(res.data)
         setBuffer(false);
         if (res.data.status === 200) {
           // alert('hello')

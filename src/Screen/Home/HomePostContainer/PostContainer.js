@@ -99,7 +99,8 @@ const PostContainer = ({
     setBuffer(true);
     setPosts([])
     setRefreshing(true);
-    axios.get(AppUrl.AllPostWithPagination + 1 + `?page=1`, axiosConfig).then(res => {
+    axios.get(AppUrl.AllPostWithPagination + 5 + `?page=1`, axiosConfig).then(res => {
+
       setRefreshing(false);
       setBuffer(false);
       if (res.data.status === 200) {
@@ -178,6 +179,11 @@ const PostContainer = ({
           /> */}
 
           <FlatList
+            //          onScroll={({nativeEvent})=>{
+            //          if(nativeEvent.contentOffset.y){
+            //           console.log('scrolling y axis')
+            //          }
+            // }}
             data={posts}
             renderItem={renderData}
             onEndReached={getAllPost}

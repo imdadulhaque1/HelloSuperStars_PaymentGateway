@@ -1,13 +1,13 @@
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
-import {RefreshControl, ScrollView, View, Text, Image} from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { RefreshControl, ScrollView, View, Text, Image } from 'react-native';
 import MarketPlaceSkeleton from '../../../Components/Skeleton/MarketSkeleton/MarketPlaceSkeleton';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import MarketProductCard from '../MarketProductCard/MarketProductCard';
 
-const MarketProductContainer = ({apiInPoint}) => {
-  const {axiosConfig} = useContext(AuthContext);
+const MarketProductContainer = ({ apiInPoint }) => {
+  const { axiosConfig } = useContext(AuthContext);
   const [marketPlaceData, setMarketPlaceData] = useState([]);
   const [loder, setLoder] = useState(true);
   const [Refreshing, setRefreshing] = useState(false);
@@ -28,7 +28,7 @@ const MarketProductContainer = ({apiInPoint}) => {
       .then(res => {
         if (res.data.status === 200) {
           setLoder(false);
-          console.log(res.data.data);
+          //console.log(res.data.data);
           setMarketPlaceData(res.data.data);
         }
       })
@@ -40,7 +40,7 @@ const MarketProductContainer = ({apiInPoint}) => {
   return (
     <View>
       <ScrollView
-        style={{marginBottom: 95, backgroundColor: 'black', height: 700}}
+        style={{ backgroundColor: 'black', paddingBottom: 100 }}
         refreshControl={
           <RefreshControl
             refreshing={Refreshing}
@@ -57,16 +57,16 @@ const MarketProductContainer = ({apiInPoint}) => {
             <MarketProductCard data={data} buttonText="Buy Now" key={index} />
           ))
         ) : (
-          <View style={{height: 600, justifyContent: 'center'}}>
+          <View style={{ height: 600, justifyContent: 'center' }}>
             <View>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Image
                   source={imagePath.lazyDog}
-                  style={{height: 100, width: 100}}
+                  style={{ height: 100, width: 100 }}
                 />
               </View>
 
-              <Text style={{color: 'white', textAlign: 'center'}}>
+              <Text style={{ color: 'white', textAlign: 'center' }}>
                 Sorry No Data Available !
               </Text>
             </View>

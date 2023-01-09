@@ -30,7 +30,7 @@ import AllInOneSDKManager from 'paytm_allinone_react-native';
 import { useStripePayment } from '../../../CustomHooks/useStripePayment';
 
 const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentView, PackegeId = null, buyFor, singlePackage = null }) => {
-  const { axiosConfig, setWaletInfo, paytmSuccess } = useContext(AuthContext);
+  const { axiosConfig, setWaletInfo, paytmSuccess, loactionInfo } = useContext(AuthContext);
   const Navigation = useNavigation()
   const [packageBuffer, setPackageBuffer] = useState(false)
   const { control, handleSubmit, reset, formState: { errors } } = useForm();
@@ -41,7 +41,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   const { resData, setResData, buffer, error, HandelGetData } = useAxiosGet(AppUrl.getTokenPaytm + countryBaseFee)
 
   const { stripeBuffer, stripeError, HandelStripePayment, openPaymentSheet, stripePaymentStatus } = useStripePayment({
-    amount: countryBaseFee,
+    amount: singlePackage?.price,
     event_type: buyFor,
     event_id: PackegeId,
     redirect: false
@@ -73,7 +73,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
       'callBackUrl': resData?.callBackUrl,
       'mode': resData?.takePaymentMode
     })
-    console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + countryBaseFee)
+    // console.log('paytm token', resData?.Token_data?.body?.txnToken + " fee  :" + countryBaseFee)
 
   }, [resData])
 
@@ -182,7 +182,7 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
     setPackageBuffer(true)
 
     axios.post(AppUrl.EventRegister, aditionalData, axiosConfig).then(res => {
-      // console.log(res.data)
+      // //console.log(res.data)
       setPackageBuffer(false)
 
       if (res.data.status === 200) {
@@ -292,6 +292,92 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
   }
 
 
+
+
+  // global payment getways
+  const globalPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => stripePaymentClick()}>
+          <Image
+            source={imagePath.Stripe}
+            style={styles.payment_icon}
+          />
+        </TouchableOpacity>
+      </>
+    )
+  }
+
+  // bangla deshi payment getways
+  const bdpayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => shujoBuffer ? shurjoPayMakePayment() : null}>
+          <Image
+            source={imagePath.Surjo}
+            style={styles.payment_icon}
+          />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+  }
+
+  //indian payment getways
+  const indPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => payTmPayment()}>
+          <Image
+            source={imagePath.paytm}
+            style={styles.payment_icon}
+          />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+
+  }
+
+  // malaysia payment getways
+  const mymPayment = () => {
+    return (
+      <>
+        <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
+          <Image
+            source={imagePath.Ipay}
+            style={styles.payment_icon}
+          />
+        </TouchableOpacity>
+        {globalPayment()}
+      </>
+    )
+  }
+
+  const renderPaymentGetways = () => {
+
+    if (loactionInfo?.countryCode == "BD") {
+
+      return bdpayment();
+
+    } else if (loactionInfo?.countryCode == 'IN') {
+
+      return indPayment();
+
+    } else if (loactionInfo?.countryCode == 'MY') {
+
+      return mymPayment();
+
+    } else {
+
+      return globalPayment();
+
+    }
+
+
+  }
+
+
   return (
     <>
       <AlertModal modalObj={modalObj} modal={modal} setModal={setModal} buttoPress={modalButtonPress} />
@@ -319,43 +405,24 @@ const PaymentComp = ({ eventType, eventId, modelName, type = null, setPaymentVie
         </ScrollView> */}
         <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around', paddingHorizontal: 20, paddingTop: 25 }}>
           {/* surjo pay */}
-          <TouchableOpacity onPress={() => shujoBuffer ? shurjoPayMakePayment() : null}>
-            <Image
-              source={imagePath.Surjo}
-              style={styles.payment_icon}
-            />
-          </TouchableOpacity>
+
+
           {/* paytm */}
-          <TouchableOpacity onPress={() => payTmPayment()}>
-            <Image
-              source={imagePath.paytm}
-              style={styles.payment_icon}
-            />
-          </TouchableOpacity>
+
           {/* ipay 88 */}
-          <TouchableOpacity onPress={() => Toast.show('Under Development', Toast.durations.SHORT)}>
-            <Image
-              source={imagePath.Ipay}
-              style={styles.payment_icon}
-            />
-          </TouchableOpacity>
+
 
           {/* pocket pay */}
-          <TouchableOpacity onPress={pocketPay}>
+          {/* <TouchableOpacity onPress={pocketPay}>
             <Image
               source={imagePath.Pocket}
               style={styles.payment_icon}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* stripe */}
-          <TouchableOpacity onPress={() => stripePaymentClick()}>
-            <Image
-              source={imagePath.Stripe}
-              style={styles.payment_icon}
-            />
-          </TouchableOpacity>
 
+          {renderPaymentGetways()}
 
 
 

@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -19,12 +19,15 @@ import RenderHtml from 'react-native-render-html';
 import AppUrl from '../../../RestApi/AppUrl';
 import CountDown from 'react-native-countdown-component';
 import moment from 'moment';
-const LearningSessionNav = ({route,navigation}) => {
-  const {event} = route.params;
+import LineView from '../../LineView';
+import { AuthContext } from '../../../Constants/context';
+const LearningSessionNav = ({ route, navigation }) => {
+  const { event } = route.params;
   const Navigation = useNavigation();
   const [showInstruction, setShowInstruction] = useState(false);
   const nowDate = new Date().getTime();
   // const countDownDate = new Date(event.assignment_reg_end_date).getTime();
+  console.log('event', event);
 
   const countDownDate = new Date(
     moment(event.assignment_reg_end_date).format('LL') + ' ' + '23:59:59',
@@ -33,18 +36,18 @@ const LearningSessionNav = ({route,navigation}) => {
   const totalSecond = TotalMillisecondRemaining / 1000;
 
   const eventInstruction = {
-    html: `<div style='color:#e6e6e6;'>${
-      event?.assignment_instruction ? event.assignment_instruction : ''
-    }</div>`,
+    html: `<div style='color:#e6e6e6;'>${event?.assignment_instruction ? event.assignment_instruction : ''
+      }</div>`,
   };
+  const { currencyCount, currency } = useContext(AuthContext);
 
   return (
     <ScrollView style={styles.container}>
-      <HeaderComp backFunc={()=>navigation.goBack()} />
+      <HeaderComp backFunc={() => navigation.goBack()} />
       <View style={styles.bannerTitle}>
         <ImageBackground
           style={styles.background}
-          source={{uri: `${AppUrl.MediaBaseUrl + event.banner}`}}>
+          source={{ uri: `${AppUrl.MediaBaseUrl + event.banner}` }}>
           <View
             style={{
               backgroundColor: '#ffffffa2',
@@ -61,8 +64,8 @@ const LearningSessionNav = ({route,navigation}) => {
                 borderColor: '#FFAD00',
                 borderRadius: 20,
               }}
-              digitTxtStyle={{color: '#FFAD00'}}
-              timeLabelStyle={{color: 'black', fontWeight: 'bold'}}
+              digitTxtStyle={{ color: '#FFAD00' }}
+              timeLabelStyle={{ color: 'black', fontWeight: 'bold' }}
               size={20}
             />
           </View>
@@ -142,7 +145,79 @@ const LearningSessionNav = ({route,navigation}) => {
 
         {showInstruction && (
           <View style={styles.listParentCopy}>
-            <RenderHtml contentWidth={9000} source={eventInstruction} />
+            <View style={{ padding: 5 }}>
+              <RenderHtml contentWidth={9000} source={eventInstruction} />
+            </View>
+            <View>
+              <View style={styles.topCard}>
+                <LineView />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginVertical: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      width: '30%',
+                      fontWeight: 'bold',
+                      color: '#ffaa00',
+                    }}>
+                    Start:
+                  </Text>
+                  <Text style={{ color: 'white', width: '60%' }}>
+                    {moment(event?.assignment_reg_start_date).format(
+                      'DD MMMM YYYY',
+                    )}
+                  </Text>
+                </View>
+                <LineView />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginVertical: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      width: '30%',
+                      fontWeight: 'bold',
+                      color: '#ffaa00',
+                    }}>
+                    End:
+                  </Text>
+                  <Text style={{ color: 'white', width: '60%' }}>
+                    {moment(event?.assignment_reg_end_date).format(
+                      'DD MMMM YYYY',
+                    )}
+                  </Text>
+                </View>
+
+                <LineView />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginVertical: 5,
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      width: '30%',
+                      fontWeight: 'bold',
+                      color: '#ffaa00',
+                    }}>
+                    Fee:
+                  </Text>
+                  <Text style={{ color: 'white', width: '60%' }}>
+                    {currencyCount(event?.assignment_fee) + ' ' + currency.symbol}
+                    {/* {data.fee ? data.fee : data.cost} BDT */}
+                  </Text>
+                </View>
+              </View>
+            </View>
           </View>
         )}
 

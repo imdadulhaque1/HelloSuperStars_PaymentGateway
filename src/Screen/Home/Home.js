@@ -4,6 +4,7 @@ import { Button, SafeAreaView, View } from 'react-native';
 import PushNotification from 'react-native-push-notification';
 import HeaderComp from '../../Components/HeaderComp';
 import { AuthContext } from '../../Constants/context';
+import navigationStrings from '../../Constants/navigationStrings';
 import NotificationRender from '../../NotificationHandeler/NotificationRender';
 import AppUrl from '../../RestApi/AppUrl';
 import HomeOnlineStars from './HomeOnlineStars/HomeOnlineStars';
@@ -13,12 +14,13 @@ import styles from './styles';
 function Home() {
   const navigation = useNavigation();
   const [postPage, setPostPage] = useState(1);
-  const { setUserInfo, useInfo, setLoginStatus } = useContext(AuthContext);
+  const { setUserInfo, useInfo, setLoginStatus, activities, getActivity } = useContext(AuthContext);
+
 
   useEffect(() => {
-    console.log(postPage);
+    // console.log(postPage);
     createChannels();
-    console.log('status', useInfo.status)
+    // console.log('status', useInfo.status)
     // if (useInfo.status == 0) {
     //   setLoginStatus(false)
     //   navigation.navigate('category')
@@ -27,8 +29,22 @@ function Home() {
 
 
   useEffect(() => {
-    console.log('post page', postPage)
+    // console.log('post page', postPage)
   }, [postPage])
+
+
+  PushNotification.configure({
+    onNotification: function (notification) {
+      // console.log("NOTIFICATION:", notification);
+      activities.length
+      if (activities.length != 0) {
+        navigation.navigate(navigationStrings.MENUSTACKSCREENV2, { screen: navigationStrings.MENUACTIVITES });
+      }
+
+    },
+    requestPermissions: Platform.OS === 'ios'
+  });
+
 
   const createChannels = () => {
     PushNotification.createChannel(
@@ -44,32 +60,32 @@ function Home() {
       (created) => console.log(`channel created ${created}`)
     )
   }
-  const handleNotification = () => {
+  // const handleNotification = () => {
 
-    PushNotification.cancelAllLocalNotifications();
+  //   PushNotification.cancelAllLocalNotifications();
 
-    PushNotification.localNotification({
-      channelId: "test-channel",
-      title: "You clicked on ",
-      message: "habijabi message here",
-      bigText: " is one of the largest and most beatiful cities in ",
-      color: "red",
-      id: 1,
-      playSound: true,
-      soundName: 'sound.mp3',
-      importance: 4,
-      vibrate: true,
-      vibration: 1000,
-    });
+  //   PushNotification.localNotification({
+  //     channelId: "test-channel",
+  //     title: "You clicked on ",
+  //     message: "habijabi message here",
+  //     bigText: " is one of the largest and most beatiful cities in ",
+  //     color: "red",
+  //     id: 1,
+  //     playSound: true,
+  //     soundName: 'sound.mp3',
+  //     importance: 4,
+  //     vibrate: true,
+  //     vibration: 1000,
+  //   });
 
-    PushNotification.localNotificationSchedule({
-      channelId: "test-channel",
-      title: "Alarm",
-      message: "You clicked on " + item.country + " 20 seconds ago",
-      date: new Date(Date.now() + 20 * 1000),
-      allowWhileIdle: true,
-    });
-  }
+  //   PushNotification.localNotificationSchedule({
+  //     channelId: "test-channel",
+  //     title: "Alarm",
+  //     message: "You clicked on " + item.country + " 20 seconds ago",
+  //     date: new Date(Date.now() + 20 * 1000),
+  //     allowWhileIdle: true,
+  //   });
+  // }
 
   return (
     <View style={styles.container}>
@@ -86,7 +102,7 @@ function Home() {
         {/* ..........custom header end....................  */}
 
         {/* ...........online active stars................... */}
-        {/* <NotificationRender /> */}
+        <NotificationRender />
         <HomeOnlineStars />
         {/* ...........online active end................... */}
 

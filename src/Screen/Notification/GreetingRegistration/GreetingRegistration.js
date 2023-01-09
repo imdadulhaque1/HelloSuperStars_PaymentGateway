@@ -122,14 +122,7 @@ const GreetingRegistration = ({route}) => {
       });
   };
 
-  const modalButtonPress = () => {
-    setModal(false);
-    if (eventType == 'OfflineMeetup') {
-      Linking.openURL('http://www.africau.edu/images/default/sample.pdf');
-    } else {
-      // return navigation.navigate(navigationStrings.HOME);
-    }
-  };
+  const modalButtonPress = () => {};
   return (
     <>
       <AlertModal
@@ -143,8 +136,31 @@ const GreetingRegistration = ({route}) => {
       ) : (
         <>
           <ScrollView>
-            <HeaderComp text="Greeting Registration" />
+            <HeaderComp
+              backFunc={() => navigation.goBack()}
+              text="Greeting Registration"
+            />
             <View style={styles.greetingsBody}>
+              <View
+                style={{
+                  backgroundColor: '#282828',
+                  margin: 10,
+                  borderRadius: 5,
+                  fontSize: 20,
+                  height: 40,
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: '#FFAD00',
+                    fontSize: 18,
+                    textAlign: 'center',
+                  }}>
+                  {post?.title}
+                </Text>
+              </View>
               <View style={styles.greetingsRequest}>
                 <Heading heading="Greetings Request" />
                 <UnderlineImage />
@@ -153,7 +169,7 @@ const GreetingRegistration = ({route}) => {
                     <VideoPlayer
                       video={{uri: `${AppUrl.MediaBaseUrl + post?.video}`}}
                       videoWidth={120}
-                      videoHeight={50}
+                      videoHeight={100}
                       thumbnail={{
                         uri: AppUrl.MediaBaseUrl + post.banner,
                       }}
@@ -174,7 +190,23 @@ const GreetingRegistration = ({route}) => {
                   )}
                 </View>
               </View>
+
               {/* information  */}
+              <View
+                style={{
+                  backgroundColor: '#282828',
+                  margin: 8,
+                  marginBottom: -15,
+                  borderRadius: 5,
+                  fontSize: 20,
+                  height: 50,
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Heading heading="Information" />
+                <UnderlineImage />
+              </View>
               <InformationComp data={postRegistration} type="greeting" />
 
               {/* instruction  */}
@@ -183,7 +215,15 @@ const GreetingRegistration = ({route}) => {
                 instruction={post?.instruction}
               />
 
-              <View style={styles.greetingsRequest}>
+              <View
+                style={{
+                  backgroundColor: '#282828',
+                  margin: 10,
+                  borderRadius: 5,
+                  fontSize: 20,
+                  height:
+                    postRegistration?.payment_status === null ? '40%' : 70,
+                }}>
                 {postRegistration?.name === null ||
                 postRegistration?.greeting_context === null ? (
                   <>
@@ -193,7 +233,7 @@ const GreetingRegistration = ({route}) => {
                       <View style={{marginTop: 10, marginBottom: 10}}></View>
                       <View style={{marginTop: 10, marginBottom: 10}}>
                         <Text style={{marginBottom: 8, color: 'white'}}>
-                          Name of persion
+                          Name of Person
                         </Text>
                         <Controller
                           control={control}
@@ -207,7 +247,7 @@ const GreetingRegistration = ({route}) => {
                               value={value}
                               multiline
                               placeholderTextColor="#9e9e9e"
-                              placeholder="Name of persion"
+                              placeholder="Name of Person"
                               style={styles.textInput}
                             />
                           )}
@@ -349,7 +389,8 @@ const GreetingRegistration = ({route}) => {
 
                     <RegisPaymentModal
                       eventType="greeting"
-                      eventId={postRegistration?.id}
+                      eventId={post?.id}
+                      event_id={postRegistration?.id}
                       modelName="greeting"
                       isShowPaymentComp={isShowPaymentComp}
                       setIsShowPaymentComp={setIsShowPaymentComp}

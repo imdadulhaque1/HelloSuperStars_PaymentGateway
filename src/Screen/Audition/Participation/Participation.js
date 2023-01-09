@@ -7,28 +7,28 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HeaderComp from '../../../Components/HeaderComp';
 import RoundTopBanner from '../../Audition/Round1/RoundTopBanner';
 import imagePath from '../../../Constants/imagePath';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import VideoUploadModal from '../../../Components/MODAL/VideoUploadModal';
 import AuditionTimer from '../../../Components/AUDITION/AuditionTimer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNFS from 'react-native-fs';
 import VideoPlayer from 'react-native-video-player';
-import {androidCameraPermission} from '../../../../permission';
+import { androidCameraPermission } from '../../../../permission';
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import navigationStrings from '../../../Constants/navigationStrings';
-import {FlatGrid} from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import Toast from 'react-native-root-toast';
 import TitleHeader from '../../../Components/TitleHeader';
-const Participation = ({route}) => {
+const Participation = ({ route }) => {
   const {
     title,
     roundName,
@@ -47,7 +47,7 @@ const Participation = ({route}) => {
   const [appealVideos, setAppealVideos] = useState([]);
   const [myArray, setMyArray] = useState([]);
   const [myArrayAppeal, setMyArrayAppeal] = useState([]);
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const [oldVideos, setOldVideos] = useState([]);
 
   const [videoList, setVideoList] = React.useState([]);
@@ -70,7 +70,7 @@ const Participation = ({route}) => {
       )
       .then(res => {
         if (res.data.status === 200) {
-          console.log(res.data);
+          //console.log(res.data);
           setVideoList(res?.data?.videos);
           setAppealVideoList(res?.data?.appeal_videos);
           setMarkTracking(res?.data?.auditionRoundMarkTracking);
@@ -91,7 +91,7 @@ const Participation = ({route}) => {
       .get(AppUrl.isAppealRound + auditionId + '/' + roundId, axiosConfig)
       .then(res => {
         if (res?.data?.status === 200) {
-          console.log(res.data);
+          //console.log(res.data);
           setIsAppealedForThisRound(res?.data?.isAppealedForThisRound);
           if (res?.data?.isAppealedForThisRound == true) {
             setAppealedRegistration(res?.data?.appealedRegistration);
@@ -119,9 +119,9 @@ const Participation = ({route}) => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Profile Picture', 'Choose an option', [
-        {text: 'Camera', onPress: onCamera},
-        {text: 'Gallery', onPress: onGallery},
-        {text: 'Cancel', onPress: () => {}},
+        { text: 'Camera', onPress: onCamera },
+        { text: 'Gallery', onPress: onGallery },
+        { text: 'Cancel', onPress: () => { } },
       ]);
     }
   };
@@ -137,9 +137,9 @@ const Participation = ({route}) => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Profile Picture', 'Choose an option', [
-        {text: 'Camera', onPress: onCamera},
-        {text: 'Gallery', onPress: onGallery},
-        {text: 'Cancel', onPress: () => {}},
+        { text: 'Camera', onPress: onCamera },
+        { text: 'Gallery', onPress: onGallery },
+        { text: 'Cancel', onPress: () => { } },
       ]);
     }
   };
@@ -156,14 +156,14 @@ const Participation = ({route}) => {
         if (isAppealedForThisRound) {
           setAppealVideos([
             ...appealVideos,
-            {type: type, url: url, base64: res},
+            { type: type, url: url, base64: res },
           ]);
           submitVideo(type, res, 'appeal');
           Toast.show('Uploaded', Toast.durations.SHORT);
           setCountAppealUpload(prevNum => prevNum + 1);
           return;
         }
-        setVideos([...videos, {type: type, url: url, base64: res}]);
+        setVideos([...videos, { type: type, url: url, base64: res }]);
         // console.log(videos);
         Toast.show('Uploaded', Toast.durations.SHORT);
         submitVideo(type, res, 'general');
@@ -185,14 +185,14 @@ const Participation = ({route}) => {
         if (isAppealedForThisRound) {
           setAppealVideos([
             ...appealVideos,
-            {type: type, url: url, base64: res},
+            { type: type, url: url, base64: res },
           ]);
           submitVideo(type, res, 'appeal');
           Toast.show('Uploaded', Toast.durations.SHORT);
           setCountAppealUpload(prevNum => prevNum + 1);
           return;
         }
-        setVideos([...videos, {type: type, url: url, base64: res}]);
+        setVideos([...videos, { type: type, url: url, base64: res }]);
         console.log('Video', res);
         submitVideo(type, res, 'general');
         Toast.show('Uploaded', Toast.durations.SHORT);
@@ -251,7 +251,7 @@ const Participation = ({route}) => {
       .then(res => {
         console.log('video array response', res);
         if (res.data.status === 200) {
-          console.log(res);
+          //console.log(res);
           Toast.show('Upload Done', Toast.durations.SHORT);
           if (videoType === 'appeal') {
             myArrayAppeal.pop();
@@ -309,8 +309,8 @@ const Participation = ({route}) => {
             position: 'relative',
             marginHorizontal: 10,
           }}>
-          <View style={{marginHorizontal: 10}}></View>
-          <View style={{borderWidth: 0.5, borderBottomColor: 'black'}} />
+          <View style={{ marginHorizontal: 10 }}></View>
+          <View style={{ borderWidth: 0.5, borderBottomColor: 'black' }} />
           <View style={styles.uploadStyle}>
             <View>
               {/*========== condition ========== */}
@@ -331,22 +331,22 @@ const Participation = ({route}) => {
               )}
             </View>
             <View>
-              <Text style={{color: '#ddd'}}>
+              <Text style={{ color: '#ddd' }}>
                 {roundInformation.video_upload_start_date}
               </Text>
               {roundInformation.round_type === 1 ? ( //online
-                <Text style={{color: '#ddd'}}>
+                <Text style={{ color: '#ddd' }}>
                   {roundInformation.video_duration} Minutes
                 </Text>
               ) : (
-                <Text style={{color: '#ddd'}}>
+                <Text style={{ color: '#ddd' }}>
                   {roundInformation.video_duration} Minutes
                 </Text>
               )}
 
               {/*========== condition ========== */}
               {roundInformation.round_type === 1 ? null : (
-                <Text style={{color: '#ddd'}}>
+                <Text style={{ color: '#ddd' }}>
                   {roundInformation.video_slot_num}
                 </Text>
               )}
@@ -379,7 +379,7 @@ const Participation = ({route}) => {
                     size={22}
                   />
                   <Text
-                    style={{color: '#FFAD00', marginHorizontal: 5}}
+                    style={{ color: '#FFAD00', marginHorizontal: 5 }}
                     onPress={() => handleJoinCall(roundInformation?.room_id)}>
                     Join Now
                   </Text>
@@ -399,16 +399,16 @@ const Participation = ({route}) => {
                 borderRadius: 10,
                 marginHorizontal: 10,
               }}>
-              <View style={{flex: 1, flexDirection: 'row'}}>
+              <View style={{ flex: 1, flexDirection: 'row' }}>
                 {roundInformation.round_type === 0 &&
                   (videos.length != 0 ? (
                     <FlatGrid
                       spacing={10}
                       itemDimension={120}
                       data={videos}
-                      renderItem={({item, index}) => (
+                      renderItem={({ item, index }) => (
                         <>
-                          <View style={{width: '100%'}}>
+                          <View style={{ width: '100%' }}>
                             <VideoPlayer
                               video={{
                                 uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -434,9 +434,9 @@ const Participation = ({route}) => {
                       spacing={10}
                       itemDimension={120}
                       data={videoList}
-                      renderItem={({item, index}) => (
+                      renderItem={({ item, index }) => (
                         <>
-                          <View style={{width: '100%'}}>
+                          <View style={{ width: '100%' }}>
                             <VideoPlayer
                               video={{
                                 uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -469,7 +469,7 @@ const Participation = ({route}) => {
                                     size={20}
                                   />
                                   {videoSrc != '' && (
-                                    <Text style={{color: '#FFAD00'}}>
+                                    <Text style={{ color: '#FFAD00' }}>
                                       Browse
                                     </Text>
                                   )}
@@ -538,16 +538,16 @@ const Participation = ({route}) => {
                     }}>
                     Appeal Video
                   </Text>
-                  <View style={{flex: 1, flexDirection: 'row'}}>
+                  <View style={{ flex: 1, flexDirection: 'row' }}>
                     {roundInformation.round_type === 0 &&
                       (appealVideos.length != 0 ? (
                         <FlatGrid
                           spacing={10}
                           itemDimension={120}
                           data={appealVideos}
-                          renderItem={({item, index}) => (
+                          renderItem={({ item, index }) => (
                             <>
-                              <View style={{width: '100%'}}>
+                              <View style={{ width: '100%' }}>
                                 <VideoPlayer
                                   video={{
                                     uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -573,9 +573,9 @@ const Participation = ({route}) => {
                         spacing={10}
                         itemDimension={120}
                         data={appealVideoList}
-                        renderItem={({item, index}) => (
+                        renderItem={({ item, index }) => (
                           <>
-                            <View style={{width: '100%'}}>
+                            <View style={{ width: '100%' }}>
                               <VideoPlayer
                                 video={{
                                   uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -611,7 +611,7 @@ const Participation = ({route}) => {
                                     size={20}
                                   />
                                   {videoSrc != '' && (
-                                    <Text style={{color: '#FFAD00'}}>
+                                    <Text style={{ color: '#FFAD00' }}>
                                       Browse
                                     </Text>
                                   )}
@@ -643,16 +643,16 @@ const Participation = ({route}) => {
               {pick ? (
                 <View style={styles.uploadVideoStyle}>
                   <View style={styles.pickVideo}>
-                    <Image style={{height: '100%'}} source={pick} />
+                    <Image style={{ height: '100%' }} source={pick} />
                   </View>
                   <View style={styles.pickVideo}>
-                    <Image style={{height: '100%'}} source={pick} />
+                    <Image style={{ height: '100%' }} source={pick} />
                   </View>
                   <View style={styles.pickVideo}>
-                    <Image style={{height: '100%'}} source={pick} />
+                    <Image style={{ height: '100%' }} source={pick} />
                   </View>
                   <View style={styles.pickVideo}>
-                    <Image style={{height: '100%'}} source={pick} />
+                    <Image style={{ height: '100%' }} source={pick} />
                   </View>
                 </View>
               ) : null}

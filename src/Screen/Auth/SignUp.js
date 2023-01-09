@@ -1,12 +1,9 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable prettier/prettier */
 //import liraries
 import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import React, {useContext, useRef, useState} from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {
-  Button,
   Dimensions,
   ImageBackground,
   ScrollView,
@@ -15,7 +12,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  SafeAreaView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -47,12 +43,14 @@ const SignUp = () => {
   const [serverError, setServerError] = useState([]);
   const screen = Dimensions.get('screen');
   const [passwordError, setPasswordError] = useState();
+
   const [isModalVisible, setModalVisible] = useState(false);
+  const [checkBoxIcon, setCheckBoxIcon] = useState(false);
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [formSubmit, setFormSubmit] = useState(false);
-  const [checkBoxIcon, setCheckBoxIcon] = useState(false);
+
   const [country, setCountry] = useState({
     code: '',
     calling: '',
@@ -74,7 +72,6 @@ const SignUp = () => {
         // return console.log(signUpData)
 
         setPasswordError(false);
-
         if (!checkBoxIcon) {
           setModalVisible(true);
         } else {
@@ -82,7 +79,7 @@ const SignUp = () => {
           axios
             .post(AppUrl.CreateUser, signUpData)
             .then(res => {
-              //console.log(res.data.validation_errors)
+              ////console.log(res.data.validation_errors)
               if (res.data.status === 200) {
                 // alert('hello')
                 setBuffer(false);
@@ -95,7 +92,7 @@ const SignUp = () => {
                 // });
                 // navigation.navigate('userInformation');
               } else {
-                console.log(res.data.validation_errors);
+                //console.log(res.data.validation_errors)
                 setServerError(res.data.validation_errors);
                 setBuffer(false);
               }
@@ -119,7 +116,7 @@ const SignUp = () => {
   };
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView style={{flex: 1, backgroundColor: '#000'}}>
       <>
         {buffer ? <LoaderComp /> : <></>}
         <ScrollView>
@@ -420,14 +417,23 @@ const SignUp = () => {
                   onPress={() => navigation.navigate('Login')}>
                   <Text style={styles.input_title}>LOGIN</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+                <TouchableOpacity
+                  style={{flex: 1}}
+                  onPress={handleSubmit(onSubmit)}>
                   <LinearGradient
-                    style={styles.login_btn}
+                    style={styles.sign_btn}
                     colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
                     <Text style={{color: 'black'}}>SIGN UP</Text>
                   </LinearGradient>
                 </TouchableOpacity>
+
+                {/* <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+                  <LinearGradient
+                    style={styles.login_btn}
+                    colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
+                    <Text style={{ color: 'black' }}>SIGN UP</Text>
+                  </LinearGradient>
+                </TouchableOpacity> */}
               </View>
             </Animatable.View>
           </ImageBackground>
@@ -555,12 +561,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ffaa00',
     borderRadius: 50,
-    paddingHorizontal: 50,
-    paddingVertical: 10,
+
     borderRadius: 50,
     alignItems: 'center',
     marginTop: 30,
-
+    marginHorizontal: 5,
+    flex: 1,
+    paddingVertical: 10,
     color: 'black',
   },
 });

@@ -23,15 +23,15 @@ import MarketPlaceShipingComp from '../MarketPlaceShipingComp/MarketPlaceShiping
 import styles from './MarketPlaceBuyNowStyle';
 
 const MarketPlaceBuyNow = ({ route }) => {
-
-  const { axiosConfig, currencyMulti, currencyCount, currency } = useContext(AuthContext);
+  const { axiosConfig, currencyMulti, currencyCount, currency } =
+    useContext(AuthContext);
 
   const { width } = useWindowDimensions();
   const { product } = route.params;
 
-
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
+  const [fee, setFee] = useState(0);
   const [step, setStep] = useState(1);
   const [marketplaceOrder, setMarketplaceOrder] = useState({});
   const [modal, setModal] = useState(false);
@@ -39,8 +39,7 @@ const MarketPlaceBuyNow = ({ route }) => {
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [parentData, setParentData] = useState({});
 
-
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const [modalObj, setModalObj] = useState({
     modalType: '',
@@ -57,17 +56,44 @@ const MarketPlaceBuyNow = ({ route }) => {
     if (count > 0) {
       setCount(count - 1);
       setTotalPrice(count - 1);
+      setFeeValue(count - 1);
     }
   };
   const increment = () => {
     setCount(count + 1);
     setTotalPrice(count + 1);
+    setFeeValue(count + 1);
+  };
+
+  const handelDollarTaxPrice = taxdoller => {
+    return (Number(product?.unit_price * count) * Number(taxdoller)) / 100;
+  };
+
+  useEffect(() => {
+    setFee(
+      Number(product?.unit_price) +
+      Number(handelDollarTaxPrice(product?.tax)) +
+      Number(product?.delivery_charge),
+    );
+  }, []);
+  const setFeeValue = async count_amount => {
+    if (count_amount !== 0) {
+      setFee(
+        Number(count_amount * product?.unit_price) +
+        Number(count_amount * product?.tax) +
+        Number(product?.delivery_charge),
+      );
+    } else {
+      setFee(0);
+    }
   };
   const setTotalPrice = async count_amount => {
     if (count_amount !== 0) {
       setAmount(
         Number(count_amount * currencyCount(product?.unit_price)) +
-        Number(count_amount * currencyCount(product?.tax)) +
+        Number(
+          count_amount * currencyCount(handelDollarTaxPrice(product?.tax)),
+        ) +
         Number(currencyCount(product?.delivery_charge)),
       );
     } else {
@@ -75,7 +101,6 @@ const MarketPlaceBuyNow = ({ route }) => {
     }
   };
   const checkPaymentUncompletedOrder = async () => {
-
     // return alert('dadad')
     setBuffer(true);
     axios
@@ -85,7 +110,7 @@ const MarketPlaceBuyNow = ({ route }) => {
         if (res.data.status === 200) {
           if (res.data.isHavePaymentUncompletedOrder == true) {
             setMarketplaceOrder(res.data.marketplaceOrder);
-            console.log(res.data.marketplaceOrder);
+            //console.log(res.data.marketplaceOrder);
             setStep(2);
 
             // if (res.data?.marketplaceOrder?.phone == null) {
@@ -105,12 +130,11 @@ const MarketPlaceBuyNow = ({ route }) => {
       });
   };
   const handleBuyNow = async () => {
-
     if (count !== 0) {
       const inputData = {
         items: count,
         marketplace_id: product?.id,
-        total_price: amount,
+        total_price: fee,
       };
       setBuffer(true);
       axios
@@ -244,7 +268,9 @@ const MarketPlaceBuyNow = ({ route }) => {
                       <Text style={styles.PriceDollarText}> Price</Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        {currencyCount(product?.unit_price) + " " + currency.symbol}
+                        {currencyCount(product?.unit_price) +
+                          ' ' +
+                          currency.symbol}
                       </Text>
                     </View>
                   </View>
@@ -262,8 +288,9 @@ const MarketPlaceBuyNow = ({ route }) => {
                       </Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        {currencyCount(product?.delivery_charge) + " " + currency.symbol}
-
+                        {currencyCount(product?.delivery_charge) +
+                          ' ' +
+                          currency.symbol}
                       </Text>
                     </View>
                   </View>
@@ -280,8 +307,9 @@ const MarketPlaceBuyNow = ({ route }) => {
                       <Text style={styles.PriceDollarText}> Tax</Text>
                       <Text style={styles.PriceDollarTextB}>
                         {' '}
-                        {currencyCount(product?.tax) + " " + currency.symbol}
-
+                        {currencyCount(handelDollarTaxPrice(product?.tax)) +
+                          ' ' +
+                          currency.symbol}
                       </Text>
                     </View>
                   </View>
@@ -290,8 +318,7 @@ const MarketPlaceBuyNow = ({ route }) => {
 
               <View style={styles.MaiN}>
                 <View style={styles.Increment}>
-                  <View style={{ flex: 2 }}>
-                  </View>
+                  <View style={{ flex: 2 }}></View>
                   <View style={{ flex: 7 }}>
                     <Text style={styles.TextEr}>Your quantity</Text>
                   </View>
@@ -325,7 +352,10 @@ const MarketPlaceBuyNow = ({ route }) => {
                   </View>
                   <View style={styles.Increment2}>
                     <View style={styles.Flex1}>
-                      <Text style={styles.TextColorS}> {amount + " " + currency.symbol} </Text>
+                      <Text style={styles.TextColorS}>
+                        {' '}
+                        {amount + ' ' + currency.symbol}{' '}
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -359,6 +389,7 @@ const MarketPlaceBuyNow = ({ route }) => {
                 amount={amount}
                 slug={product.slug}
                 tax={product?.tax}
+                fee={fee}
               />
             </>
           )}

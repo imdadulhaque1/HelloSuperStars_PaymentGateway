@@ -1,7 +1,22 @@
 import {
+    Dimensions,
     StyleSheet,
 } from 'react-native';
+const { width } = Dimensions.get('window');
+
+const promoWidth=(width/3.4).toFixed(0);
+let widthPromo=parseInt(promoWidth)
 const styles = StyleSheet.create({
+
+
+backgroundVideo:{
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+},
+    
     container: {
         // backgroundColor: 'pink',
         backgroundColor: '#343434',
@@ -9,6 +24,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 0,
         marginBottom: 9,
+
         // borderColor: '#2c2c2cb6',
         // borderWidth: 3
     },
@@ -21,8 +37,9 @@ const styles = StyleSheet.create({
         // borderWidth: 3
     },
     item: {
-        width: 100,
-        height: 150,
+        width: widthPromo,
+        height: 155,
+      
         position: 'relative',
         backgroundColor: '#FFAD00',
         overflow: 'hidden',
@@ -54,7 +71,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
 
-    }
+    },
+    child: { width, justifyContent: 'center' },
+    text: { fontSize: width * 0.5, textAlign: 'center' },
 });
 
 export default styles;

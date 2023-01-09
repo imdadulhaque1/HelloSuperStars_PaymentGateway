@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -15,22 +15,24 @@ import imagePath from '../../../Constants/imagePath';
 import HeaderComp from '../../HeaderComp';
 
 import axios from 'axios';
-import {useEffect} from 'react';
-import {AuthContext} from '../../../Constants/context';
+import { useEffect } from 'react';
+import { AuthContext } from '../../../Constants/context';
 import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp';
 
 import navigationStrings from '../../../Constants/navigationStrings';
 
-const ResultLearningSession = ({route}) => {
+const ResultLearningSession = ({ route }) => {
   const Navigation = useNavigation();
 
-  const {event} = route.params;
-  const {axiosConfig} = useContext(AuthContext);
+  const { event } = route.params;
+  console.log(event);
+  const { axiosConfig } = useContext(AuthContext);
   const [show, setShow] = useState(false);
   const [buffer, setBuffer] = useState(false);
   const [videoLoad, setVideoLoad] = useState(false);
   const [markedVideos, setMarkedVideos] = useState([]);
+  const [rejectedVideos, setRejectedVideos] = useState([]);
   const [totalMark, setTotalMark] = useState(0);
   let total = 0;
 
@@ -45,6 +47,8 @@ const ResultLearningSession = ({route}) => {
         if (res.data.status === 200) {
           setBuffer(false);
           setMarkedVideos(res.data.markedVideos);
+          setRejectedVideos(res.data.rejectedVideos);
+          //console.log(res.data);
         }
       })
       .catch(err => {
@@ -65,42 +69,12 @@ const ResultLearningSession = ({route}) => {
       <View style={styles.bannerTitle}>
         <ImageBackground
           style={styles.background}
-          source={{uri: `${AppUrl.MediaBaseUrl + event.banner}`}}>
+          source={
+            event.banner
+              ? { uri: `${AppUrl.MediaBaseUrl + event.banner}` }
+              : imagePath.videoPlayIcon
+          }>
           <View></View>
-          {/* <LinearGradient
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={[
-              '#FFAD00',
-              '#FFD273',
-              '#E19A04',
-              '#FACF75',
-              '#E7A725',
-              '#FFAD00',
-            ]}
-            style={styles.linearGradient}>
-            <View style={styles.learningRow}>
-              <View style={styles.singleLearningStyle}>
-                <Image source={imagePath.LearningClock} />
-              </View>
-              <View style={styles.singleLearningStyle}>
-                <Text style={styles.text}>Day</Text>
-                <Text style={styles.text}>8</Text>
-              </View>
-              <View style={styles.singleLearningStyle}>
-                <Text style={styles.text}>Hrs</Text>
-                <Text style={styles.text}>12</Text>
-              </View>
-              <View style={styles.singleLearningStyle}>
-                <Text style={styles.text}>Min</Text>
-                <Text style={styles.text}>28</Text>
-              </View>
-              <View style={styles.singleLearningStyle}>
-                <Text style={styles.text}>Sec</Text>
-                <Text style={styles.text}>55</Text>
-              </View>
-            </View>
-          </LinearGradient> */}
           <View
             style={{
               flexDirection: 'row',
@@ -143,7 +117,7 @@ const ResultLearningSession = ({route}) => {
                         overflow: 'hidden',
                       }}>
                       {/* <Image source={imagePath.Rectangle} style={styles.AudiImg} /> */}
-                      <View style={{padding: 10}}>
+                      <View style={{ padding: 10 }}>
                         <VideoPlayer
                           video={{
                             uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -156,21 +130,9 @@ const ResultLearningSession = ({route}) => {
                           resizeMode="contain"
                           onStart={() => setVideoLoad(true)}
                           onLoad={() => setVideoLoad(false)}
+                          thumbnail={imagePath.videoPlayIcon}
                         />
                       </View>
-                      {videoLoad && (
-                        <View
-                          style={{
-                            position: 'absolute',
-                            marginTop: 20,
-                            marginLeft: 15,
-                          }}>
-                          <Image
-                            source={imagePath.loadingBuffering}
-                            style={{height: 20, width: 20}}
-                          />
-                        </View>
-                      )}
 
                       <View style={styles.VideoTax}>
                         <View style={styles.flexMark}>
@@ -178,12 +140,12 @@ const ResultLearningSession = ({route}) => {
                             source={imagePath.Rectangle3}
                             style={styles.AudiImg2}
                           />
-                          <Text style={{color: '#fff', marginHorizontal: 4}}>
+                          <Text style={{ color: '#fff', marginHorizontal: 4 }}>
                             Mark
                           </Text>
                         </View>
                         <View style={styles.flexMark}>
-                          <Text style={{color: '#fff'}}>
+                          <Text style={{ color: '#fff' }}>
                             {Math.floor(item.mark)}{' '}
                           </Text>
                         </View>
@@ -204,17 +166,21 @@ const ResultLearningSession = ({route}) => {
                   <Text style={styles.Input}>Your total marks</Text>
                 </View>
                 <View>
-                  <Text style={styles.Input1}>{Math.floor(total)}</Text>
+                  <Text style={styles.Input1}>
+                    {total / event?.assignment_video_slot_number}
+                  </Text>
                 </View>
               </View>
 
               <TouchableOpacity
-                style={{backgroundColor: '#000000'}}
+                style={{ backgroundColor: '#000000' }}
                 onPress={() =>
                   Navigation.navigate(
                     navigationStrings.APPLYFORCERLEARNINGSESSION,
                     {
-                      slug: event.slug,
+                      slug: event?.slug,
+                      fee: event?.assignment_fee,
+                      id: event?.id,
                     },
                   )
                 }>
@@ -224,6 +190,99 @@ const ResultLearningSession = ({route}) => {
                   <Text style={styles.CardTex}>Apply for the certificate</Text>
                 </LinearGradient>
               </TouchableOpacity>
+            </>
+          ) : rejectedVideos.length != 0 ? (
+            <>
+              {rejectedVideos.map((item, index) => {
+                {
+                  total += item.mark;
+                }
+                return (
+                  <>
+                    <View style={styles.topCard} key={index}>
+                      <View
+                        style={{
+                          flex: 1,
+                          margin: 8,
+                          backgroundColor: '#343434',
+                          borderRadius: 10,
+                          overflow: 'hidden',
+                        }}>
+                        {/* <Image source={imagePath.Rectangle} style={styles.AudiImg} /> */}
+                        <View style={{ padding: 10 }}>
+                          <VideoPlayer
+                            video={{
+                              uri: `${AppUrl.MediaBaseUrl + item.video}`,
+                            }}
+                            videoWidth={100}
+                            videoHeight={70}
+                            autoplay={false}
+                            pauseOnPress
+                            // hideControlsOnStart
+                            resizeMode="contain"
+                            onStart={() => setVideoLoad(true)}
+                            onLoad={() => setVideoLoad(false)}
+                            thumbnail={imagePath.videoPlayIcon}
+                          />
+                        </View>
+                        {videoLoad && (
+                          <View
+                            style={{
+                              position: 'absolute',
+                              marginTop: 20,
+                              marginLeft: 15,
+                            }}>
+                            <Image
+                              source={imagePath.loadingBuffering}
+                              style={{ height: 20, width: 20 }}
+                            />
+                          </View>
+                        )}
+
+                        <View style={styles.VideoTax}>
+                          <View style={styles.flexMark}>
+                            <Image
+                              source={imagePath.Rectangle3}
+                              style={styles.AudiImg2}
+                            />
+                            <Text style={{ color: '#fff', marginHorizontal: 4 }}>
+                              Mark
+                            </Text>
+                          </View>
+                          <View style={styles.flexMark}>
+                            <Text style={{ color: '#fff' }}>
+                              {Math.floor(item.mark)}{' '}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                );
+              })}
+              <View
+                style={{
+                  backgroundColor: '#282828',
+                  margin: 8,
+                  flexDirection: 'row',
+                  borderRadius: 5,
+                  padding: 10,
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                }}>
+                <View>
+                  <Text
+                    style={{
+                      backgroundColor: 'black',
+                      color: 'red',
+                      textAlign: 'center',
+                      padding: 10,
+                    }}>
+                    Your Video is rejected
+                  </Text>
+                </View>
+                <View></View>
+              </View>
             </>
           ) : (
             <View
@@ -235,9 +294,9 @@ const ResultLearningSession = ({route}) => {
               }}>
               <Image
                 source={imagePath.lazyDog}
-                style={{height: 150, width: 150}}
+                style={{ height: 150, width: 150 }}
               />
-              <Text style={{color: '#FFAD00', fontSize: 20}}>
+              <Text style={{ color: '#FFAD00', fontSize: 20 }}>
                 Result not published yet !
               </Text>
             </View>

@@ -6,18 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
 import imagePath from '../../../Constants/imagePath';
-import {FlatGrid} from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import LinearGradient from 'react-native-linear-gradient';
 import LockPaymentModal from '../../../Components/MODAL/LockPaymentModal';
 import VideoPlayer from 'react-native-video-player';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 
-export default function VIdeos({starId, toggle}) {
+export default function VIdeos({ starId, toggle }) {
   const [post, setPost] = useState([]);
   const [photosUpdate, setUnlocked] = useState(false);
   const [lockStatus, setLockStatus] = useState([]);
@@ -28,7 +28,7 @@ export default function VIdeos({starId, toggle}) {
   const windowWidth = Dimensions.get('window').width;
   const [payment_status, setPaymentStatus] = useState([]);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const makePayment = id => {
     setPostId(id[0]);
     setFee(id[1]);
@@ -38,7 +38,7 @@ export default function VIdeos({starId, toggle}) {
   useEffect(() => {
     axios.get(`${AppUrl.starVideos}+${starId}`).then(res => {
       if (res.data.status === 200) {
-        console.log(res.data.post);
+        //console.log(res.data.post);
         setPost(res.data.post);
       }
     });
@@ -68,7 +68,7 @@ export default function VIdeos({starId, toggle}) {
             spacing={15}
             itemDimension={120}
             data={post}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return item.type === 'paid' ? (
                 item.video && (
                   <View>
@@ -102,7 +102,7 @@ export default function VIdeos({starId, toggle}) {
                   </View>
                 )
               ) : (
-                <View style={{textAlign: 'center', marginRight: 20}}>
+                <View style={{ textAlign: 'center', marginRight: 20 }}>
                   <VideoPlayer
                     video={{
                       uri: `${AppUrl.MediaBaseUrl}${item?.video}`,
@@ -113,7 +113,7 @@ export default function VIdeos({starId, toggle}) {
                     thumbnail={{
                       uri: `${AppUrl.MediaBaseUrl}${item?.banner}`,
                     }}
-                    // blurRadius={1}
+                  // blurRadius={1}
                   />
                 </View>
               );
@@ -121,16 +121,16 @@ export default function VIdeos({starId, toggle}) {
           />
         </View>
       ) : (
-        <View style={{height: 200, justifyContent: 'center'}}>
+        <View style={{ height: 200, justifyContent: 'center' }}>
           <View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Image
                 source={imagePath.lazyDog}
-                style={{height: 100, width: 100}}
+                style={{ height: 100, width: 100 }}
               />
             </View>
 
-            <Text style={{color: 'white', textAlign: 'center'}}>
+            <Text style={{ color: 'white', textAlign: 'center' }}>
               Sorry No Data Available !
             </Text>
           </View>

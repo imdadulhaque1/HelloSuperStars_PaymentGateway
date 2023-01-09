@@ -7,24 +7,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HeaderComp from '../../../Components/HeaderComp';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import LinearGradient from 'react-native-linear-gradient';
 import AppUrl from '../../../RestApi/AppUrl';
 import TitleHeader from '../../../Components/TitleHeader';
-const EducationInfo = ({navigation}) => {
+const EducationInfo = ({ navigation }) => {
   const [degree, setDegree] = useState('');
   const [institute, setInstitute] = useState('');
   const [subject, setSubject] = useState('');
   const [allDegree, setAllDegree] = useState([]);
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const handleUpdate = () => {
     const data = {
       edu_level: degree,
@@ -51,7 +51,7 @@ const EducationInfo = ({navigation}) => {
       .get(AppUrl.userEducationalData, axiosConfig)
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data);
+          //console.log(res.data);
           setDegree(res.data?.info?.edu_level);
           setInstitute(res.data?.info?.institute);
           setSubject(res.data?.info?.subject);
@@ -85,7 +85,7 @@ const EducationInfo = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
         <TitleHeader title={'Educational information'} />
@@ -95,7 +95,7 @@ const EducationInfo = ({navigation}) => {
             backgroundColor: '#202020',
             borderRadius: 10,
           }}>
-          <TouchableOpacity style={{marginVertical: 5}}>
+          <TouchableOpacity style={{ marginVertical: 5 }}>
             <View
               style={{
                 marginHorizontal: 20,
@@ -112,10 +112,10 @@ const EducationInfo = ({navigation}) => {
                 name="school"
                 size={20}
                 color="#ffaa00"
-                style={{position: 'absolute', left: 9}}
+                style={{ position: 'absolute', left: 9 }}
               />
               <Picker
-                style={{color: '#fff', marginLeft: 10}}
+                style={{ color: '#fff', marginLeft: 10 }}
                 selectedValue={degree}
                 onValueChange={(itemValue, itemIndex) => setDegree(itemValue)}>
                 <Picker.Item label="Select One" value="" />
@@ -124,7 +124,7 @@ const EducationInfo = ({navigation}) => {
             </View>
           </TouchableOpacity>
 
-          <View style={{marginVertical: 5}}>
+          <View style={{ marginVertical: 5 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -139,7 +139,7 @@ const EducationInfo = ({navigation}) => {
               }}>
               <Ionicons name="home" size={20} color="#ffaa00" />
               <TextInput
-                style={{paddingHorizontal: 10, color: 'white'}}
+                style={{ paddingHorizontal: 10, color: 'white' }}
                 placeholder={'Institute'}
                 placeholderTextColor="gray"
                 onChangeText={setInstitute}
@@ -148,7 +148,7 @@ const EducationInfo = ({navigation}) => {
             </View>
           </View>
 
-          <View style={{marginVertical: 5}}>
+          <View style={{ marginVertical: 5 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -163,7 +163,7 @@ const EducationInfo = ({navigation}) => {
               }}>
               <Icon name="book" size={20} color="#ffaa00" />
               <TextInput
-                style={{paddingHorizontal: 10, color: 'white'}}
+                style={{ paddingHorizontal: 10, color: 'white' }}
                 placeholder={'Subject'}
                 placeholderTextColor="gray"
                 onChangeText={setSubject}
@@ -173,14 +173,14 @@ const EducationInfo = ({navigation}) => {
           </View>
 
           <TouchableOpacity
-            style={{padding: 20}}
+            style={{ padding: 20 }}
             onPress={() => {
               handleUpdate();
             }}>
             <LinearGradient
               style={styles.login_btn}
               colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-              <Text style={{color: 'black'}}>Save</Text>
+              <Text style={{ color: 'black' }}>Save</Text>
             </LinearGradient>
             {/* <Text style={styles.input_title}>LOGIN</Text> */}
           </TouchableOpacity>

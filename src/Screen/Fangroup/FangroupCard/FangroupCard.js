@@ -1,5 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { Image, Text, TouchableOpacity, View, useWindowDimensions, Share } from 'react-native';
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+  Share,
+} from 'react-native';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -16,59 +23,56 @@ const FangroupCard = ({ data }) => {
   const { useInfo, axiosConfig } = useContext(AuthContext);
 
   const { width } = useWindowDimensions();
-  const [like, setlike] = useState(JSON.parse(data.user_like_id).includes(useInfo.id));
+  const [like, setlike] = useState(
+    JSON.parse(data.user_like_id).includes(useInfo.id),
+  );
   const [likeId, setLikeId] = useState(JSON.parse(data.user_like_id));
-  const [likeCount, setLikeCount] = useState(JSON.parse(data.user_like_id).length);
+  const [likeCount, setLikeCount] = useState(
+    JSON.parse(data.user_like_id).length,
+  );
   const contentSource = {
     html: `<div style='color:#e6e6e6;'>${data?.description ? data.description : ''
       }</div>`,
   };
 
-  console.log(data)
+  console.log(data);
   const handelLike = () => {
-
     setlike(!like);
     if (like) {
       setLikeCount(prev => {
-
-        handelLikeUnlike(likeId.slice(0, likeId.length), "Unlike")
+        handelLikeUnlike(likeId.slice(0, likeId.length), 'Unlike');
 
         return prev - 1;
       });
     }
     if (!like) {
       setLikeCount(prev => {
-
-        handelLikeUnlike([...likeId, useInfo.id], "Like")
+        handelLikeUnlike([...likeId, useInfo.id], 'Like');
 
         return prev + 1;
       });
     }
 
     // console.log('fdjkgdg', userLikeIds + post.id)
-
-  }
+  };
 
   const handelLikeUnlike = (valu, mesg) => {
-
     let LinkIds = {
-      showlike: JSON.stringify(valu)
-    }
+      showlike: JSON.stringify(valu),
+    };
 
-
-
-    axios.post(AppUrl.FanGroupLike + data.id, LinkIds, axiosConfig).then((res) => {
-      console.log(res.data)
-      if (res.data.status === 200) {
-        Toast.show(mesg, Toast.durations.SHORT);
-      }
-    }).catch((err) => {
-
-      console.log(err.message)
-    });
-  }
-
-
+    axios
+      .post(AppUrl.FanGroupLike + data.id, LinkIds, axiosConfig)
+      .then(res => {
+        //console.log(res.data);
+        if (res.data.status === 200) {
+          Toast.show(mesg, Toast.durations.SHORT);
+        }
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
+  };
 
   const onShare = async () => {
     try {
@@ -91,17 +95,29 @@ const FangroupCard = ({ data }) => {
     }
   };
 
-
   return (
     <View>
       <View style={styles.CardRow}>
         <View style={styles.MainCard}>
           <TouchableOpacity style={styles.cardImg}>
-            <Image style={styles.starCardImg} source={data.user.image === null ? imagePath.noImage : { uri: AppUrl.MediaBaseUrl + data.user?.image }} />
+            <Image
+              style={styles.starCardImg}
+              source={
+                data.user.image === null
+                  ? imagePath.noImage
+                  : { uri: AppUrl.MediaBaseUrl + data.user?.image }
+              }
+            />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Text style={styles.cardText}>{data.user?.first_name + " " + data.user?.last_name}</Text>
-            <Text style={styles.time}> {moment(data?.created_at).format('DD MMMM YYYY')}{data.user.first_name}</Text>
+            <Text style={styles.cardText}>
+              {data.user?.first_name + ' ' + data.user?.last_name}
+            </Text>
+            <Text style={styles.time}>
+              {' '}
+              {moment(data?.created_at).format('DD MMMM YYYY')}
+              {data.user?.first_name}
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.CardContent}>
@@ -110,7 +126,7 @@ const FangroupCard = ({ data }) => {
           </Text>
 
           <View style={{ position: 'relative' }}>
-            {data.video &&
+            {data.video && (
               <VideoPlayer
                 video={{
                   uri: AppUrl.MediaBaseUrl + data.video,
@@ -120,18 +136,17 @@ const FangroupCard = ({ data }) => {
                 // thumbnail={{
                 //   uri: AppUrl.MediaBaseUrl + data.video,
                 // }}
+                thumbnail={imagePath.videoPlayIcon}
                 blurRadius={10}
               />
-            }
+            )}
 
-            {data.image &&
+            {data.image && (
               <Image
                 style={styles.cardCoverImg}
                 source={{ uri: AppUrl.MediaBaseUrl + data.image }}
               />
-            }
-
-
+            )}
           </View>
 
           <View style={styles.cardInfo}>
@@ -164,9 +179,7 @@ const FangroupCard = ({ data }) => {
                 Like
               </Text>
             </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={handelLike}
-              style={styles.likeBtn}>
+            <TouchableOpacity onPress={handelLike} style={styles.likeBtn}>
               <View
                 style={{
                   flexDirection: 'row',

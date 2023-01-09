@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   greetingsBody: {
@@ -47,8 +47,7 @@ export const styles = StyleSheet.create({
   },
   button: {
     margin: 10,
-    width: 200,
-
+    width: 130,
   },
   dateStyle: {
     flex: 1,

@@ -1507,6 +1507,11 @@
   dependencies:
     "@expo/config-plugins" "^4.1.5"
 
+"@svanboxel/visibility-sensor-react-native@^1.0.2":
+  "integrity" "sha512-UH9EyC2VeOrC6M4tleR0/NgbEBK3sLvTGgq3veGFjLPstGl5grHPxfWXTdSwf4wMbo8UNYRIwEiC1JcItO3wVQ=="
+  "resolved" "https://registry.npmjs.org/@svanboxel/visibility-sensor-react-native/-/visibility-sensor-react-native-1.0.2.tgz"
+  "version" "1.0.2"
+
 "@tootallnate/once@1":
   "integrity" "sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw=="
   "resolved" "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz"

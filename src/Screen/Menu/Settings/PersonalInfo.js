@@ -7,20 +7,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import HeaderComp from '../../../Components/HeaderComp';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DatePicker from 'react-native-date-picker';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import LinearGradient from 'react-native-linear-gradient';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import moment from 'moment';
 import TitleHeader from '../../../Components/TitleHeader';
-const PersonalInfo = ({navigation}) => {
+const PersonalInfo = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState();
@@ -29,7 +29,7 @@ const PersonalInfo = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [birthday, setBirthday] = useState('');
   const [country, setCountry] = useState('');
-  const {axiosConfig, setUserInfo, useInfo} = useContext(AuthContext);
+  const { axiosConfig, setUserInfo, useInfo } = useContext(AuthContext);
   const [allCountry, setAllCountry] = useState([]);
   const loadInfo = () => {
     axios
@@ -57,7 +57,7 @@ const PersonalInfo = ({navigation}) => {
   };
   const loadCountries = () => {
     axios.get(AppUrl.allCountry, axiosConfig).then(res => {
-      console.log(res.data);
+      //console.log(res.data);
       if (res.status === 200) {
         setAllCountry(res.data.country);
       }
@@ -97,7 +97,7 @@ const PersonalInfo = ({navigation}) => {
     });
   };
   return (
-    <View style={{flex: 1, backgroundColor: 'black'}}>
+    <View style={{ flex: 1, backgroundColor: 'black' }}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
 
@@ -108,7 +108,7 @@ const PersonalInfo = ({navigation}) => {
             marginHorizontal: 10,
             borderRadius: 10,
           }}>
-          <View style={{marginVertical: 5}}>
+          <View style={{ marginVertical: 5 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -123,7 +123,7 @@ const PersonalInfo = ({navigation}) => {
               }}>
               <Icon name="user-circle" size={20} color="#ffaa00" />
               <TextInput
-                style={{paddingHorizontal: 10, color: 'white'}}
+                style={{ paddingHorizontal: 10, color: 'white' }}
                 placeholder={'Enter your Name'}
                 placeholderTextColor="gray"
                 onChangeText={setFullName}
@@ -132,7 +132,7 @@ const PersonalInfo = ({navigation}) => {
             </View>
           </View>
 
-          <View style={{marginVertical: 5}}>
+          <View style={{ marginVertical: 5 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -148,7 +148,7 @@ const PersonalInfo = ({navigation}) => {
               <Icon name="mobile-phone" size={25} color="#ffaa00" />
               <TextInput
                 keyboardType="numeric"
-                style={{paddingHorizontal: 10, color: 'white'}}
+                style={{ paddingHorizontal: 10, color: 'white' }}
                 placeholder={'Enter your phone number'}
                 placeholderTextColor="gray"
                 onChangeText={setPhone}
@@ -157,7 +157,7 @@ const PersonalInfo = ({navigation}) => {
             </View>
           </View>
 
-          <View style={{marginVertical: 5}}>
+          <View style={{ marginVertical: 5 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -173,7 +173,7 @@ const PersonalInfo = ({navigation}) => {
               <Ionicons name="mail" size={18} color="#ffaa00" />
               <TextInput
                 keyboardType="numeric"
-                style={{paddingHorizontal: 10, color: 'white'}}
+                style={{ paddingHorizontal: 10, color: 'white' }}
                 placeholder={'Enter your email'}
                 placeholderTextColor="gray"
                 onChangeText={setEmail}
@@ -183,11 +183,11 @@ const PersonalInfo = ({navigation}) => {
           </View>
 
           <TouchableOpacity
-            style={{marginVertical: 5}}
+            style={{ marginVertical: 5 }}
             onPress={() => setOpen(true)}>
             <View
               style={{
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 marginHorizontal: 20,
                 borderWidth: 0.8,
                 marginTop: 15,
@@ -203,11 +203,11 @@ const PersonalInfo = ({navigation}) => {
                   flex: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
+
                 }}>
                 <Icon name="birthday-cake" size={20} color="#ffaa00" />
                 <Text
-                  style={{textAlign: 'center', color: '#fff', marginStart: 10}}>
+                  style={{ textAlign: 'center', color: '#fff', marginStart: 10 }}>
                   {birthday}
                 </Text>
               </View>
@@ -219,7 +219,7 @@ const PersonalInfo = ({navigation}) => {
             open={open}
             date={date}
             mode="date"
-            theme="dark"
+            theme="light"
             onConfirm={date => {
               setOpen(false);
               setBirthday(moment(date).format('DD-MM-YYYY'));
@@ -231,7 +231,7 @@ const PersonalInfo = ({navigation}) => {
             }}
           />
 
-          <TouchableOpacity style={{marginVertical: 5}}>
+          <TouchableOpacity style={{ marginVertical: 5 }}>
             <View
               style={{
                 marginHorizontal: 20,
@@ -257,9 +257,9 @@ const PersonalInfo = ({navigation}) => {
                   }}>
                   <Icon name="globe" size={20} color="#ffaa00" />
                 </View>
-                <View style={{width: '90%'}}>
+                <View style={{ width: '90%' }}>
                   <Picker
-                    style={{color: '#fff'}}
+                    style={{ color: '#fff' }}
                     selectedValue={country}
                     onValueChange={(itemValue, itemIndex) =>
                       setCountry(itemValue)
@@ -272,14 +272,14 @@ const PersonalInfo = ({navigation}) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={{padding: 20}}
+            style={{ padding: 20 }}
             onPress={() => {
               handleUpdate();
             }}>
             <LinearGradient
               style={styles.login_btn}
               colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-              <Text style={{color: 'black'}}>Save</Text>
+              <Text style={{ color: 'black' }}>Save</Text>
             </LinearGradient>
             {/* <Text style={styles.input_title}>LOGIN</Text> */}
           </TouchableOpacity>

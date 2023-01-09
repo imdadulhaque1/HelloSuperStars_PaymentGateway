@@ -44,7 +44,7 @@ const CategorySelection = () => {
     axios
       .get(`${AppUrl.BaseUrl}view-category-mobile`)
       .then(res => {
-        //console.log(res.data.category)
+        ////console.log(res.data.category)
         if (res.data.status === 200) {
           setBuffer(false);
           makeCatrgoryArry(res.data.category);

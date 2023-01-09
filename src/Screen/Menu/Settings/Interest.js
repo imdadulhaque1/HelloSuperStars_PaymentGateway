@@ -1,7 +1,7 @@
 //import liraries
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -16,23 +16,23 @@ import * as Animatable from 'react-native-animatable';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import {FlatGrid} from 'react-native-super-grid';
+import { FlatGrid } from 'react-native-super-grid';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import LoaderComp from '../../../Components/LoaderComp';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 function CustomHeader(props) {
   return (
-    <View style={{backgroundColor: '#343434', paddingVertical: 10}}>
+    <View style={{ backgroundColor: '#343434', paddingVertical: 10 }}>
       <TouchableOpacity
-        style={{flexDirection: 'row', marginLeft: 10}}
+        style={{ flexDirection: 'row', marginLeft: 10 }}
         onPress={() => props.onPress()}>
-        <Text style={{color: 'white'}}>
+        <Text style={{ color: 'white' }}>
           <Icon name="arrow-back" size={25} />
         </Text>
-        <Text style={{color: 'white', fontSize: 18, marginLeft: 4}}>Back</Text>
+        <Text style={{ color: 'white', fontSize: 18, marginLeft: 4 }}>Back</Text>
       </TouchableOpacity>
     </View>
   );
@@ -41,7 +41,7 @@ function CustomHeader(props) {
 const Interest = () => {
   const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
-  const {axiosConfig, authContext} = useContext(AuthContext);
+  const { axiosConfig, authContext } = useContext(AuthContext);
   const [buffer, setBuffer] = useState(true);
   const [category, setCategory] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -58,7 +58,7 @@ const Interest = () => {
     axios
       .get(`${AppUrl.BaseUrl}view-category-mobile`)
       .then(res => {
-        //console.log(res.data.category)
+        ////console.log(res.data.category)
         if (res.data.status === 200) {
           setBuffer(false);
           makeCatrgoryArry(res.data.category);
@@ -75,7 +75,7 @@ const Interest = () => {
   const makeCatrgoryArry = data => {
     let categoryArry = data.map((item, index) => {
       item.isSelected = false;
-      return {...item};
+      return { ...item };
     });
 
     setCategory(categoryArry);
@@ -86,7 +86,7 @@ const Interest = () => {
       if (valu == index) {
         item.isSelected = !item.isSelected;
       }
-      return {...item};
+      return { ...item };
     });
 
     setCategory(categoryArry);
@@ -97,7 +97,7 @@ const Interest = () => {
     let categoryArry = category.map(item => {
       item.isSelected = !selectAll;
 
-      return {...item};
+      return { ...item };
     });
 
     setCategory(categoryArry);
@@ -143,7 +143,7 @@ const Interest = () => {
         <SafeAreaView>
           <CustomHeader onPress={handleBack} />
         </SafeAreaView>
-        <View style={{marginTOp: 20}}>
+        <View style={{ marginTOp: 20 }}>
           <Text
             style={{
               color: '#ffaa00',
@@ -162,7 +162,7 @@ const Interest = () => {
             spacing={10}
             itemDimension={120}
             data={category}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <View>
                 <TouchableOpacity
                   style={styles.categoryitem}
@@ -170,8 +170,8 @@ const Interest = () => {
                   onPress={() => selectHandaler(index)}>
                   {item.isSelected ? (
                     <LinearGradient
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
                       colors={['#ffa825', '#ffce48', '#ab6616']}>
                       <Text style={styles.btn_textActive}>{item.name}</Text>
                       {/* <Text style={styles.btn_text}>

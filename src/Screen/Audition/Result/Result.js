@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useEffect, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   Linking,
@@ -23,12 +23,12 @@ import CustomModal from '../../../Components/MODAL/CustomModal';
 import VideoPlayer from 'react-native-video-player';
 import axios from 'axios';
 import AppUrl from '../../../RestApi/AppUrl';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 import Toast from 'react-native-root-toast';
 import TitleHeader from '../../../Components/TitleHeader';
-import {FlatGrid} from 'react-native-super-grid';
-const Result = ({route}) => {
+import { FlatGrid } from 'react-native-super-grid';
+const Result = ({ route }) => {
   const {
     roundName,
     auditionTitle,
@@ -40,7 +40,7 @@ const Result = ({route}) => {
   } = route.params;
   const Navigation = useNavigation();
   const [show, setShow] = useState(false);
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   console.log('roundInformation', roundInformation);
 
   const [customShow, setCustomShow] = useState(false);
@@ -87,7 +87,7 @@ const Result = ({route}) => {
       //     axiosConfig,
       //   )
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         Linking.openURL(`${AppUrl.MediaBaseUrl}${res.data.certificateURL}`);
       })
       .catch(err => {
@@ -159,7 +159,7 @@ const Result = ({route}) => {
       round_info_id: roundId,
     };
     axios.post(AppUrl.AppealRegistration, data, axiosConfig).then(res => {
-      console.log(res.data);
+      //console.log(res.data);
       if (res?.data?.status === 200) {
       } else if (res?.data?.status === 422) {
         setErrorList(res?.data?.validation_errors);
@@ -169,7 +169,7 @@ const Result = ({route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#000000'}}>
+    <View style={{ flex: 1, backgroundColor: '#000000' }}>
       {/* Home Page 39 */}
 
       <HeaderComp backFunc={() => Navigation.goBack()} />
@@ -184,7 +184,7 @@ const Result = ({route}) => {
         />
         {isEmptyObject(markTracking) === 0 ? (
           <View style={styles.topCard}>
-            <Text style={{color: 'white', fontSize: 22, margin: 50}}>
+            <Text style={{ color: 'white', fontSize: 22, margin: 50 }}>
               Result is not published yet
             </Text>
           </View>
@@ -226,9 +226,9 @@ const Result = ({route}) => {
                         spacing={10}
                         itemDimension={120}
                         data={videoList}
-                        renderItem={({item, index}) => (
+                        renderItem={({ item, index }) => (
                           <>
-                            <View style={{width: '100%'}}>
+                            <View style={{ width: '100%' }}>
                               <VideoPlayer
                                 video={{
                                   uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -273,7 +273,7 @@ const Result = ({route}) => {
             {isAppealedForThisRound &&
               markTracking.wining_status === 0 &&
               appealVideoList.length > 0 && (
-                <View style={{marginTop: 20}}>
+                <View style={{ marginTop: 20 }}>
                   <View style={styles.topCard}>
                     <Text
                       style={styles.fonts}
@@ -293,7 +293,7 @@ const Result = ({route}) => {
                       {appealVideoList.map((item, index) => {
                         return (
                           <>
-                            <View style={{width: '30%'}}>
+                            <View style={{ width: '30%' }}>
                               <VideoPlayer
                                 video={{
                                   uri: `${AppUrl.MediaBaseUrl + item.video}`,
@@ -329,10 +329,10 @@ const Result = ({route}) => {
                       {markTracking?.type === 'general'
                         ? 'Your Total Mark '
                         : markTracking?.type === 'wildcard'
-                        ? 'Your Total Video Feed Vote'
-                        : appealMarkTracking
-                        ? 'Your Appeal Mark'
-                        : 'Your Total Mark'}
+                          ? 'Your Total Video Feed Vote'
+                          : appealMarkTracking
+                            ? 'Your Appeal Mark'
+                            : 'Your Total Mark'}
                     </Text>
                   </View>
 
@@ -367,7 +367,7 @@ const Result = ({route}) => {
                       }}>
                       {(markTracking?.wining_status === 1 &&
                         markTracking?.type === 'general') ||
-                      appealMarkTracking?.wining_status === 1 ? (
+                        appealMarkTracking?.wining_status === 1 ? (
                         <>
                           {/* <Text style={{color: '#E19A04'}}>
                           Congratulation!!!
@@ -408,10 +408,10 @@ const Result = ({route}) => {
                   </View>
                 </View>
                 {markTracking?.wining_status === 1 ||
-                appealMarkTracking?.wining_status === 1 ? (
+                  appealMarkTracking?.wining_status === 1 ? (
                   isPaymentComplete ? (
                     <TouchableOpacity
-                      style={{backgroundColor: '#000000'}}
+                      style={{ backgroundColor: '#000000' }}
                       onPress={() => {
                         downloadCertificate();
                       }}>
@@ -425,14 +425,14 @@ const Result = ({route}) => {
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
-                      style={{backgroundColor: '#000000'}}
+                      style={{ backgroundColor: '#000000' }}
                       onPress={() => {
                         certificateFee
                           ? setIsShowPaymentComp(true)
                           : Toast.show(
-                              'Certificate not ready yet',
-                              Toast.durations.SHORT,
-                            );
+                            'Certificate not ready yet',
+                            Toast.durations.SHORT,
+                          );
                       }}>
                       <LinearGradient
                         colors={['#FFAD00', '#E19A04', '#FACF75']}
@@ -444,12 +444,12 @@ const Result = ({route}) => {
                     </TouchableOpacity>
                   )
                 ) : isAppealedForThisRound || appealedPaid ? (
-                  <Text style={{color: 'white', textAlign: 'center'}}>
+                  <Text style={{ color: 'white', textAlign: 'center' }}>
                     Already appealed in this round
                   </Text>
                 ) : roundInfo?.round_type === 0 && roundInfo?.appeal === 1 ? (
                   <TouchableOpacity
-                    style={{backgroundColor: '#000000'}}
+                    style={{ backgroundColor: '#000000' }}
                     onPress={() => {
                       handleAppealRegister();
                     }}>
@@ -463,7 +463,7 @@ const Result = ({route}) => {
               </>
             ) : (
               <View style={styles.topCard}>
-                <Text style={{color: 'white', fontSize: 22, margin: 50}}>
+                <Text style={{ color: 'white', fontSize: 22, margin: 50 }}>
                   Result is not published yet
                 </Text>
               </View>

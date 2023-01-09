@@ -6,7 +6,7 @@ import {
     View
 } from 'react-native';
 import Toast from 'react-native-root-toast';
-import React, { Component, useState } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import imagePath from '../../Constants/imagePath';
 import { useNavigation } from '@react-navigation/native';
 import AppUrl from '../../RestApi/AppUrl';
@@ -26,7 +26,9 @@ function ChatBox({ data }) {
         chatData = data.qna
     }
 
-
+    useEffect(() => {
+        console.log('time------>', timeCount)
+    }, [])
 
     const handelInsertChat = () => {
         let messageInfo

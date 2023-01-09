@@ -1,5 +1,5 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator, Text } from "react-native";
 import ParticipantView from "./ParticipantView";
 import {
   getGridRowsAndColumns,
@@ -12,6 +12,7 @@ import VideoChatParticipantView from "./VideoChatParticipantView";
 import { useContext } from "react";
 import { MeetingContex } from "../../../VideoSdk";
 import { create } from "react-test-renderer";
+import LoaderComp from "../../Components/LoaderComp";
 
 const ActiveParticipantsGrid = ({ toggleBars, isLandscape }) => {
   const isMobile = true;
@@ -22,10 +23,47 @@ const ActiveParticipantsGrid = ({ toggleBars, isLandscape }) => {
   const participants = mMeeting?.participants;
 
   const { mainViewParticipants } = useMeetingAppContext();
-  const { type } = useContext(MeetingContex)
+  const { type, starName } = useContext(MeetingContex)
+  const [starJoin, setStarJoin] = useState(true)
+  // learning session view modify alamin/shohan
+  const [getIds, setGetIds] = useState([])
+
+  //learning session only alamin/shohan
+  useEffect(() => {
+    const participantData = [...new Map(participants)];
+
+    let updateScreenData = participantData?.map((item, index) => {
+      return item[1];
+    })
+
+
+    let fiterScreenValu = updateScreenData?.filter((item) => {
+      return item?.displayName == starName || item?.local == true;
+    })
+
+    if (fiterScreenValu.length == 2) {
+      setStarJoin(false)
+    } else {
+      setStarJoin(true)
+    }
+
+
+
+    let gettingId = fiterScreenValu?.map((item) => item.id);
+
+    setGetIds(gettingId)
+    console.log('perticefhjksdf_______', gettingId)
+
+  }, [participants, type])
 
   const { singleRow } = React.useMemo(() => {
-    const participants = [...mainViewParticipants];
+    let participants = [...mainViewParticipants];
+
+    //learning session only alamin/shohan
+    if (type == "learningSession" || type == "meetup" || type == "videoChat") {
+      participants = participants.filter(element => getIds.includes(element));
+    }
+
 
     const participantsCount = participants?.length || 1;
 
@@ -37,7 +75,7 @@ const ActiveParticipantsGrid = ({ toggleBars, isLandscape }) => {
     });
 
     return getGridForMainParticipants({ participants, gridInfo });
-  }, [mainViewParticipants, isLandscape, isMobile, isTab]);
+  }, [mainViewParticipants, isLandscape, isMobile, isTab, getIds]);
 
   //self video 
   const myVideo = (participantId) => {
@@ -64,6 +102,14 @@ const ActiveParticipantsGrid = ({ toggleBars, isLandscape }) => {
         marginBottom: 12,
       }}
     >
+
+      {starJoin &&
+        <View style={{ zIndex: 99, backgroundColor: '#0000007c', width: '100%', height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: 'white', fontSize: 18 }}> <ActivityIndicator color="#ffaa00" />Please wait, your star not join yet !</Text>
+        </View>
+      }
+
+
       {singleRow.map(({ participantId, left, top, height, width }) => (
         <>
           {type !== "videoChat" ?

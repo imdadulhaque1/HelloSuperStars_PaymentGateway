@@ -1,20 +1,23 @@
-import {View, Text} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
-import {AuthContext} from '../Constants/context';
+import { View, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../Constants/context';
 import PushNotification from 'react-native-push-notification';
 import AppUrl from '../RestApi/AppUrl';
 import moment from 'moment';
 
 const NotificationRender = () => {
-  const {activities, socketData, updateNotification} = useContext(AuthContext);
-  const {useInfo} = useContext(AuthContext);
+
+  const { activities, socketData, updateNotification, countryTimestamp } = useContext(AuthContext);
+  const { useInfo } = useContext(AuthContext);
 
   useEffect(() => {
     handelLearningSessionNotification();
     handelMeetupSessionNotification();
     handelQnaNotification();
     handelLiveChatNotification();
-  }, [activities?.learning_session]);
+
+
+  }, [activities]);
   useEffect(() => {
     socketData.on('greeting_data', data => {
       console.log('recive data', data);
@@ -29,10 +32,13 @@ const NotificationRender = () => {
    * time left count
    */
   const timeCount = (date, time) => {
-    console.log('count date:', date + ' time:' + time);
+    // console.log('count date:', date + ' time:' + time);
+
     let StartTime = moment(date + ' ' + time);
-    let timeCount = StartTime.valueOf() - new Date().getTime();
-    return timeCount;
+    let timeCounts = StartTime.valueOf() - new Date(countryTimestamp()).getTime();
+
+    return timeCounts - 5000;
+
   };
 
   /**
@@ -153,7 +159,12 @@ const NotificationRender = () => {
    * live chat notification
    */
   const handelLiveChatNotification = () => {
+
     activities?.live_chat_activities?.map(item => {
+
+      // console.log('activety data', item)
+
+
       let scheduleTime = timeCount(
         item?.livechat?.event_date,
         item?.livechat_registration?.live_chat_start_time,

@@ -50,13 +50,20 @@ const OrderStatus = ({ route, navigation }) => {
   const { width } = useWindowDimensions();
   const { event } = route.params;
 
-  const { axiosConfig } = useContext(AuthContext);
-  console.log(event);
+  const { axiosConfig, currencyCount, currency, currencyMulti } =
+    useContext(AuthContext);
+  console.log('event', event);
   const ownerName =
     event?.marketplace?.superstar?.first_name +
     ' ' +
     event?.marketplace?.superstar?.last_name;
-  const totalPrice = event?.total_price;
+  const totalPrice =
+    parseInt(event?.marketplace?.unit_price) * event?.items +
+    parseInt(event?.marketplace?.delivery_charge) +
+    (Number(event?.marketplace?.unit_price * event?.items) *
+      Number(event?.marketplace?.tax)) /
+    100;
+
   const description = event?.marketplace?.description;
   const descriptionHTML = {
     html: `<div style='color:#e6e6e6;'>${description}</div>`,
@@ -64,29 +71,40 @@ const OrderStatus = ({ route, navigation }) => {
   const progress = event?.status;
   const imageURl = event?.marketplace?.image;
 
+  const handelDollarTaxPrice = taxdoller => {
+    return (
+      (Number(event?.marketplace?.unit_price * event?.items) *
+        Number(taxdoller)) /
+      100
+    );
+  };
+
   const downloadInvoice = () => {
     const data = {
       productName: event?.marketplace?.title,
       SuperStar: event?.star?.first_name + ' ' + event?.star?.last_name,
-      qty: 1,
-      unitPrice: event?.marketplace?.unit_price,
-      total: event?.marketplace?.unit_price,
-      subTotal: event?.marketplace?.unit_price,
-      deliveryCharge: event?.marketplace?.delivery_charge,
-      tax: event?.marketplace?.tax,
-      grandTotal:
-        parseInt(event?.marketplace?.unit_price) +
+      qty: event?.items,
+      unitPrice: currencyCount(event?.marketplace?.unit_price),
+      total: currencyMulti(event?.marketplace?.unit_price, event?.items),
+      subTotal: currencyMulti(event?.marketplace?.unit_price, event?.items),
+      deliveryCharge: currencyCount(event?.marketplace?.delivery_charge),
+      tax: currencyCount(handelDollarTaxPrice(event?.marketplace?.tax)),
+      grandTotal: currencyCount(
+        parseInt(event?.marketplace?.unit_price) * event?.items +
         parseInt(event?.marketplace?.delivery_charge) +
-        parseInt(event?.marketplace?.tax),
+        handelDollarTaxPrice(event?.marketplace?.tax),
+      ),
       orderID: event?.order_no,
       orderDate: event?.payment_date,
       name: event?.card_holder_name,
       termCondition: event?.description,
+      symbol: currency?.symbol,
     };
+    // currencyCount(totalPrice)
     axios
       .post(AppUrl.getPDF, data, axiosConfig)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         Linking.openURL(`${AppUrl.MediaBaseUrl}/${res.data}`);
       })
       .catch(err => {
@@ -147,23 +165,18 @@ const OrderStatus = ({ route, navigation }) => {
                   flexDirection: 'row',
                   marginVertical: 5,
                 }}>
-                <View style={{ width: '20%', justifyContent: 'center' }}>
-                  <Text style={{ color: '#fff' }}>Description:</Text>
+                <View style={{ width: '22%' }}>
+                  <Text style={{ color: '#fff', marginTop: 13 }}>
+                    Description:
+                  </Text>
                 </View>
                 <View
                   style={{
                     marginLeft: 10,
                     flexDirection: 'row',
-
-                    width: '78%',
+                    width: '75%',
                   }}>
-                  <Text
-                    style={{
-                      color: '#fff',
-                      flexWrap: 'wrap',
-                    }}>
-                    <RenderHtml contentWidth={width} source={descriptionHTML} />
-                  </Text>
+                  <RenderHtml contentWidth={50} source={descriptionHTML} />
                 </View>
               </View>
               <View
@@ -182,7 +195,8 @@ const OrderStatus = ({ route, navigation }) => {
                     width: '78%',
                   }}>
                   <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
-                    {totalPrice}
+                    {/* {totalPrice} */}
+                    {currencyCount(totalPrice) + ' ' + currency.symbol}
                   </Text>
                 </View>
               </View>

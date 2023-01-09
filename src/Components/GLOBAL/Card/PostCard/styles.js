@@ -60,8 +60,9 @@ const styles = StyleSheet.create({
   cardCoverImg: {
     height: 230,
     width: '100%',
-    borderRadius: 10,
+    // borderRadius: 10,
     marginVertical: 4,
+    resizeMode:'stretch'
   },
   cardCoverImgLock: {
     height: 230,
@@ -155,26 +156,32 @@ const styles = StyleSheet.create({
   mainMeetUpView: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    position: 'absolute',
+    // position: 'absolute',
     width: '100%',
     bottom: 4,
     backgroundColor: '#00000065',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    // borderBottomLeftRadius: 10,
+    // borderBottomRightRadius: 10,
     paddingHorizontal: 10,
-    minHeight: 20
+    minHeight: 20,
+    
   },
+
+  // learning session video modified 
   mainMeetUpViewlearningSession: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    position: 'absolute',
+    // position: 'absolute',
     width: '100%',
-    bottom: 4,
+    bottom: 3,
     backgroundColor: '#00000065',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    minHeight: 40
+    // borderBottomLeftRadius: 10,
+    // borderBottomRightRadius: 10,
+
+  
+ 
   },
+
   meetupBtn: {
     backgroundColor: '#FFAD00',
     justifyContent: 'center',
@@ -274,7 +281,7 @@ const styles = StyleSheet.create({
   // },
   TextBanner: {
     fontSize: 20,
-    color: '#F6EA45',
+    color: '#ffaa00',
     fontWeight: 'bold',
     paddingVertical: 3,
     height: 30
@@ -294,7 +301,7 @@ const styles = StyleSheet.create({
   },
 
   BannerCsText: {
-    color: '#FDDC00',
+    color: '#ffaa00',
     paddingTop: 12,
     fontWeight: 'bold',
     paddingHorizontal: 10,

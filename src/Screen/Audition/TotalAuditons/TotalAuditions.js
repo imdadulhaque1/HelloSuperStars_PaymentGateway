@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect, useState } from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-root-toast';
 import HeaderComp from '../../../Components/HeaderComp';
 import imagePath from '../../../Constants/imagePath';
@@ -8,15 +8,15 @@ import navigationStrings from '../../../Constants/navigationStrings';
 import styles from './Styles';
 import AppUrl from '../../../RestApi/AppUrl';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {FlatGrid} from 'react-native-super-grid';
-import {AuthContext} from '../../../Constants/context';
+import { FlatGrid } from 'react-native-super-grid';
+import { AuthContext } from '../../../Constants/context';
 import axios from 'axios';
 import moment from 'moment';
 import CountDown from 'react-native-countdown-component';
-const TotalAuditions = ({route}) => {
+const TotalAuditions = ({ route }) => {
   const navigation = useNavigation();
-  const {audition} = route.params;
-  const {axiosConfig} = useContext(AuthContext);
+  const { audition } = route.params;
+  const { axiosConfig } = useContext(AuthContext);
 
   const [roundInfo, setRoundInfo] = useState([]);
   const [roundPass, setRoundPass] = useState(0);
@@ -41,7 +41,7 @@ const TotalAuditions = ({route}) => {
         if (res.data.status === 200) {
           setRoundInfo([res.data.round_info]);
           setRoundPass(res.data.myRoundPass);
-          console.log(res.data);
+          //console.log(res.data);
           setRoundInstruction(res.data.round_instruction);
           setAuditionRoundNum(
             res.data.myRoundPass + 1 >= res.data.totalRound
@@ -70,18 +70,18 @@ const TotalAuditions = ({route}) => {
       });
   }, []);
 
-  const buildRound = () => {};
+  const buildRound = () => { };
   return (
     <View style={styles.container}>
       {/*========= header start here==========  */}
       <HeaderComp backFunc={() => navigation.goBack()} />
       {/*========= header start here==========  */}
 
-      <ScrollView style={{marginTop: 6}}>
+      <ScrollView style={{ marginTop: 6 }}>
         {/*============ top banner start here ======= */}
 
         <View style={styles.topBannerImg}>
-          <View style={{zIndex: 2}}>
+          <View style={{ zIndex: 2 }}>
             <CountDown
               // until={totalSecond}
               until={remainingTime(
@@ -95,7 +95,7 @@ const TotalAuditions = ({route}) => {
                 borderColor: '#FFAD00',
                 borderRadius: 20,
               }}
-              digitTxtStyle={{color: '#FFAD00'}}
+              digitTxtStyle={{ color: '#FFAD00' }}
               timeLabelStyle={{
                 color: 'black',
                 fontWeight: 'bold',
@@ -133,7 +133,7 @@ const TotalAuditions = ({route}) => {
           <FlatGrid
             itemDimension={160}
             data={round}
-            renderItem={({item}) => {
+            renderItem={({ item }) => {
               return (
                 <TouchableOpacity
                   onPress={() => {
@@ -184,7 +184,7 @@ const TotalAuditions = ({route}) => {
                     // backgroundColor: '#282828',
                     borderRadius: 10,
                     // padding: 10,
-                  position:'relative',
+                    position: 'relative',
                   }}>
                   <Image
                     source={imagePath.Round}

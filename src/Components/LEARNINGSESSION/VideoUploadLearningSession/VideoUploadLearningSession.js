@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Alert,
   Image,
@@ -10,10 +10,11 @@ import {
   ToastAndroid,
   TouchableOpacity,
   View,
+  ScrollView,
 } from 'react-native';
 import RNFS from 'react-native-fs';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { AuthContext } from '../../../Constants/context';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {AuthContext} from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import HeaderComp from '../../HeaderComp';
@@ -21,17 +22,54 @@ import VideoUploadSuccessfulModal from '../../MODAL/VideoUploadSuccessfulModal';
 import moment from 'moment';
 import CountDown from 'react-native-countdown-component';
 import VideoPlayer from 'react-native-video-player';
-import { androidCameraPermission } from '../../../../permission';
+import {androidCameraPermission} from '../../../../permission';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useEffect} from 'react';
 
-const VideoUploadLearningSession = ({ route }) => {
+const VideoUploadLearningSession = ({route}) => {
   const [assinmentNumebr, setAssinmentNumebr] = useState(0);
   const Navigation = useNavigation();
   const [uploadDone, setUploadDone] = useState(false);
   const [document, setDocument] = useState(null);
-  const { axiosConfig } = useContext(AuthContext);
-  const { event } = route.params;
+  const {axiosConfig} = useContext(AuthContext);
+  const {event} = route.params;
   const [lastTime, setLastTime] = useState(true);
+  const [videos, setVideos] = useState([]);
+  console.log(event);
+  const getOldVideo = () => {
+    axios
+      .get(AppUrl.getLearningUploadedVideo + event?.id, axiosConfig)
+      .then(res => {
+        setVideos(res.data.videos);
+        console.log('uploaded videosssss: ', res.data.videos);
+      });
+  };
+  const [totalUploadDone, setTotalUploadDone] = useState(false);
+  const checkAllUploaded = () => {
+    console.log('slot: ', event?.assignment_video_slot_number);
+
+    axios
+      .get(AppUrl.getLearningUploadedVideo + event?.id, axiosConfig)
+      .then(res => {
+        setVideos(res.data.videos);
+        console.log('uploaded- check all: ', res.data.videos.length);
+        if (event?.assignment_video_slot_number === res.data.videos.length) {
+          setTotalUploadDone(true);
+        }
+      });
+
+    console.log('uploaded: ', videos?.length);
+    if (event?.assignment_video_slot_number == videos?.length) {
+      console.log('done');
+      setTotalUploadDone(true);
+    } else {
+      console.log('not done');
+    }
+  };
+  useEffect(() => {
+    getOldVideo();
+    checkAllUploaded();
+  }, [uploadDone]);
   const [updateData, setUpdateData] = useState({
     video: {
       learningSessionId: event.id,
@@ -60,9 +98,9 @@ const VideoUploadLearningSession = ({ route }) => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Profile Picture', 'Choose an option', [
-        { text: 'Camera', onPress: onCamera },
-        { text: 'Gallery', onPress: onGallery },
-        { text: 'Cancel', onPress: () => { } },
+        {text: 'Camera', onPress: onCamera},
+        {text: 'Gallery', onPress: onGallery},
+        {text: 'Cancel', onPress: () => {}},
       ]);
     }
     clearInterval(progress);
@@ -128,6 +166,7 @@ const VideoUploadLearningSession = ({ route }) => {
   const uploadVideo = () => {
     // console.log('wait uploading');
     setProgress(true);
+    console.log(updateData);
     axios
       .post(AppUrl.LearningSessionVideoUplaod, updateData, axiosConfig)
       .then(res => {
@@ -146,6 +185,8 @@ const VideoUploadLearningSession = ({ route }) => {
         if (res.status === 200) {
           setUploadDone(true);
           setAssinmentNumebr(res.data.assinmentNumber);
+          setVideos(1);
+          getOldVideo();
         } else if (res.data.status === 300) {
           setAssinmentNumebr(res.data.assinmentNumber);
           ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
@@ -165,6 +206,7 @@ const VideoUploadLearningSession = ({ route }) => {
             data: '',
           },
         });
+        console.log(err);
         ToastAndroid.show(err.message, ToastAndroid.SHORT);
       });
   };
@@ -172,12 +214,12 @@ const VideoUploadLearningSession = ({ route }) => {
   // console.log('update video---', updateData)
   // setUploadDone(true);
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <HeaderComp />
       <View style={styles.bannerTitle}>
         <ImageBackground
           style={styles.background}
-          source={{ uri: `${AppUrl.MediaBaseUrl + event.banner}` }}>
+          source={{uri: `${AppUrl.MediaBaseUrl + event.banner}`}}>
           <View>
             <View
               style={{
@@ -195,8 +237,8 @@ const VideoUploadLearningSession = ({ route }) => {
                   borderColor: '#FFAD00',
                   borderRadius: 20,
                 }}
-                digitTxtStyle={{ color: '#FFAD00' }}
-                timeLabelStyle={{ color: 'black', fontWeight: 'bold' }}
+                digitTxtStyle={{color: '#FFAD00'}}
+                timeLabelStyle={{color: 'black', fontWeight: 'bold'}}
                 size={20}
               />
             </View>
@@ -224,63 +266,127 @@ const VideoUploadLearningSession = ({ route }) => {
         </ImageBackground>
       </View>
 
+      <View
+        style={{
+          backgroundColor: '#343434',
+          margin: 10,
+          borderRadius: 10,
+          overflow: 'hidden',
+          borderWidth: 1,
+          padding: 10,
+        }}>
+        <Text
+          style={{
+            color: '#FFAD00',
+            fontSize: 15,
+            marginHorizontal: 8,
+            textAlign: 'center',
+          }}>
+          Assignment Slot {event?.assignment_video_slot_number}
+        </Text>
+      </View>
+
       {totalSecond && lastTime > 0 ? (
-        <>
-          {updateData.video.uri != '' ? (
+        !totalUploadDone ? (
+          <>
+            {updateData.video.uri != '' ? (
+              <View
+                style={{
+                  backgroundColor: '#343434',
+                  marginHorizontal: 10,
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  borderWidth: 1,
+                  borderColor: '#ffad00',
+                }}>
+                <VideoPlayer
+                  video={{uri: updateData.video.uri}}
+                  videoWidth={100}
+                  videoHeight={100}
+                  autoplay={false}
+                  pauseOnPress
+                  hideControlsOnStart
+                  resizeMode="contain"
+                  thumbnail={imagePath.videoPlayIcon}
+                />
+              </View>
+            ) : (
+              <></>
+            )}
+            <View>
+              {Array(event.assignment)
+                .fill(0)
+                .map((x, idx) => (
+                  <TouchableOpacity
+                    key={idx}
+                    onPress={
+                      updateData.video.uri === '' ? chosePhoto : uploadVideo
+                    }
+                    style={styles.listParent}>
+                    <View style={styles.onRight}>
+                      {progress ? (
+                        <Image
+                          source={imagePath.loadingBuffering}
+                          style={{height: 40, width: 40}}
+                        />
+                      ) : (
+                        <Image source={imagePath.UploadVideoLearning} />
+                      )}
+                    </View>
+                    <View style={styles.middleOne}>
+                      <Text style={styles.participationText}>
+                        {updateData.video.uri === ''
+                          ? 'Chose Video'
+                          : 'Upload Video'}{' '}
+                        {/* ({event.assignment - assinmentNumebr}) */}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+            </View>
+          </>
+        ) : (
+          <>
             <View
               style={{
                 backgroundColor: '#343434',
-                marginHorizontal: 10,
-                borderRadius: 20,
+                margin: 10,
+                borderRadius: 10,
                 overflow: 'hidden',
                 borderWidth: 1,
-                borderColor: '#ffad00',
+                padding: 10,
               }}>
-              <VideoPlayer
-                video={{ uri: updateData.video.uri }}
-                videoWidth={100}
-                videoHeight={100}
-                autoplay={false}
-                pauseOnPress
-                hideControlsOnStart
-                resizeMode="contain"
-              />
+              {videos?.map(item => {
+                return (
+                  <View style={{margin: 10}}>
+                    <VideoPlayer
+                      video={{uri: AppUrl.MediaBaseUrl + item.video}}
+                      videoWidth={80}
+                      videoHeight={80}
+                      autoplay={false}
+                      pauseOnPress
+                      hideControlsOnStart
+                      resizeMode="contain"
+                      thumbnail={imagePath.videoPlayIcon}
+                    />
+                  </View>
+                );
+              })}
             </View>
-          ) : (
-            <></>
-          )}
-          <View>
-            {Array(event.assignment)
-              .fill(0)
-              .map((x, idx) => (
-                <TouchableOpacity
-                  key={idx}
-                  onPress={
-                    updateData.video.uri === '' ? chosePhoto : uploadVideo
-                  }
-                  style={styles.listParent}>
-                  <View style={styles.onRight}>
-                    {progress ? (
-                      <Image
-                        source={imagePath.loadingBuffering}
-                        style={{ height: 40, width: 40 }}
-                      />
-                    ) : (
-                      <Image source={imagePath.UploadVideoLearning} />
-                    )}
-                  </View>
-                  <View style={styles.middleOne}>
-                    <Text style={styles.participationText}>
-                      {updateData.video.uri === ''
-                        ? 'Chose Video'
-                        : 'Upload Video'}{' '}
-                      ({event.assignment - assinmentNumebr})
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-          </View>
-        </>
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 50,
+                marginBottom: 50,
+              }}>
+              <Text style={{color: '#FFAD00', fontSize: 20}}>
+                Your Video Upload successfully Done..!
+              </Text>
+            </View>
+          </>
+        )
       ) : (
         <View
           style={{
@@ -289,8 +395,8 @@ const VideoUploadLearningSession = ({ route }) => {
             alignItems: 'center',
             marginTop: 50,
           }}>
-          <Image source={imagePath.lazyDog} style={{ height: 150, width: 150 }} />
-          <Text style={{ color: '#FFAD00', fontSize: 20 }}>
+          <Image source={imagePath.lazyDog} style={{height: 150, width: 150}} />
+          <Text style={{color: '#FFAD00', fontSize: 20}}>
             Oops Time Expired !
           </Text>
         </View>
@@ -300,7 +406,7 @@ const VideoUploadLearningSession = ({ route }) => {
         uploadDone={uploadDone}
         setUploadDone={setUploadDone}
       />
-    </View>
+    </ScrollView>
   );
 };
 

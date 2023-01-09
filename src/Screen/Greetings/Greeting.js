@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -22,16 +23,26 @@ import {AuthContext} from '../../Constants/context';
 import VideoPlayer from 'react-native-video-player';
 import Video from 'react-native-video';
 import TitleHeader from '../../Components/TitleHeader';
+import VideoPlayerComp from '../../Components/VIDEO/VideoPlayerComp';
 const Greeting = ({route}) => {
   const {activeGreetings} = route.params;
-  console.log(activeGreetings);
+  console.log('activeGreetings', activeGreetings);
   const filteredActivities = activeGreetings.filter(item => {
     return item?.type === 'greeting'
       ? item?.greeting_registration?.status > 2
-        ? item?.greeting
+        ? item?.greeting_registration
         : null
       : item;
   });
+  const cummingActivities = activeGreetings.filter(item => {
+    return item?.type === 'greeting'
+      ? item?.greeting_registration?.status < 3
+        ? item?.greeting_registration
+        : null
+      : item;
+  });
+  console.log('paid but comming', cummingActivities);
+  console.log('filteredActivities', filteredActivities);
   const width = Dimensions.get('window').width;
   const navigation = useNavigation();
 
@@ -56,9 +67,8 @@ const Greeting = ({route}) => {
   return (
     <>
       <HeaderComp backFunc={() => navigation.goBack()} />
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <SafeAreaView style={styles.ActiveNew}>
-          <TitleHeader title={'Greetings'} />
           {/* <View style={{position: 'relative'}}>
             <Image source={imagePath.BgLane} style={styles.LaneBg} />
             <Text
@@ -67,19 +77,28 @@ const Greeting = ({route}) => {
               Greetings
             </Text>
           </View> */}
+          {filteredActivities.length === 0 &&
+          cummingActivities.length > 0 ? null : (
+            <TitleHeader title={'Greetings'} />
+          )}
 
           <View style={{height: '100%'}}>
-            {activeGreetings.length > 0 ? (
-              <FlatGrid
-                itemDimension={200}
-                data={filteredActivities}
-                renderItem={({item}) => {
-                  return (
-                    <View style={{}}>
-                      {/* <text style={{color: 'white'}}>Hi</text> */}
+            {filteredActivities.length > 0 ? (
+              <>
+                <FlatGrid
+                  itemDimension={200}
+                  data={activeGreetings}
+                  renderItem={({item}) => {
+                    return item?.greeting_registration?.status > 2 ? (
+                      <View style={{}}>
+                        {/* <text style={{color: 'white'}}>Hi</text> */}
 
-                      <View style={{height: 270, width: 400}}>
-                        <Video
+                        <View style={{width: 400}}>
+                          <VideoPlayerComp
+                            url={`${AppUrl.MediaBaseUrl}${item?.greeting_registration?.video}`}
+                            thumbnail={`${AppUrl.MediaBaseUrl}${item?.greeting_registration?.greeting?.banner}`}
+                          />
+                          {/* <Video
                           source={{
                             uri: `${AppUrl.MediaBaseUrl}${item?.greeting_registration?.video}`,
                           }}
@@ -102,10 +121,10 @@ const Greeting = ({route}) => {
                             width: 400,
                             position: 'absolute',
                           }}
-                        />
-                      </View>
+                        /> */}
+                        </View>
 
-                      {/* <VideoPlayer
+                        {/* <VideoPlayer
                         style={styles.BannerCardImg}
                         video={{
                           uri: `${AppUrl.MediaBaseUrl}${item?.greeting_registration?.video}`,
@@ -121,15 +140,26 @@ const Greeting = ({route}) => {
                         }}
                         blurRadius={10}
                       /> */}
-                    </View>
-                  );
-                }}
-              />
-            ) : (
+                      </View>
+                    ) : !item?.greeting_registration?.payment_status ? (
+                      <View style={{height: 270, width: 400}}>
+                        {/* <Image source={}/> */}
+                        <Text style={{color: 'white'}}>
+                          Your Greetings will be available here
+                        </Text>
+                      </View>
+                    ) : null;
+                  }}
+                />
+              </>
+            ) : cummingActivities.length > 0 ? null : (
               <View style={{height: 300, justifyContent: 'center'}}>
                 <View>
                   <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
                     <Image
                       source={imagePath.lazyDog}
                       style={{height: 100, width: 100}}
@@ -143,10 +173,54 @@ const Greeting = ({route}) => {
               </View>
             )}
 
+            {cummingActivities.length > 0 && (
+              <>
+                <TitleHeader title={'Greetings Requests'} />
+                <FlatGrid
+                  itemDimension={150}
+                  data={cummingActivities}
+                  renderItem={({item}) => {
+                    return (
+                      <View style={{height: 270, width: 200}}>
+                        {console.log(item?.greeting?.banner)}
+                        {/* <Image source={}/> */}
+                        <Image
+                          source={
+                            item?.greeting?.banner
+                              ? {
+                                  uri:
+                                    AppUrl.MediaBaseUrl +
+                                    item?.greeting?.banner,
+                                }
+                              : imagePath.Rectangle
+                          }
+                          style={{width: 150, height: 200}}
+                          resizeMode="stretch"
+                        />
+
+                        <View>
+                          <Text
+                            style={{
+                              color: '#fff',
+                              fontSize: 14,
+                              marginTop: -38,
+                              marginLeft: 5,
+                              fontWeight: 'bold',
+                            }}>
+                            Your Greetings will be available here
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  }}
+                />
+              </>
+            )}
+
             {/*================== Card  Start here==================  */}
           </View>
         </SafeAreaView>
-      </View>
+      </ScrollView>
     </>
   );
 };

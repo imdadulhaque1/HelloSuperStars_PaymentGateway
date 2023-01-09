@@ -22,8 +22,8 @@ const MenuFollowers = ({
 
 
   route
-,
-navigation
+  ,
+  navigation
 
 }) => {
   const { resData, buffer, setFollowerArrayId } = route.params;
@@ -62,7 +62,7 @@ navigation
       'star_id': JSON.stringify(data)
     }
     axios.post(AppUrl.followStor, followData, axiosConfig).then((res) => {
-      console.log(res.data)
+      //console.log(res.data)
       if (res.data.status === 200) {
         setFollowersIds(res.data.followers)
         setFollowerArrayId(res.data.followers?.split(","))
@@ -89,7 +89,7 @@ navigation
               <Text style={styles.followText}>SuperStar</Text>
               <Text
                 style={[styles.text, { marginVertical: 8, fontSize: 18 }]}>
-                {item.super_star.first_name + " " + item.super_star.last_name}
+                {item.super_star.first_name + " " + item.super_star?.last_name}
               </Text>
             </View>
             <TouchableOpacity
@@ -130,7 +130,7 @@ navigation
               <Text style={styles.followText}>SuperStar</Text>
               <Text
                 style={[styles.text, { marginVertical: 8, fontSize: 18 }]}>
-                {item.super_star.first_name + " " + item.super_star.last_name}
+                {item.super_star.first_name + " " + item.super_star?.last_name}
               </Text>
             </View>
             <TouchableOpacity
@@ -164,7 +164,7 @@ navigation
 
 
   return (<>
-    <HeaderComp backFunc={()=>navigation.goBack()}/>
+    <HeaderComp backFunc={() => navigation.goBack()} />
     <ScrollView style={{ backgroundColor: 'black' }}>
 
       <View style={{ flex: 1, backgroundColor: 'black' }}>
@@ -176,7 +176,7 @@ navigation
         }
 
         {!buffer &&
-        <TitleHeader title={'YOU FOLLOWES'}/>
+          <TitleHeader title={'YOU FOLLOWES'} />
         }
 
 
@@ -190,7 +190,7 @@ navigation
             <FlatList
               columnWrapperStyle={{ justifyContent: 'space-around' }}
               numColumns={2}
-     
+
               data={followingCat}
               renderItem={RenderStarsFollowList}
             />
@@ -201,7 +201,7 @@ navigation
 
 
         {!buffer &&
-         <TitleHeader title={'SUGGESSION'} />
+          <TitleHeader title={'SUGGESSION'} />
         }
 
 
@@ -210,7 +210,7 @@ navigation
           <FlatList
             columnWrapperStyle={{ justifyContent: 'space-around' }}
             numColumns={2}
-          
+
             data={followingCat}
             renderItem={RenderStarsSugestedList}
           />

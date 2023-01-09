@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
     margin: '15%',
   },
 
-
   linearGradient: {
     width: '100%',
     justifyContent: 'center',
@@ -156,10 +155,9 @@ const styles = StyleSheet.create({
   },
 
   postImageX: {
-    
     width: 130.5,
     height: '100%',
-    resizeMode:'stretch',
+    resizeMode: 'stretch',
   },
 
   PriceRow: {
@@ -342,7 +340,7 @@ const styles = StyleSheet.create({
   },
   LiveBidding: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   LiveBCar: {

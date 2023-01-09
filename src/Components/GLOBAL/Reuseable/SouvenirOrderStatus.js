@@ -59,7 +59,7 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
   const { width } = useWindowDimensions();
   const { event } = route.params;
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
-  console.log(event);
+  console.log('souvinir apply', event);
   const ownerName = event?.name;
   const ownerPhone = event?.mobile_no;
   const ownerAddress = event?.city?.name + ', ' + event?.country?.name;
@@ -70,22 +70,31 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
   };
   const progress = event?.status;
   const imageURl = event?.image;
-  const { axiosConfig } = useContext(AuthContext);
+  const { axiosConfig, currencyCount, currency } = useContext(AuthContext);
+
+  const handelDollarTaxPrice = taxdoller => {
+    return (Number(event?.souvenir?.price) * Number(taxdoller)) / 100;
+  };
 
   const downloadInvoice = e => {
     const data = {
       productName: event?.souvenir?.title,
       SuperStar: event?.star?.first_name + ' ' + event?.star?.last_name,
       qty: 1,
-      unitPrice: event?.souvenir?.price,
-      total: event?.souvenir?.price,
-      subTotal: event?.souvenir?.price,
-      deliveryCharge: event?.souvenir?.delivery_charge,
-      tax: event?.souvenir?.tax,
-      grandTotal:
-        parseInt(event?.souvenir?.price) +
+      unitPrice: currencyCount(event?.souvenir?.price),
+      total: currencyCount(event?.souvenir?.price),
+      subTotal: currencyCount(event?.souvenir?.price),
+      deliveryCharge: currencyCount(event?.souvenir?.delivery_charge),
+      tax: currencyCount(handelDollarTaxPrice(event?.souvenir?.tax)),
+      grandTotal: currencyCount(
+        parseInt(event?.souvenir?.unit_price) +
         parseInt(event?.souvenir?.delivery_charge) +
-        parseInt(event?.souvenir?.tax),
+        handelDollarTaxPrice(event?.souvenir?.tax),
+      ),
+      // grandTotal:
+      //   parseInt(event?.souvenir?.price) +
+      //   parseInt(event?.souvenir?.delivery_charge) +
+      //   parseInt(event?.souvenir?.tax),
       orderID: event?.invoice_no,
       orderDate: event?.created_at,
       name: event?.name,
@@ -94,7 +103,7 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
     axios
       .post(AppUrl.getPDF, data, axiosConfig)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         Linking.openURL(`${AppUrl.MediaBaseUrl}/${res.data}`);
       })
       .catch(err => {
@@ -133,51 +142,247 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
                 resizeMode="stretch"
               />
 
-              <View style={{ width: '100%', marginVertical: 25 }}>
-                <Text style={styles.inputText}>Name {ownerName}</Text>
-                <Text style={styles.inputText}>Mobile No {ownerPhone}</Text>
-                <Text style={styles.inputText}>Address {ownerAddress}</Text>
-                <Text style={styles.inputText}>Total Price {totalPrice}</Text>
-
+              <View style={{ marginVertical: 20 }}>
                 <View
                   style={{
-                    display: 'flex',
                     flexDirection: 'row',
-                    justifyContent: 'center',
+                    marginVertical: 5,
                   }}>
-                  <View>
-                    <Text style={styles.desc}>Description </Text>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Name:</Text>
                   </View>
-                  <View style={{ width: '80%' }}>
-                    <RenderHtml contentWidth={width} source={descriptionHTML} />
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {ownerName}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Phone No:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {ownerPhone}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Address:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {ownerAddress}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '22%' }}>
+                    <Text style={{ color: '#fff', marginTop: 13 }}>
+                      Description:
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+                      width: '75%',
+                    }}>
+                    <RenderHtml contentWidth={50} source={descriptionHTML} />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Price:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {currencyCount(event?.souvenir?.price) +
+                        ' ' +
+                        currency.symbol}
+                      {/* {currencyCount(totalPrice) + ' ' + currency.symbol} */}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Delivery:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {currencyCount(event?.souvenir?.delivery_charge) +
+                        ' ' +
+                        currency.symbol}
+                      {/* {currencyCount(totalPrice) + ' ' + currency.symbol} */}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Tax:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {currencyCount(
+                        handelDollarTaxPrice(event?.souvenir?.tax),
+                      ) +
+                        ' ' +
+                        currency.symbol}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Total:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {Number(currencyCount(event?.souvenir?.price)) +
+                        Number(
+                          currencyCount(
+                            handelDollarTaxPrice(event?.souvenir?.tax),
+                          ),
+                        ) +
+                        Number(
+                          currencyCount(event?.souvenir?.delivery_charge),
+                        ) +
+                        ' ' +
+                        currency.symbol}
+
+                      {/* {currencyCount(totalPrice) + ' ' + currency.symbol} */}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>
+                      {event?.status == 6 ? <>Delivered </> : <>Ordered </>}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
+
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {moment(event?.created_at).format('LL')}
+                    </Text>
                   </View>
                 </View>
 
-                <Text style={styles.inputText}>
-                  {event?.status == 6 ? <>Delivered </> : <>Ordered </>}
-                  {moment(event?.created_at).format('LL')}
-                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}>
+                  <View style={{ width: '20%' }}>
+                    <Text style={{ color: '#fff' }}>Status:</Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 10,
+                      flexDirection: 'row',
 
-                <Text style={styles.inputText}>
-                  Status
-                  {event?.status == 0 ? (
-                    <> Pending for Approval</>
-                  ) : event?.status == 1 ? (
-                    <> Approved for Payment</>
-                  ) : event?.status == 2 ? (
-                    <> Payment Complete</>
-                  ) : event?.status == 3 ? (
-                    <> Processing</>
-                  ) : event?.status == 4 ? (
-                    <> Product Received</>
-                  ) : event?.status == 5 ? (
-                    <> Processing</>
-                  ) : event?.status == 6 ? (
-                    <> Out for Delivery</>
-                  ) : (
-                    <> Delivered</>
-                  )}
-                </Text>
+                      width: '78%',
+                    }}>
+                    <Text style={{ color: '#fff', flexWrap: 'wrap' }}>
+                      {event?.status == 0 ? (
+                        <> Pending for Approval</>
+                      ) : event?.status == 1 ? (
+                        <> Approved for Payment</>
+                      ) : event?.status == 2 ? (
+                        <> Payment Complete</>
+                      ) : event?.status == 3 ? (
+                        <> Processing</>
+                      ) : event?.status == 4 ? (
+                        <> Product Received</>
+                      ) : event?.status == 5 ? (
+                        <> Processing</>
+                      ) : event?.status == 6 ? (
+                        <> Out for Delivery</>
+                      ) : (
+                        <> Delivered</>
+                      )}
+                    </Text>
+                  </View>
+                </View>
 
                 {event?.status == 1 ? (
                   <TouchableOpacity
@@ -192,7 +397,7 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
                       Pay now
                     </Text>
                   </TouchableOpacity>
-                ) : event?.status == 7 ? (
+                ) : event?.status > 1 ? (
                   <TouchableOpacity
                     style={styles.downloadContainer}
                     onPress={downloadInvoice}>
@@ -207,6 +412,11 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
                 ) : (
                   <></>
                 )}
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginVertical: 5,
+                  }}></View>
               </View>
             </View>
           </View>
@@ -221,7 +431,7 @@ const SouvenirOrderStatus = ({ route, navigation }) => {
           souvenirId={event.souvenir_id}
           id={event.id}
           fee={event.total_amount}
-          eventId={event.souvenir_id}
+          eventId={event.id}
         />
       ) : (
         <></>

@@ -22,10 +22,13 @@ const MarketPlaceShipingComp = ({
   amount = null,
   slug = null,
   tax = null,
+  fee = null,
 }) => {
+  console.log('fee is', fee);
   // console.log('MarketPlaceShipingComp------eventId------', eventId);
   // console.log('MarketPlaceShipingComp------setParentData------', setParentData);
   // console.log('MarketPlaceShipingComp------passChildData------', passChildData);
+  console.log('marketplaceOrder', marketplaceOrder);
   const [buffer, setBuffer] = useState(false);
   const [forParentIsShowPaymentModal, setForParentIsShowPaymentModal] =
     useState(false);
@@ -103,7 +106,7 @@ const MarketPlaceShipingComp = ({
       tax: tax,
       marketplace_slug: slug,
     };
-    console.log('data-----------', data);
+    // console.log('data-----------', data);
     // console.log('AppUrl.MarketplaceOrderUpdate + marketplaceOrder?.id-----------', AppUrl.MarketplaceOrderUpdate + marketplaceOrder?.id);
     axios
       .post(
@@ -112,7 +115,7 @@ const MarketPlaceShipingComp = ({
         axiosConfig,
       )
       .then(res => {
-        console.log('res---------', res);
+        // console.log('res---------', res);
         reset(data);
         setBuffer(false);
         if (res.data.status === 200) {
@@ -474,12 +477,13 @@ const MarketPlaceShipingComp = ({
             </View>
             <RegisPaymentModal
               eventType="marketplace"
-              eventId={marketplaceOrder?.marketplace_id}
+              eventId={marketplaceOrder?.id}
               modelName="marketplace"
               isShowPaymentComp={isShowPaymentComp}
               setIsShowPaymentComp={setIsShowPaymentComp}
               event_registration_id={marketplaceOrder && marketplaceOrder?.id}
-              fee={marketplaceOrder.total_price}
+              fee={fee}
+              event_id={marketplaceOrder?.id}
               // parentData={parentData}
             />
           </>

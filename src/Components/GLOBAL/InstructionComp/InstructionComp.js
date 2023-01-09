@@ -12,16 +12,12 @@ function InstructionComp({title, instruction}) {
   };
   return (
     <>
-    <TitleHeader title={title} />
+      <TitleHeader title={title} />
       <View style={styles.topCard}>
-    
-      
-
-       <View style={{margin:10,justifyContent:'center',alignItems:'center'}}>
-       <RenderHtml contentWidth={width} source={source} />
-       </View>
-    
- 
+        <View
+          style={{margin: 10, justifyContent: 'center', alignItems: 'center'}}>
+          <RenderHtml contentWidth={width} source={source} />
+        </View>
       </View>
     </>
   );

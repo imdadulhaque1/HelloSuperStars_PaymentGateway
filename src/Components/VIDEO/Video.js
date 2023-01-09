@@ -11,33 +11,28 @@ function Video({title, image, videoSrc = null}) {
 
   return (
     <>
-    <TitleHeader title={title} />
-    <View style={styles.topCard}>
-    
-
-
-    
-
-      {videoSrc !== null ? (
-        <View style={{marginHorizontal: 20, marginVertical: 3}}>
-          <VideoPlayer
-            style={{height: 300}}
-            video={{
-              uri: `${AppUrl.MediaBaseUrl}${videoSrc}`,
-            }}
-            resizeMode={'stretch'}
-            thumbnail={imagePath.greetingStar}
-          />
-        </View>
-      ) : (
-     <View style={{padding:10}}>
-     <Image
-          source={{uri: image}}
-          style={{height: 180, resizeMode: 'cover',borderRadius:10}}
-        />
-     </View>
-      )}
-      {/* <VideoPlayer
+      <TitleHeader title={title} />
+      <View style={styles.topCard}>
+        {videoSrc !== null ? (
+          <View style={{marginHorizontal: 20, marginVertical: 3}}>
+            <VideoPlayer
+              style={{height: 300}}
+              video={{
+                uri: `${AppUrl.MediaBaseUrl}${videoSrc}`,
+              }}
+              resizeMode={'stretch'}
+              thumbnail={imagePath.videoPlayIcon}
+            />
+          </View>
+        ) : (
+          <View style={{padding: 10}}>
+            <Image
+              source={{uri: image}}
+              style={{height: 180, resizeMode: 'cover', borderRadius: 10}}
+            />
+          </View>
+        )}
+        {/* <VideoPlayer
         style={{ height: 300 }}
         video={{
           uri: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
@@ -47,7 +42,7 @@ function Video({title, image, videoSrc = null}) {
           uri: 'https://www.newagebd.com/files/records/news/202103/132871_199.jpg',
         }}
       /> */}
-    </View>
+      </View>
     </>
   );
 }
@@ -65,7 +60,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     fontSize: 18,
-    paddingHorizontal:3
+    paddingHorizontal: 3,
   },
   bannerRow: {
     alignItems: 'center',

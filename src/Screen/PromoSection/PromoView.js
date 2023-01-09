@@ -8,7 +8,9 @@ import PromoVideoSlide from '../../Components/HOME/PromoVideoSlider/PromoVideoSl
 
 
 const PromoView = ({ route }) => {
-    const { index, data } = route.params
+    const { index, data } = route.params;
+   console.log('video data is ===> ',data)
+
     // const [videoData, setVideoData] = useState([
     //     {
     //         key: 0,
@@ -57,7 +59,7 @@ const PromoView = ({ route }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const windowHight = Dimensions.get('window').height;
     const windowWidth = Dimensions.get('window').width;
-
+console.log('index is show promo ===>> ',index)
     useEffect(() => {
         setCurrentIndex(index)
 

@@ -24,7 +24,7 @@ import RegisPaymentModal from '../MODAL/RegisPaymentModal';
 
 const ApplyForCertificate = ({ route }) => {
   // const {slug} = route.params;
-  const { slug } = route.params;
+  const { slug, fee, id } = route.params;
   const [showModal, setShowModal] = useState(false);
   const [isShowPaymentComp, setIsShowPaymentComp] = React.useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
@@ -32,32 +32,54 @@ const ApplyForCertificate = ({ route }) => {
   const [fatherName, setFatherName] = useState(null);
   const [password, setPassword] = useState('');
   const [certificateUrl, setCertificateUrl] = useState('');
-  const [data, setData] = useState({});
-  const { axiosConfig } = useContext(AuthContext);
+  const { axiosConfig, currencyCount, currency, currencyMulti } =
+    useContext(AuthContext);
+
+  const [applied, setApplied] = useState(null);
 
   const handleDone = () => {
-
     if (name != null || fatherName != null) {
-      setData({
+      const data = {
         name: name,
         fatherName: fatherName,
-      });
-      setPaymentComplete(true)
-      // setIsShowPaymentComp(true);
-    }
-  };
-  useEffect(() => {
-    setPaymentComplete(paymentComplete);
-    if (paymentComplete) {
+        event_id: id,
+      };
+      console.log('data', data);
       console.log(`${AppUrl.downloadLearningCertificate}${slug}`);
       axios
         .post(`${AppUrl.downloadLearningCertificate}${slug}`, data, axiosConfig)
         .then(res => {
-          console.log(res);
+          //console.log(res);
           setCertificateUrl(res.data.certificateURL);
+          if (paymentComplete) {
+            setPaymentComplete(true);
+          }
+          setApplied(true);
+        })
+        .catch(err => {
+          console.log(err.message);
         });
     }
-  }, [paymentComplete]);
+  };
+
+  const checkPayment = () => {
+    console.log('slug', AppUrl.checkPaymentStatusLearning + slug);
+    axios
+      .get(AppUrl.checkPaymentStatusLearning + slug, axiosConfig)
+      .then(res => {
+        console.log('is payment done? ', res.data);
+        if (res.data.certificate) {
+          setPaymentComplete(true);
+        }
+      })
+      .catch(e => {
+        console.log('from check payment', e);
+      });
+  };
+
+  useEffect(() => {
+    checkPayment();
+  }, [applied, certificateUrl]);
 
   return (
     <>
@@ -94,7 +116,7 @@ const ApplyForCertificate = ({ route }) => {
                 </View>
                 <View style={{ marginVertical: 10 }}>
                   <TextInput
-                    placeholder=" Father name..."
+                    placeholder="Enter Father name..."
                     placeholderTextColor={'white'}
                     style={{
                       borderWidth: 1,
@@ -133,13 +155,15 @@ const ApplyForCertificate = ({ route }) => {
                     Apply
                   </Text>
                 </TouchableOpacity>
-                {paymentComplete && (
+                {applied && (
                   <TouchableOpacity
                     style={styles.DoneS}
                     onPress={() => {
-                      Linking.openURL(
-                        `${AppUrl.MediaBaseUrl}${certificateUrl}`,
-                      );
+                      paymentComplete
+                        ? Linking.openURL(
+                          `${AppUrl.MediaBaseUrl}${certificateUrl}`,
+                        )
+                        : setIsShowPaymentComp(true);
                     }}>
                     <Text
                       style={{
@@ -147,7 +171,11 @@ const ApplyForCertificate = ({ route }) => {
                         fontWeight: 'bold',
                         color: '#000',
                       }}>
-                      Download
+                      {/* {currencyCount(data.fee ? data.fee : data.cost) + " " + currency.symbol} */}
+                      {paymentComplete
+                        ? 'Download'
+                        : `Please Pay ${currencyCount(fee) + ' ' + currency.symbol
+                        }`}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -161,11 +189,22 @@ const ApplyForCertificate = ({ route }) => {
         // setAppeal={setAppeal}
         // RoundName={RoundName}
         eventType="learningSessionCertificate"
+        modelName="learningSessionCertificate"
+        eventId={id}
         isShowPaymentComp={isShowPaymentComp}
         setIsShowPaymentComp={setIsShowPaymentComp}
         setPaymentComplete={setPaymentComplete}
-        job="learningSessionCertificate"
+        fee={fee}
       />
+
+      {/* <RegisPaymentModal
+                    eventType="auction"
+                    modelName="auction"
+                    isShowPaymentComp={isShowPaymentComp}
+                    setIsShowPaymentComp={setIsShowPaymentComp}
+                    eventId={product?.id}
+                    fee={maxBid?.amount}
+                  /> */}
 
       {/* <BidCongratulationModal
         showModal={showModal}

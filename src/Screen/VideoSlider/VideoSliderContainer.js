@@ -1,22 +1,22 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {Dimensions, View, Text, TouchableOpacity, Image} from 'react-native';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import React, { useContext, useEffect, useState } from 'react';
+import { Dimensions, View, Text, TouchableOpacity, Image } from 'react-native';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import VideoSlider from '../../Components/HOME/VideoSlider/VideoSlider';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import axios from 'axios';
 import AppUrl from '../../RestApi/AppUrl';
-import {AuthContext} from '../../Constants/context';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import HeaderComp from '../../Components/HeaderComp';
-const VideoSliderContainer = ({navigation}) => {
-  const {axiosConfig} = useContext(AuthContext);
+const VideoSliderContainer = ({ navigation }) => {
+  const { axiosConfig } = useContext(AuthContext);
   const [videoData, setVideoData] = useState([]);
   const [paidLoveReact, setPaidLoveReact] = useState([]);
   const getLoveReact = () => {
     axios.get(AppUrl.videoFeedLoveReact, axiosConfig).then(res => {
       if (res.data.status === 200) {
         setPaidLoveReact(res.data?.loveReact);
-        console.log('love react ===================>', res.data?.loveReact);
+        // console.log('love react ===================>', res.data?.loveReact);
       }
     });
   };
@@ -31,6 +31,11 @@ const VideoSliderContainer = ({navigation}) => {
       .then(res => {
         if (res.data.status === 200) {
           setVideoData(res.data.totalVideos);
+
+          
+          console.log('videos->>>>>>>>>>>>>>>>>', res.data.totalVideos);
+
+          
           setLiked(0);
         }
       })
@@ -55,18 +60,50 @@ const VideoSliderContainer = ({navigation}) => {
   const [totalVideo, setTotalVideo] = useState([]);
   useEffect(() => {
     setTotalVideo(videoData.concat(oxygenVideos));
+
   }, [oxygenVideos, videoData]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const windowHight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
-  const handleChangeIndexValue = ({index}) => {
+  const handleChangeIndexValue = ({ index }) => {
     setCurrentIndex(index);
   };
 
+  let VideoData = [
+    {
+      id: 1,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+    },
+    {
+      id: 2,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4"
+    },
+    {
+      id: 3,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
+    }
+    ,
+    {
+      id: 4,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+    }
+    ,
+    {
+      id: 5,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4"
+    },
+
+    {
+      id: 6,
+      url: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+    },
+
+  ]
+
   return (
     <>
-      <View style={{backgroundColor: 'black'}}>
+      <View style={{ backgroundColor: 'black' }}>
         <View
           style={{
             height: windowHight,
@@ -77,29 +114,37 @@ const VideoSliderContainer = ({navigation}) => {
                 text="Notification"
                 backFunc={() => navigation.goBack()}
               />
-              <View style={{height: 600, justifyContent: 'center'}}>
+              <View style={{ height: 600, justifyContent: 'center' }}>
                 <View>
                   <View
-                    style={{justifyContent: 'center', alignItems: 'center'}}>
+                    style={{ justifyContent: 'center', alignItems: 'center' }}>
                     <Image
                       source={imagePath.lazyDog}
-                      style={{height: 100, width: 100}}
+                      style={{ height: 100, width: 100 }}
                     />
                   </View>
 
-                  <Text style={{color: 'white', textAlign: 'center'}}>
+                  <Text style={{ color: 'white', textAlign: 'center' }}>
                     Sorry No Data Available !
                   </Text>
                 </View>
               </View>
             </>
           )}
+
+
+
+
+
           <SwiperFlatList
             vertical={true}
             onChangeIndex={handleChangeIndexValue}
             // index={4}
             data={totalVideo.length > 0 ? totalVideo : videoData}
-            renderItem={({item, index}) => (
+            // data={VideoData}
+            renderItem={({ item, index }) => (
+
+
               <VideoSlider
                 item={item}
                 index={index}
@@ -109,17 +154,22 @@ const VideoSliderContainer = ({navigation}) => {
                 liked={liked}
                 paidLoveReact={paidLoveReact}
               />
+
+
+
+              
             )}
             keyExtractor={(item, index) => index}
           />
 
           {videoData.length > 0 && (
             <TouchableOpacity
-              style={{position: 'absolute', left: 10, top: 10}}
+              style={{ position: 'absolute', left: 10, top: 10 }}
               onPress={() => navigation.goBack()}>
               <Text>
                 <Icon name="arrow-back" size={25} color="#fff" />
               </Text>
+  
             </TouchableOpacity>
           )}
         </View>

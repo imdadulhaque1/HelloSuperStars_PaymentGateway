@@ -1,14 +1,15 @@
 //import liraries
-import { Picker } from '@react-native-picker/picker';
-import { useNavigation } from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Alert,
   Dimensions,
   Image,
   ImageBackground,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,21 +20,21 @@ import Toast from 'react-native-root-toast';
 import * as Animatable from 'react-native-animatable';
 import DatePicker from 'react-native-date-picker';
 // import {launchImageLibrary} from 'react-native-image-picker';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { androidCameraPermission } from '../../../permission';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {androidCameraPermission} from '../../../permission';
 import LoaderComp from '../../Components/LoaderComp';
-import { AuthContext } from '../../Constants/context';
+import {AuthContext} from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import AppUrl from '../../RestApi/AppUrl';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFS from 'react-native-fs';
 import LinearGradient from 'react-native-linear-gradient';
-import { useAxiosGet } from '../../CustomHooks/useAxiosGet';
+import {useAxiosGet} from '../../CustomHooks/useAxiosGet';
 
 // create a component
 const UserInformation = () => {
   const Navigation = useNavigation();
-  const { axiosConfig, authContext } = useContext(AuthContext);
+  const {axiosConfig, authContext} = useContext(AuthContext);
   const [buffer, setBuffer] = useState(false);
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -49,8 +50,8 @@ const UserInformation = () => {
 
   // console.log(updateData)
 
-  const { resData } = useAxiosGet(AppUrl.infoUpdateInforamtion);
-  const { country, educationlevel, occupation } = resData;
+  const {resData} = useAxiosGet(AppUrl.infoUpdateInforamtion);
+  const {country, educationlevel, occupation} = resData;
   console.log(resData);
 
   const handelSkip = () => {
@@ -62,7 +63,7 @@ const UserInformation = () => {
     axios
       .post(AppUrl.SignUpInforUpdate, updateData, axiosConfig)
       .then(res => {
-        console.log(res.data.userInfo);
+        //console.log(res.data.userInfo);
         if (res.data.status == 200) {
           console.log('user infor update page', res.data.userInfo);
           authContext.userInfoUpate(res.data.userInfo);
@@ -82,9 +83,9 @@ const UserInformation = () => {
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Profile Picture', 'Choose an option', [
-        { text: 'Camera', onPress: onCamera },
-        { text: 'Gallery', onPress: onGallery },
-        { text: 'Cancel', onPress: () => { } },
+        {text: 'Camera', onPress: onCamera},
+        {text: 'Gallery', onPress: onGallery},
+        {text: 'Cancel', onPress: () => {}},
       ]);
     }
   };
@@ -163,7 +164,7 @@ const UserInformation = () => {
   // };
 
   return (
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView style={{backgroundColor: 'black', height: '100%'}}>
       {buffer ? <LoaderComp /> : <></>}
       <>
         <ScrollView>
@@ -183,10 +184,10 @@ const UserInformation = () => {
                   alignItems: 'center',
                 }}>
                 <TouchableOpacity onPress={onSelectImage}>
-                  <View style={{ marginTop: 50 }}>
+                  <View style={{marginTop: 50}}>
                     {document ? (
                       <Image
-                        source={{ uri: document }}
+                        source={{uri: document}}
                         style={{
                           height: 150,
                           width: 150,
@@ -292,7 +293,7 @@ const UserInformation = () => {
               <TouchableOpacity
                 style={styles.input_textInput}
                 onPress={() => setOpen(true)}>
-                <Text style={{ color: '#ffffff' }}>
+                <Text style={{color: '#ffffff'}}>
                   {moment(updateData?.birthday).format('YYYY-MM-DD')}
                 </Text>
               </TouchableOpacity>
@@ -302,7 +303,7 @@ const UserInformation = () => {
                 open={open}
                 date={date}
                 mode="date"
-                theme="dark"
+                theme="light"
                 onConfirm={date => {
                   setOpen(false);
                   setUpdateData({
@@ -336,7 +337,7 @@ const UserInformation = () => {
                   <LinearGradient
                     style={styles.login_btn}
                     colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-                    <Text style={{ color: 'black' }}>UPDATE PROFILE</Text>
+                    <Text style={{color: 'black'}}>UPDATE PROFILE</Text>
                   </LinearGradient>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.sign_btn} onPress={handelSkip}>
