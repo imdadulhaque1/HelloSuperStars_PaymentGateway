@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import imagePath from '../../../../Constants/imagePath';
 import RenderHtml from 'react-native-render-html';
@@ -19,10 +19,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import navigationStrings from '../../../../Constants/navigationStrings';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AppUrl from '../../../../RestApi/AppUrl';
 export default function UpcomingAuditionsCard(props) {
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const post = props.post;
   console.log(post);
   const Navigation = useNavigation();
@@ -34,7 +34,7 @@ export default function UpcomingAuditionsCard(props) {
     axios
       .get(AppUrl.PostShare + post.id, axiosConfig)
       .then(res => {
-        console.log(res);
+        //console.log(res);
         setPostShare(post?.share_count + 1);
       })
       .catch(err => {
@@ -90,7 +90,7 @@ export default function UpcomingAuditionsCard(props) {
             <View>
               <View style={styles.CardRow}>
                 <View style={styles.CardContent}>
-                  <View style={{position: 'relative'}}>
+                  <View style={{ position: 'relative' }}>
                     <ImageBackground
                       source={imagePath.BannerAu}
                       style={styles.BannerCardImg}>
@@ -100,7 +100,7 @@ export default function UpcomingAuditionsCard(props) {
                           source={{
                             html: `<div style='color:#F6EA45; display: inline; font-size: 18px; font-weight: 'bold'>${item?.audition?.title}</div>`,
                           }}
-                          style={{color: 'red'}}
+                          style={{ color: 'red' }}
                         />
                       </View>
                     </ImageBackground>
@@ -117,7 +117,7 @@ export default function UpcomingAuditionsCard(props) {
                       blurRadius={10}
                     />
                     <View style={styles.BannerCse}>
-                      <View style={{paddingVertical: 2}}>
+                      <View style={{ paddingVertical: 2 }}>
                         <Text
                           style={{
                             color: 'white',
@@ -126,7 +126,7 @@ export default function UpcomingAuditionsCard(props) {
                             paddingHorizontal: 3,
                             paddingTop: 2,
                           }}>
-                          <View style={{paddingVertical: 2}}>
+                          <View style={{ paddingVertical: 2 }}>
                             <Text
                               style={{
                                 color: 'white',
@@ -170,7 +170,7 @@ export default function UpcomingAuditionsCard(props) {
                               animation="pulse"
                               easing="ease-out"
                               iterationCount="infinite"
-                              style={{color: '#fff', fontSize: 12}}>
+                              style={{ color: '#fff', fontSize: 12 }}>
                               Register Now
                             </Animatable.Text>
                           </LinearGradient>
@@ -190,9 +190,8 @@ export default function UpcomingAuditionsCard(props) {
                             <Image
                               style={styles.starCardImg}
                               source={{
-                                uri: `${
-                                  AppUrl.MediaBaseUrl + judge?.user?.image
-                                }`,
+                                uri: `${AppUrl.MediaBaseUrl + judge?.user?.image
+                                  }`,
                               }}
                             />
                           </View>
@@ -202,16 +201,16 @@ export default function UpcomingAuditionsCard(props) {
                   </View>
 
                   <View style={styles.cardInfo}>
-                    <View style={{flexDirection: 'row', marginTop: 5}}>
+                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
                       <Text style={styles.infoText}>
                         <Icon name="heart" color={'red'} size={12} />
                       </Text>
-                      <Text style={{marginLeft: 4, color: '#d9d9d9'}}>
+                      <Text style={{ marginLeft: 4, color: '#d9d9d9' }}>
                         {likeCount}
                       </Text>
                     </View>
-                    <View style={{flexDirection: 'row'}}>
-                      <View style={{marginTop: 7}}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <View style={{ marginTop: 7 }}>
                         <Icon name="paper-plane" color={'#03a5fc'} size={12} />
                       </View>
                       <View>
@@ -225,16 +224,16 @@ export default function UpcomingAuditionsCard(props) {
           );
         })
       ) : (
-        <View style={{height: 200, justifyContent: 'center'}}>
+        <View style={{ height: 200, justifyContent: 'center' }}>
           <View>
-            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <Image
                 source={imagePath.lazyDog}
-                style={{height: 100, width: 100}}
+                style={{ height: 100, width: 100 }}
               />
             </View>
 
-            <Text style={{color: 'white', textAlign: 'center'}}>
+            <Text style={{ color: 'white', textAlign: 'center' }}>
               Sorry No Data Available !
             </Text>
           </View>

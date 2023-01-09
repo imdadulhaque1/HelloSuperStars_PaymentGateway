@@ -38,7 +38,7 @@ const AllMembers = ({ fangroup, memberInfos }) => {
                       <Image source={item.user.image === null ? imagePath.noImage : { uri: AppUrl.MediaBaseUrl + item.user?.image }} style={{ height: 40, width: 40, borderRadius: 50, marginRight: 6 }} />
                     </View>
                     <View style={{ justifyContent: 'center' }}>
-                      <Text style={styles.fontStyle}>{item.user.first_name + " " + item.user.last_name}</Text>
+                      <Text style={styles.fontStyle}>{item.user?.first_name + " " + item.user?.last_name}</Text>
                     </View>
                   </View>
                 }
@@ -56,7 +56,7 @@ const AllMembers = ({ fangroup, memberInfos }) => {
                       <Image source={item.user.image === null ? imagePath.noImage : { uri: AppUrl.MediaBaseUrl + item.user?.image }} style={{ height: 40, width: 40, borderRadius: 50, marginRight: 6 }} />
                     </View>
                     <View style={{ justifyContent: 'center' }}>
-                      <Text style={styles.fontStyle}>{item.user.first_name + " " + item.user.last_name}</Text>
+                      <Text style={styles.fontStyle}>{item.user?.first_name + " " + item.user?.last_name}</Text>
                     </View>
                   </View>
                 }

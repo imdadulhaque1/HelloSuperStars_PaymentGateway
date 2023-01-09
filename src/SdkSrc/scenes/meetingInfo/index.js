@@ -1,38 +1,33 @@
-import React, { useState, useEffect, useContext } from "react";
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Dimensions,
-} from "react-native";
+import React, {useState, useEffect, useContext} from 'react';
+import {View, Text, SafeAreaView, Dimensions} from 'react-native';
 import Toast from 'react-native-root-toast';
-import { Colors } from "../../styles";
+import {Colors} from '../../styles';
 import {
   convertRFValue,
   useStandardHeight,
   useStandardWidth,
-} from "../../styles/spacing";
+} from '../../styles/spacing';
 import {
   MicOn,
   VideoEnable,
   VideoDisable,
   MicOff,
   CopyContent,
-} from "../../assets/icons";
-import { ROBOTO_FONTS } from "../../styles/fonts";
-import ButtonContainer from "../../components/ButtonContainer";
-import { Dots } from "../../assets/icons";
-import MeetingControlsTouchable from "../../components/MeetingControlsTouchable";
-import { Button } from "react-native-ui-lib";
-import { useRoute } from "@react-navigation/native";
-import { SCREEN_NAMES } from "../../navigators/screenNames";
-import { RTCView, mediaDevices } from "@videosdk.live/react-native-sdk";
-import { getToken } from "../../config/api";
-import { MeetingContex } from "../../../../VideoSdk";
-export default function MeetingInfo({ navigation }) {
+} from '../../assets/icons';
+import {ROBOTO_FONTS} from '../../styles/fonts';
+import ButtonContainer from '../../components/ButtonContainer';
+import {Dots} from '../../assets/icons';
+import MeetingControlsTouchable from '../../components/MeetingControlsTouchable';
+import {Button} from 'react-native-ui-lib';
+import {useRoute} from '@react-navigation/native';
+import {SCREEN_NAMES} from '../../navigators/screenNames';
+import {RTCView, mediaDevices} from '@videosdk.live/react-native-sdk';
+import {getToken} from '../../config/api';
+import {MeetingContex} from '../../../../VideoSdk';
+export default function MeetingInfo({navigation}) {
   const route = useRoute();
   const [token, setToken] = useState();
-  const { meetingId } = useContext(MeetingContex);
+  const {meetingId} = useContext(MeetingContex);
   const [micOn, setMicon] = useState(true);
   const [videoOn, setVideoOn] = useState(true);
 
@@ -41,21 +36,19 @@ export default function MeetingInfo({ navigation }) {
   const vertical_220 = useStandardHeight(220);
   const horizontal_150 = useStandardWidth(150);
 
-  const [tracks, setTrack] = useState("");
+  const [tracks, setTrack] = useState('');
 
   useEffect(async () => {
-
     const token = await getToken();
-    setToken(token)
-
-
+    setToken(token);
+    console.log('token is ->>>>>>>>>>>', token);
 
     mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then((stream) => {
+      .getUserMedia({audio: true, video: true})
+      .then(stream => {
         setTrack(stream.toURL());
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
       });
   }, []);
@@ -65,43 +58,38 @@ export default function MeetingInfo({ navigation }) {
       style={{
         flex: 1,
         backgroundColor: Colors.DARK_BACKGROUND,
-      }}
-    >
+      }}>
       <>
         <View
           style={{
-            height: Dimensions.get("screen").height / 2.5,
-            width: Dimensions.get("screen").width,
+            height: Dimensions.get('screen').height / 2.5,
+            width: Dimensions.get('screen').width,
             paddingHorizontal: vertical_50,
             marginTop: 26,
-          }}
-        >
+          }}>
           <View
             style={{
               flex: 1,
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
             <View
               style={{
-                alignSelf: "flex-start",
-              }}
-            >
+                alignSelf: 'flex-start',
+              }}>
               <Dots />
             </View>
             <View
               style={{
                 height: vertical_220,
                 width: horizontal_150,
-                position: "absolute",
+                position: 'absolute',
                 top: 50,
-              }}
-            >
+              }}>
               {videoOn ? (
                 <RTCView
                   streamURL={tracks}
-                  objectFit={"cover"}
+                  objectFit={'cover'}
                   mirror={true}
                   style={{
                     flex: 1,
@@ -112,26 +100,24 @@ export default function MeetingInfo({ navigation }) {
                 <View
                   style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     backgroundColor: Colors.GRAYISH_BLUE,
-                  }}
-                >
-                  <Text style={{ color: Colors.WHITE }}>No media</Text>
+                  }}>
+                  <Text style={{color: Colors.WHITE}}>No media</Text>
                 </View>
               )}
               <View
                 style={{
-                  flexDirection: "row",
+                  flexDirection: 'row',
                   marginVertical: 12,
-                  justifyContent: "center",
-                }}
-              >
+                  justifyContent: 'center',
+                }}>
                 <MeetingControlsTouchable
                   outlineWidth={1}
                   outline
                   outlineColor={Colors.WHITE}
-                  bgColor={micOn ? Colors.WHITE : "transparent"}
+                  bgColor={micOn ? Colors.WHITE : 'transparent'}
                   onPress={() => {
                     setMicon(!micOn);
                   }}
@@ -147,7 +133,7 @@ export default function MeetingInfo({ navigation }) {
                   outlineWidth={1}
                   outline
                   outlineColor={Colors.WHITE}
-                  bgColor={videoOn ? Colors.WHITE : "transparent"}
+                  bgColor={videoOn ? Colors.WHITE : 'transparent'}
                   onPress={() => {
                     setVideoOn(!videoOn);
                   }}
@@ -168,9 +154,8 @@ export default function MeetingInfo({ navigation }) {
 
             <View
               style={{
-                alignSelf: "flex-end",
-              }}
-            >
+                alignSelf: 'flex-end',
+              }}>
               <Dots />
             </View>
           </View>
@@ -179,16 +164,14 @@ export default function MeetingInfo({ navigation }) {
         <View
           style={{
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               paddingHorizontal: 12,
-            }}
-          >
+            }}>
             {/* <Text
               numberOfLines={2}
               style={{
@@ -201,11 +184,10 @@ export default function MeetingInfo({ navigation }) {
             >
               {meetingId}
             </Text> */}
-
           </View>
           <ButtonContainer
-            containerStyle={{ marginTop: vertical_20 }}
-            label={"Join Now"}
+            containerStyle={{marginTop: vertical_20}}
+            label={'Join Now'}
             labelStyle={{
               fontSize: convertRFValue(14),
               color: Colors.WHITE,

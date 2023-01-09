@@ -47,10 +47,10 @@ export default function HomeOnlineStars() {
       if (data) {
         setStarOnline((prev) => [...prev, data && data.userInfo]);
       }
-      console.log(data.activeStar)
+      // console.log(data.activeStar)
     })
     socketData.on('recive_offonline_star', (data) => {
-      console.log('offline star---', data)
+
     })
 
   }, [socketData])

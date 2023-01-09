@@ -1,18 +1,17 @@
 class AppUrl {
-  static BaseUrl = 'https://tfpbackend.hellosuperstars.com/api/';
-  static MediaBaseUrl = 'https://tfpbackend.hellosuperstars.com/';
+  // static BaseUrl = 'https://tfpbackend.hellosuperstars.com/api/';
+  // static MediaBaseUrl = 'https://tfpbackend.hellosuperstars.com/';
+  static SoketUrl = 'https://socket.hellosuperstars.com';
 
   // static SoketUrl = 'http://10.10.10.142:3005';
-  static SoketUrl = 'https://socket.hellosuperstars.com/';
+  // static SoketUrl = 'https://socket.hellosuperstars.com/';
   // static SoketUrl = 'http://10.10.10.103:3005';
 
+  static BaseUrl = 'https://backend.hellosuperstars.com/api/';
+  static MediaBaseUrl = 'https://backend.hellosuperstars.com/';
 
-  // static BaseUrl =
-  //   'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/api/';
-  // static MediaBaseUrl =
-  //   'http://10.10.10.103/TFP-Projects-2/HelloSuperStarsBackend-2/public/';
-
-
+  // static MyLoaction =
+  //   'https://api.ipdata.co?api-key=5dc984209c581e3e19e08142ae4812e89526d711a92a8f99f8c5323f';
 
   // static demo instruction = 'http://your pc ip/project name on www-htdocs folder/public/';
   static virtualTour = this.BaseUrl + 'mobile/getVirtualTourVideo';
@@ -41,7 +40,7 @@ class AppUrl {
 
   static categoryAdd = this.BaseUrl + 'user/selected/category/store';
 
-  static OtpVerification = this.BaseUrl + 'otpp_verify';
+  static OtpVerification = this.BaseUrl + 'otp_verify';
   static VerifyToRegisterEvent = this.BaseUrl + 'verify_to_register_event';
   static SignUpInforUpdate = this.BaseUrl + 'mobile/userInformation_update';
   static AllPost = this.BaseUrl + 'user/all_post';
@@ -69,6 +68,12 @@ class AppUrl {
 
   static GetPromoVideos = this.BaseUrl + 'user/PromoVideos';
   //learning session video uplaod
+  static getLearningUploadedVideo =
+    this.BaseUrl + 'user/learning-session/getUploadedVideo/'; //{event_id}
+  static checkPaymentStatusLearning =
+    this.BaseUrl + 'mobile/learningSession/checkPaymentStatus/'; //{event_id}
+  static checkPaymentStatus =
+    this.BaseUrl + 'mobile/audition/checkPaymentStatus/'; //{event_id}
   static walletQnaLearningRegister = this.BaseUrl + 'user/wallet/qna-register';
   static LearningSessionVideoUplaod =
     this.BaseUrl + 'learning-assinment-upload';
@@ -106,7 +111,7 @@ class AppUrl {
   static AuctionLiveBidding = this.BaseUrl + 'user/liveBidding/auction/';
   static AuctionMyBiddingHistory = this.BaseUrl + 'user/liveBidding/history/';
   static AuctionMyApply = this.BaseUrl + 'user/auctionApply/auction/';
-  static AuctionGetInstruction = this.BaseUrl + 'auction-product/';
+  static AuctionGetInstruction = this.BaseUrl + 'auction-product/'; //id
   static AuctionStar = this.BaseUrl + 'user/getStarAuction/'; // star ID
   // Get Souvenir
   static GetStarSouvenir = this.BaseUrl + 'user/souviner/view/';
@@ -225,7 +230,7 @@ class AppUrl {
   static fanGroupMemeberList = this.BaseUrl + 'user/fangroup-member/'; //fangroup_id
 
   //downlod ticket
-  static DownlodMeetUpTicket = this.BaseUrl + 'offlineMeetup/ticketDownload/'; //event id
+  static DownlodMeetUpTicket = this.BaseUrl + 'offlineMeetup/ticketDownload'; //event id
 
   /**
    * for paytm start

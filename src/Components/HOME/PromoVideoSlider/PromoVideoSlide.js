@@ -12,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const PromoVideoSlide = ({ currentIndex, index, item }) => {
+  console.log(index)
     const vedioRef = useRef(null)
     const windowHight = Dimensions.get('window').height;
     const windowWidth = Dimensions.get('window').width;
@@ -153,10 +154,6 @@ const PromoVideoSlide = ({ currentIndex, index, item }) => {
                     <Image source={imagePath.GiftIcon3} height={50} width={50} />
                     <Text style={{ color: '#FFFFFF' }}>2.5 K</Text>
                 </View>
-
-
-
-
             </View> */}
 
             <View style={styles.RightSideBar}>
@@ -201,19 +198,18 @@ const PromoVideoSlide = ({ currentIndex, index, item }) => {
                     <Text style={{ fontSize: 20, color: '#FFFFFF' }}> {item.title}</Text>
                 </View>
                 <Text style={{ fontSize: 12, color: '#FFFFFF' }}>ng established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point </Text>
-
-
             </View> */}
             <View style={styles.promoVideoHader}>
                 <View>
                     <TouchableOpacity onPress={() => Navigation.goBack()}>
                         <Icon
+                        color={'#ffaa00'}
                             name="left"
                             size={30}
                         />
                     </TouchableOpacity>
                 </View>
-                <Text style={{ fontSize: 20, color: '#FFFFFF' }}></Text>
+                <Text style={{ fontSize: 20, color: '#ffaa00' }}></Text>
                 <View>
                     <Image source={imagePath.logo} style={{ height: 40, width: 40 }} />
                 </View>
@@ -229,5 +225,3 @@ const PromoVideoSlide = ({ currentIndex, index, item }) => {
 }
 
 export default PromoVideoSlide
-
-// const styles = StyleSheet.create({})

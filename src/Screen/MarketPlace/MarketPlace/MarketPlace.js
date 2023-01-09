@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useContext, useEffect, useState } from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   RefreshControl,
   SafeAreaView,
@@ -13,15 +13,15 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import HeaderComp from '../../../Components/HeaderComp';
 import LoaderComp from '../../../Components/LoaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 import AppUrl from '../../../RestApi/AppUrl';
 import AuctionProductContainer from '../AuctionProductContainer/AuctionProductContainer';
 import MarketProductContainer from '../MarketProductContainer/MarketProductContainer';
 import marketPlaceNavigatr from './marketPlaceNavigatr';
 import styles from './styles';
 
-function MarketPlace({ route = null }) {
-  const { axiosConfig } = useContext(AuthContext);
+function MarketPlace({route = null}) {
+  const {axiosConfig} = useContext(AuthContext);
   const navigation = useNavigation();
   const [loder, setLoder] = React.useState(true);
   const [auction, setAuction] = useState();
@@ -38,7 +38,7 @@ function MarketPlace({ route = null }) {
     available: '',
   });
 
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -56,7 +56,7 @@ function MarketPlace({ route = null }) {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: 'black', height: '100%'}}>
       <AlertModal
         modalObj={modalObj}
         modal={modal}
@@ -67,7 +67,7 @@ function MarketPlace({ route = null }) {
 
       <HeaderComp backFunc={() => navigation.goBack()} />
       <ScrollView
-        style={{ backgroundColor: 'black' }}
+        style={{backgroundColor: 'black'}}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -95,11 +95,11 @@ function MarketPlace({ route = null }) {
                   onPress={() =>
                     setMarketPlaceNavigate(marketPlaceNavigatr.MARKETPLACE)
                   }>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{flexDirection: 'row'}}>
                     <Icon
                       name="shopping-basket"
                       size={15}
-                      style={{ marginRight: 10 }}
+                      style={{marginRight: 10}}
                       color={
                         marketPlaceNavigate === marketPlaceNavigatr.MARKETPLACE
                           ? 'black'
@@ -133,11 +133,11 @@ function MarketPlace({ route = null }) {
                   onPress={() =>
                     setMarketPlaceNavigate(marketPlaceNavigatr.AUCTION)
                   }>
-                  <View style={{ flexDirection: 'row' }}>
+                  <View style={{flexDirection: 'row'}}>
                     <Icon
                       name="gavel"
                       size={15}
-                      style={{ marginRight: 10 }}
+                      style={{marginRight: 10}}
                       color={
                         marketPlaceNavigate === marketPlaceNavigatr.AUCTION
                           ? 'black'
@@ -157,7 +157,6 @@ function MarketPlace({ route = null }) {
               </LinearGradient>
             </View>
             <ScrollView>
-
               {marketPlaceNavigate === marketPlaceNavigatr.MARKETPLACE ? (
                 <MarketProductContainer
                   apiInPoint={AppUrl.MarketplaceAllPost}
@@ -170,8 +169,6 @@ function MarketPlace({ route = null }) {
               ) : (
                 <></>
               )}
-
-
             </ScrollView>
           </SafeAreaView>
         </View>

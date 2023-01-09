@@ -14,6 +14,9 @@ import Loader from '../Screen/Auth/Loader';
 import axios from 'axios';
 import linking from '../SdkSrc/navigators/linking';
 import publicIP from 'react-native-public-ip';
+import { StripeProvider } from '@stripe/stripe-react-native';
+import Toast from 'react-native-root-toast';
+import moment from 'moment';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,26 +37,25 @@ const Routes = () => {
   const [totalNotification, setTotalNotification] = useState();
   const [greetingInfo, setGreetingInfo] = useState([]);
   const [shurjoPayment, setShurjoPayment] = useState(false);
+  const [ipay88Payment, setIpay88Payment] = useState(false);
 
   const [loactionInfo, setLoactionInfo] = useState();
-  const [currency, setCurrency] = useState({
-    country_code: "",
-    currency_value: "",
-    symbol: ""
 
+  const [loactionStatus, setLoactionStatus] = useState(false);
+  const [quantity, setQuantity] = useState(0);
+
+  const [stripePk, setStripePk] = useState('');
+  const [currency, setCurrency] = useState({
+    country_code: '',
+    currency_value: '',
+    symbol: '',
+    min: '',
+    hour: '',
+    timeAction: '',
   });
   //socket connection
+
   useEffect(() => {
-    //socket connection
-    socket.current = io(AppUrl.SoketUrl);
-    setSocketData(socket.current);
-
-    //console.log('user inforamtion...', useInfo)
-
-    retrieveData();
-    LoginStatusGet();
-
-
     publicIP()
       .then(ip => {
         console.log(ip);
@@ -64,8 +66,12 @@ const Routes = () => {
         console.log(error);
         // 'Unable to get IP address.'
       });
+    //socket connection
+    socket.current = io(AppUrl.SoketUrl);
+    setSocketData(socket.current);
 
-
+    retrieveData();
+    LoginStatusGet();
   }, []);
 
   //token set
@@ -125,44 +131,129 @@ const Routes = () => {
         setWaletInfo(res.data.userWallet);
       })
       .catch(err => {
-        //console.log(err);
+        console.log(err);
       });
   };
   // '104.44.7.192'
   // "162.210.194.38" usa
+  //103.91.229.182 bdt
   //get location information
-  const getLoactionInformation = (ip) => {
+  const getLoactionInformation = ip => {
+    console.log(axiosConfig);
     axios
       .get(AppUrl.MyLoaction + ip, axiosConfig)
       .then(res => {
-        setLoactionInfo(res?.data?.locationData)
+        setLoactionStatus(true);
+        setLoactionInfo(res?.data?.locationData);
         setCurrency({
           country_code: res?.data?.currencyDetails?.country_code,
           currency_value: res?.data?.currencyDetails?.currency_value,
-          symbol: res?.data?.currencyDetails?.symbol
-
-        })
-        console.log('my location', res.data)
+          symbol: res?.data?.currencyDetails?.symbol,
+          min: res.data?.currencyDetails?.minute,
+          hour: res.data?.currencyDetails?.hours,
+          timeAction: res.data?.currencyDetails?.time_action,
+        });
+        setStripePk(res?.data?.strpe_pk);
+        console.log(' location cpunty code', res?.data?.currencyDetails?.country_code);
       })
       .catch(err => {
+        Toast.show('Server Error !', Toast.durations.SHORT);
         console.log(err);
       });
-  }
+  };
+
+  //country base time
+  const countryTime = valu => {
+    if (currency.timeAction != 'null') {
+      if (currency.timeAction == 'add') {
+        return moment(valu, 'HH:mm:ss')
+          .add(currency.min, 'minutes')
+          .add(currency.hour, 'hours')
+          .format('hh:mm A');
+      } else if (currency.timeAction == 'remove') {
+        return moment(valu, 'HH:mm:ss')
+          .subtract(currency.min, 'minutes')
+          .subtract(currency.hour, 'hours')
+          .format('hh:mm A');
+      }
+    }
+
+    return moment(valu, 'HH:mm:ss').format('hh:mm A');
+  };
+
+  //country base time
+  const countryDate = valu => {
+    if (currency.timeAction != 'null') {
+      if (currency.timeAction == 'add') {
+        return moment(valu)
+          .add(currency.min, 'minutes')
+          .add(currency.hour, 'hours')
+          .format('Do MMM YY');
+      } else if (currency.timeAction == 'remove') {
+        return moment(valu)
+          .subtract(currency.min, 'minutes')
+          .subtract(currency.hour, 'hours')
+          .format('Do MMM YY');
+      }
+    }
+
+    return moment(valu).format('Do MMM YY');
+  };
+
+  //country date for post
+
+  const countryDateTime = (valu, formate) => {
+    if (currency.timeAction != 'null') {
+      if (currency.timeAction == 'add') {
+        return moment(valu)
+          .add(currency.min, 'minutes')
+          .add(currency.hour, 'hours')
+          .format(formate);
+      } else if (currency.timeAction == 'remove') {
+        return moment(valu)
+          .subtract(currency.min, 'minutes')
+          .subtract(currency.hour, 'hours')
+          .format(formate);
+      }
+    }
+
+    return moment(valu).format(formate);
+  };
+
+  //country base time
+  const countryTimestamp = () => {
+    // alert('hello')
+    if (currency.timeAction != 'null') {
+      if (currency.timeAction != 'add') {
+        return moment(Date.now())
+          .add(currency.min, 'minutes')
+          .add(currency.hour, 'hours')
+          .format();
+      } else if (currency.timeAction != 'remove') {
+        return moment(Date.now())
+          .subtract(currency.min, 'minutes')
+          .subtract(currency.hour, 'hours')
+          .format();
+      }
+    }
+
+    return moment(Date.now()).format();
+  };
 
   //get countrybase currency
-  const currencyCount = (valu) => {
-    return (Number(valu) * Number(currency?.currency_value)).toFixed(0)
-  }
+  const currencyCount = valu => {
+    return (Number(valu) * Number(currency?.currency_value)).toFixed(0);
+  };
 
   //get currency valu * number
   const currencyMulti = (valu, number) => {
+    console.log('cost_____', valu);
+    console.log('number_____', number);
 
-    console.log('cost_____', valu)
-    console.log('number_____', number)
-
-    return ((Number(valu) * Number(currency?.currency_value)) * number).toFixed(0)
-  }
-
+    return (Number(valu) * Number(currency?.currency_value) * number).toFixed(
+      0,
+    );
+  };
 
   //activity information
   const getActivity = () => {
@@ -279,8 +370,6 @@ const Routes = () => {
     } catch (error) { }
   };
 
-
-
   if (loading) {
     return (
       <>
@@ -290,46 +379,60 @@ const Routes = () => {
   }
 
   return (
-    <AuthContext.Provider
-      value={{
-        loactionInfo,
-        authContext,
-        userToken,
-        axiosConfig,
-        useInfo,
-        notification,
-        setNotification,
-        socketData,
-        setPosts,
-        posts,
-        setWaletInfo,
-        waletInfo,
-        socket,
-        activities,
-        getActivity,
-        totalNotification,
-        setTotalNotification,
-        updateNotification,
-        paytmSuccess,
-        setUserInfo,
-        getWaletInformation,
-        shurjoPayment,
-        setShurjoPayment,
-        setLoginStatus,
-        currency,
-        currencyCount,
-        currencyMulti,
-
-        greetingInfo,
-        setGreetingInfo,
-      }}>
-      <NavigationContainer linking={linking}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* !!loginStatus */}
-          {!!loginStatus ? <>{MainStack(Stack)}</> : <>{AuthStack(Stack)}</>}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <StripeProvider
+      publishableKey={stripePk}
+      urlScheme="your-url-scheme"
+      merchantIdentifier="merchant.com.Hellosuperstars">
+      <AuthContext.Provider
+        value={{
+          loactionInfo,
+          authContext,
+          userToken,
+          axiosConfig,
+          useInfo,
+          notification,
+          setNotification,
+          socketData,
+          setPosts,
+          posts,
+          setWaletInfo,
+          waletInfo,
+          socket,
+          activities,
+          getActivity,
+          totalNotification,
+          setTotalNotification,
+          updateNotification,
+          paytmSuccess,
+          setUserInfo,
+          getWaletInformation,
+          shurjoPayment,
+          setShurjoPayment,
+          setLoginStatus,
+          currency,
+          currencyCount,
+          currencyMulti,
+          greetingInfo,
+          setGreetingInfo,
+          loactionStatus,
+          quantity,
+          setQuantity,
+          countryTime,
+          countryDate,
+          countryDateTime,
+          countryTimestamp,
+        }}>
+        <NavigationContainer linking={linking}>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {!!loginStatus ? (
+              <>{MainStack(Stack, loactionStatus)}</>
+            ) : (
+              <>{AuthStack(Stack)}</>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </StripeProvider>
   );
 };
 

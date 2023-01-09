@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -18,8 +18,8 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Video from 'react-native-video';
-import {androidCameraPermission} from '../../../../permission';
-import {AuthContext} from '../../../Constants/context';
+import { androidCameraPermission } from '../../../../permission';
+import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
@@ -38,7 +38,7 @@ const VideoSlider = ({
   setLiked,
   paidLoveReact,
 }) => {
-  console.log('paidLoveReact', paidLoveReact);
+
   const vedioRef = useRef(null);
   const [like, setLike] = useState(false);
   const [likeFlash, setLikeFlash] = useState(false);
@@ -48,6 +48,9 @@ const VideoSlider = ({
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [videoComment, setVideoComment] = useState('');
   const [paymentComplete, setPaymentComplete] = useState(false);
+
+  const [videoUrl, setVideoUrl] = useState();
+
   const [videoUpload, setVideoUpload] = useState({
     uri: null,
     type: null,
@@ -63,6 +66,9 @@ const VideoSlider = ({
     // setPlay(false)
     PlayStatus();
   }, []);
+
+
+
 
   const [modalPara, setModalPara] = useState([]);
   function handleModal(value) {
@@ -151,7 +157,7 @@ const VideoSlider = ({
     }
   };
 
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const handleReact = react_num => {
     let data = {
       videoId: react_num[0],
@@ -170,9 +176,9 @@ const VideoSlider = ({
     const permissionStatus = await androidCameraPermission();
     if (permissionStatus || Platform.OS == 'ios') {
       Alert.alert('Upload Video', 'Choose an option', [
-        {text: 'Camera', onPress: onCamera},
-        {text: 'Gallery', onPress: onGallery},
-        {text: 'Cancel', onPress: () => {}},
+        { text: 'Camera', onPress: onCamera },
+        { text: 'Gallery', onPress: onGallery },
+        { text: 'Cancel', onPress: () => { } },
       ]);
     }
   }
@@ -196,7 +202,7 @@ const VideoSlider = ({
         axios
           .post(AppUrl.OxygenReplyUpload, data, axiosConfig)
           .then(res => {
-            console.log(res);
+            //console.log(res);
             Toast.show('Comment uploaded', Toast.durations.SHORT);
           })
           .catch(err => {
@@ -225,9 +231,9 @@ const VideoSlider = ({
         axios
           .post(AppUrl.OxygenReplyUpload, data, axiosConfig)
           .then(res => {
-            console.log(res);
+            //console.log(res);
             if (res.status === 200) {
-              console.log(res);
+              //console.log(res);
               Toast.show('Comment uploaded', Toast.durations.SHORT);
             }
           })
@@ -241,12 +247,15 @@ const VideoSlider = ({
 
   //================ comment video upload functionality end here ===================
 
+
+
   return (
     <View style={styles.VideoContainer}>
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => setPlay(!Play)}
         style={styles.TouchAbleViedo}>
+
         {Play ? (
           <></>
         ) : (
@@ -260,15 +269,22 @@ const VideoSlider = ({
               animation="pulse"
               iterationCount="infinite"
               source={imagePath.logo}
-              style={{height: 150, width: 150}}
+              style={{ height: 150, width: 150 }}
             />
           </View>
         )}
+
+
+
         <Video
-          source={{uri: `${AppUrl.MediaBaseUrl + item.video}`}}
-          ref={vedioRef} // Store reference
+          source={{ uri: `${AppUrl.MediaBaseUrl + item.video}` }}
+
+          // source={{uri:"https://tfpbackend.hellosuperstars.com/uploads/videos/auditions/167161601498990.ssstik.io_1671348257882.mp4"}}
+
+          ref={vedioRef}
+          onReadyForDisplay={() => console.log('Video ready for display videoFeed')}
           onBuffer={onBuffer}
-          onError={onError} // Callback when video cannot be loaded
+          onError={onError}
           resizeMode={windowWidth < 600 ? 'cover' : 'contain'}
           onLoad={loadVideo}
           onEnd={() => console.log('end')}
@@ -297,8 +313,9 @@ const VideoSlider = ({
             animation="pulse"
             iterationCount="infinite"
             source={imagePath.logo}
-            style={{height: 150, width: 150}}
+            style={{ height: 150, width: 150 }}
           />
+
         </View>
       )}
       {likeFlash ? (
@@ -360,30 +377,30 @@ const VideoSlider = ({
           style={
             paidLoveReact.length === 0
               ? {
-                  top: '47%',
-                  position: 'absolute',
-                  backgroundColor: 'rgba(31, 31, 31, 0.473)',
-                  transform: [{translateX: -halfWidth}],
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }
+                top: '47%',
+                position: 'absolute',
+                backgroundColor: 'rgba(31, 31, 31, 0.473)',
+                transform: [{ translateX: -halfWidth }],
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }
               : paidLoveReact.length === 1
-              ? {
+                ? {
                   top: '43%',
                   position: 'absolute',
                   backgroundColor: 'rgba(31, 31, 31, 0.473)',
-                  transform: [{translateX: -halfWidth}],
+                  transform: [{ translateX: -halfWidth }],
                   flexDirection: 'column',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                 }
-              : styles.LeftSideBar
+                : styles.LeftSideBar
           }>
           {/* <Text style={{ color: '#FFFFFF' }}>Gift</Text> */}
 
           <TouchableOpacity
-            style={{height: 50, marginTop: 5}}
+            style={{ height: 50, marginTop: 5 }}
             onPress={() => {
               pressLike(1000);
               console.log('free');
@@ -397,12 +414,12 @@ const VideoSlider = ({
               <AntDesign name="hearto" size={30} color="red" />
             )}
             {/* <Icon name="heart" size={30} color="red" /> */}
-            <Text style={{color: '#FFFFFF', textAlign: 'center'}}>Free</Text>
+            <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>Free</Text>
           </TouchableOpacity>
           {paidLoveReact?.map(reactItem => {
             return (
               <TouchableOpacity
-                style={{height: 50, marginTop: 5}}
+                style={{ height: 50, marginTop: 5 }}
                 onPress={() => {
                   let array = [item?.id, reactItem?.loveReact, reactItem?.fee];
                   const checking = item?.total_react?.some(
@@ -425,7 +442,7 @@ const VideoSlider = ({
                   <AntDesign name="hearto" size={30} color="red" />
                 )}
 
-                <Text style={{color: '#FFFFFF', textAlign: 'center'}}>
+                <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>
                   {reactItem?.loveReact}
                 </Text>
               </TouchableOpacity>
@@ -438,8 +455,8 @@ const VideoSlider = ({
         {!item.hasOwnProperty('status') && (
           <>
             <View
-              style={{height: 50, marginTop: 10}}
-              // onPress={() => pressLike(1000)}
+              style={{ height: 50, marginTop: 10 }}
+            // onPress={() => pressLike(1000)}
             >
               {item?.total_react?.some(
                 i =>
@@ -452,17 +469,17 @@ const VideoSlider = ({
               ) : (
                 <AntDesign name="hearto" size={30} color="red" />
               )}
-              <Text style={{color: '#FFFFFF', textAlign: 'center'}}>
+              <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>
                 {item?.get_total_react?.reduce((prev, curr) => {
                   return prev + curr.react_num;
                 }, 0)}
               </Text>
             </View>
             <TouchableOpacity
-              style={{height: 50, marginTop: 30}}
+              style={{ height: 50, marginTop: 30 }}
               onPress={onShare}>
               <FontAwesome name="paper-plane" size={30} color="#1291f8" />
-              <Text style={{color: '#FFFFFF', textAlign: 'center'}}>00</Text>
+              <Text style={{ color: '#FFFFFF', textAlign: 'center' }}>00</Text>
             </TouchableOpacity>
           </>
         )}
@@ -472,14 +489,14 @@ const VideoSlider = ({
             iterationCount="infinite"
             duration={1000}>
             <TouchableOpacity
-              style={{height: 50, marginTop: 0}}
+              style={{ height: 50, marginTop: 0 }}
               onPress={handleUpload}>
-              <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                 <Animatable.Text
                   animation="pulse"
                   easing="ease-out"
                   iterationCount="infinite"
-                  style={{color: '#FFFFFF', fontSize: 12}}>
+                  style={{ color: '#FFFFFF', fontSize: 12 }}>
                   <Foundation name="comment-video" size={35} color="#ffaa00" />
                 </Animatable.Text>
               </View>
@@ -490,14 +507,14 @@ const VideoSlider = ({
                 style={{color: '#FFFFFF', fontSize: 12}}>
                 Comment
               </Animatable.Text> */}
-              <Text style={{color: '#FFFFFF', fontSize: 12}}>Oxygen</Text>
+              <Text style={{ color: '#FFFFFF', fontSize: 12 }}>Oxygen</Text>
             </TouchableOpacity>
           </Animatable.View>
         )}
       </View>
 
       <View style={styles.CommentSection}>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View
             style={{
               borderColor: '#FFAD00',
@@ -506,7 +523,7 @@ const VideoSlider = ({
               padding: 2,
             }}>
             <Image
-              source={{uri: `${AppUrl.MediaBaseUrl + item.user.image}`}}
+              source={{ uri: `${AppUrl.MediaBaseUrl + item.user.image}` }}
               style={{
                 height: 30,
                 width: 30,
@@ -521,15 +538,15 @@ const VideoSlider = ({
               marginTop: 3,
               marginLeft: 10,
             }}>
-            {item.user.first_name} {item.user.last_name}
+            {item.user?.first_name} {item.user?.last_name}
           </Text>
         </View>
 
         {item.hasOwnProperty('status') && (
-          <View style={{marginBottom: 20, paddingTop: 3}}>
+          <View style={{ marginBottom: 20, paddingTop: 3 }}>
             <LinearGradient
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 0}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
               colors={['#ffa825', '#ffce48', '#ab6616']}
               style={{
                 marginTop: 10,
@@ -545,7 +562,7 @@ const VideoSlider = ({
                   animation="pulse"
                   easing="ease-out"
                   iterationCount="infinite"
-                  style={{color: '#FFFFFF', fontSize: 12}}>
+                  style={{ color: '#FFFFFF', fontSize: 12 }}>
                   <Text
                     style={{
                       fontSize: 20,

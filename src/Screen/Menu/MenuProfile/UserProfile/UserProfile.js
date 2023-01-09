@@ -93,7 +93,7 @@ const UserProfile = () => {
         if (res.data.status === 200) {
           setFanGrops(res.data?.fanGroup);
           setUserActivites(res.data?.userActivites);
-          console.log(res.data?.userActivites);
+          //console.log(res.data?.userActivites);
         }
       })
       .catch(err => {
@@ -103,7 +103,7 @@ const UserProfile = () => {
     axios
       .get(AppUrl.purchasedStarPhotos, axiosConfig)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         setBuffer(false);
         if (res.data.status === 200) {
           setPurchasedPhotos(res.data?.photos);
@@ -116,7 +116,7 @@ const UserProfile = () => {
     axios
       .get(AppUrl.purchasedStarVideos, axiosConfig)
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         setBuffer(false);
         if (res.data.status === 200) {
           setPurchasedVideos(res.data?.videos);
@@ -230,7 +230,7 @@ const UserProfile = () => {
   const uploadCoverPhotoCamera = () => {
     CropImagePicker.openCamera({
       width: 300,
-      height: 300,
+      height: 160,
       cropping: true,
     }).then(image => {
       RNFS.readFile(image.path, 'base64').then(res => {
@@ -249,7 +249,7 @@ const UserProfile = () => {
   const uploadCoverPhoto = () => {
     CropImagePicker.openPicker({
       width: 300,
-      height: 300,
+      height: 160,
       cropping: true,
     }).then(image => {
       RNFS.readFile(image.path, 'base64').then(res => {

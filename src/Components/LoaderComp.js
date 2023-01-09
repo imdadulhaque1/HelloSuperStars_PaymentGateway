@@ -3,12 +3,12 @@ import React from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // create a component
-const LoaderComp = () => {
+const LoaderComp = ({ text = null }) => {
   return (
     <Spinner
       visible={true}
-      textContent={'Loading...'}
-      textStyle={{color: '#757575', fontSize: 12}}
+      textContent={text == null ? 'Loading...' : text}
+      textStyle={{ color: '#757575', fontSize: 12 }}
       size="large"
       color="#757575"
       overlayColor="rgba(0, 0, 0, 0.733)"

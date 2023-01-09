@@ -1,9 +1,9 @@
 //import liraries
-import {Picker} from '@react-native-picker/picker';
-import {useNavigation} from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Modal,
@@ -19,13 +19,15 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import DatePicker from 'react-native-date-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import AppUrl from '../../../../../../RestApi/AppUrl';
+import { AuthContext } from '../../../../../../Constants/context';
+import { useContext } from 'react';
 
 // create a component
-const EditProfileModal = ({editProfile, setEditProfile}) => {
+const EditProfileModal = ({ editProfile, setEditProfile }) => {
   const Navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
   const windowHeight = Dimensions.get('window').height;
-  // const {axiosConfig, authContext} = useContext(AuthContext);
+  const { axiosConfig, authContext } = useContext(AuthContext);
   const [buffer, setBuffer] = useState(false);
 
   const [date, setDate] = useState(new Date());
@@ -51,11 +53,11 @@ const EditProfileModal = ({editProfile, setEditProfile}) => {
     axios
       .post(AppUrl.SignUpInforUpdate, updateData, axiosConfig)
       .then(res => {
-        //console.log(res.data.userInfo);
+        //console.log(res.data);
         if (res.data.status == 200) {
           // authContext.userInfoUpate(res.data.userInfo);
           setBuffer(false);
-          Navigation.navigate('category');
+          setEditProfile(false);
         } else {
           setBuffer(false);
           Toast.show(res.data.message, Toast.durations.SHORT);
@@ -124,7 +126,7 @@ const EditProfileModal = ({editProfile, setEditProfile}) => {
                   borderRadius: 15,
                 }}>
                 <View
-                  style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                  style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                   <Pressable onPress={() => setEditProfile(false)}>
                     <Text
                       style={{
@@ -192,7 +194,7 @@ const EditProfileModal = ({editProfile, setEditProfile}) => {
                 <TouchableOpacity
                   style={styles.input_textInput}
                   onPress={() => setOpen(true)}>
-                  <Text style={{color: '#ffffff'}}>
+                  <Text style={{ color: '#ffffff' }}>
                     {moment(date).format('YYYY-MM-DD')}
                   </Text>
                   <AntDesign name={'calendar'} size={20} color={'#ddd'} />
@@ -203,7 +205,7 @@ const EditProfileModal = ({editProfile, setEditProfile}) => {
                   open={open}
                   date={date}
                   mode="date"
-                  theme="dark"
+                  theme="light"
                   onConfirm={date => {
                     setOpen(false);
                     setUpdateData({
@@ -243,8 +245,8 @@ const EditProfileModal = ({editProfile, setEditProfile}) => {
 
                 <View style={styles.btn_container}>
                   <LinearGradient
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 0}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
                     colors={['#ffa825', '#ffce48', '#ab6616']}
                     style={styles.login_btn}>
                     <TouchableOpacity
@@ -284,9 +286,9 @@ const styles = StyleSheet.create({
   lineImg: {
     marginVertical: 3,
   },
-  bannerRow: {alignItems: 'center', position: 'relative', paddingBottom: 15},
-  imgRow: {marginVertical: 2, width: '90%'},
-  imgRow2: {marginVertical: 2, position: 'absolute', top: '45%', left: '50%'},
+  bannerRow: { alignItems: 'center', position: 'relative', paddingBottom: 15 },
+  imgRow: { marginVertical: 2, width: '90%' },
+  imgRow2: { marginVertical: 2, position: 'absolute', top: '45%', left: '50%' },
   infoView: {
     flexDirection: 'row',
     justifyContent: 'center',

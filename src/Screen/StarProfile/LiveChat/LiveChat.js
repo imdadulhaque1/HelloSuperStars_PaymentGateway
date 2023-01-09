@@ -1,26 +1,32 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {Dimensions, View} from 'react-native';
 import PostCard from '../../../Components/GLOBAL/Card/PostCard/PostCard';
 import NotAvailable from '../../../Components/GLOBAL/Reuseable/NotAvailable';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 
-const LiveChat = ({ setProfileNavigate, data, setSelectedLiveChat, PostData, star, filter }) => {
+const LiveChat = ({
+  setProfileNavigate,
+  data,
+  setSelectedLiveChat,
+  PostData,
+  star,
+  filter,
+}) => {
   const [liveChatList, setLiveChatList] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
-  const { axiosConfig } = useContext(AuthContext);
+  const {axiosConfig} = useContext(AuthContext);
   const [selectedValue, setSelectedValue] = useState('');
   const [takeTieme, setTakeTime] = useState(1);
-  const [fee, setFee] = useState(0)
+  const [fee, setFee] = useState(0);
   const [modal, setModal] = useState(false);
   const [modalObj, setModalObj] = useState({
     modalType: '',
     buttonTitle: '',
     message: '',
-    available: ''
-  })
+    available: '',
+  });
   const windowHight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
-
 
   // //apply now button
   // const applyNow = () => {
@@ -38,44 +44,41 @@ const LiveChat = ({ setProfileNavigate, data, setSelectedLiveChat, PostData, sta
     }
   }
   const filterLiveChat = () => {
-    if (filter === "null") {
+    if (filter === 'null') {
       setLiveChatList(data);
     } else {
-
       setLiveChatList(data.filter(checkIfLiveChat));
     }
     // console.log('live chat data', liveChatList);
-  }
+  };
 
   useEffect(() => {
-
     // console.log('PostData----------', PostData);
     //getAllLiveChatListByStarID()
-    filterLiveChat()
+    filterLiveChat();
   }, [data && data]);
 
-
-
   return (
-
     <>
-      <View style={{ backgroundColor: 'black', minHeight: windowHight / 2 }}>
+      <View style={{backgroundColor: 'black', minHeight: windowHight / 2}}>
         <>
-          {liveChatList.length != 0 ?
-
+          {liveChatList.length != 0 ? (
             <>
-              {liveChatList && liveChatList.map((data, index) => (
-                <PostCard key={index} post={data} />
-              ))}
+              {liveChatList &&
+                liveChatList.map((data, index) => (
+                  <PostCard key={index} post={data} />
+                ))}
             </>
-            :
+          ) : (
             <>
-              <NotAvailable description={"Not Available" + star?.first_name + " " + star?.last_name} />
+              <NotAvailable
+                description={
+                  'Not Available ' + star?.first_name + ' ' + star?.last_name
+                }
+              />
             </>
-          }
-
+          )}
         </>
-
 
         {/* <SafeAreaView style={styles.container} >
         <AlertModal modalObj={modalObj} modal={modal} setModal={setModal} buttoPress={applyNow} />
@@ -192,10 +195,8 @@ const LiveChat = ({ setProfileNavigate, data, setSelectedLiveChat, PostData, sta
   
       </SafeAreaView> */}
       </View>
-
     </>
-  )
-}
+  );
+};
 
-export default LiveChat
-
+export default LiveChat;

@@ -6,39 +6,39 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
-import {Controller, useForm} from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {TextInput} from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import TitleHeader from '../../../Components/TitleHeader';
 function CustomHeader(props) {
   return (
-    <View style={{backgroundColor: '#343434', paddingVertical: 10}}>
+    <View style={{ backgroundColor: '#343434', paddingVertical: 10 }}>
       <TouchableOpacity
-        style={{flexDirection: 'row', marginLeft: 10}}
+        style={{ flexDirection: 'row', marginLeft: 10 }}
         onPress={() => props.onPress()}>
-        <Text style={{color: 'white'}}>
+        <Text style={{ color: 'white' }}>
           <Icon name="arrow-back" size={25} />
         </Text>
-        <Text style={{color: 'white', fontSize: 18, marginLeft: 4}}>Back</Text>
+        <Text style={{ color: 'white', fontSize: 18, marginLeft: 4 }}>Back</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-const Personal = ({navigation}) => {
+const Personal = ({ navigation }) => {
   const [serverError, setServerError] = useState({});
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
   function handleBack() {
     return navigation.goBack();
@@ -49,8 +49,8 @@ const Personal = ({navigation}) => {
       <SafeAreaView>
         <CustomHeader onPress={handleBack} />
 
-        <View style={{margin: 10}}>
-        <TitleHeader title={'Personal Information'} />
+        <View style={{ margin: 10 }}>
+          <TitleHeader title={'Personal Information'} />
           {/* <View>
             <Text
               style={{
@@ -88,7 +88,7 @@ const Personal = ({navigation}) => {
                   rules={{
                     required: true,
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       // onBlur={onBlur}
                       onChangeText={onChange}
@@ -102,7 +102,7 @@ const Personal = ({navigation}) => {
                 />
               </View>
               {errors.first_name && (
-                <Text style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
                   This field is required !
                 </Text>
               )}
@@ -128,7 +128,7 @@ const Personal = ({navigation}) => {
                       message: 'Please enter a valid email',
                     },
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -142,7 +142,7 @@ const Personal = ({navigation}) => {
                 />
               </View>
               {errors.email && (
-                <Text style={{color: 'red', marginLeft: 8, marginBottom: -10}}>
+                <Text style={{ color: 'red', marginLeft: 8, marginBottom: -10 }}>
                   {errors.email?.type === 'pattern'
                     ? 'provide valid email'
                     : 'This field is required !'}
@@ -179,7 +179,7 @@ const Personal = ({navigation}) => {
                       message: 'Please enter a valid phone number',
                     },
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -193,7 +193,7 @@ const Personal = ({navigation}) => {
                 />
               </View>
               {errors.phone && (
-                <Text style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
                   {errors.phone?.type === 'pattern'
                     ? 'provide valid phone number'
                     : 'This field is required !'}
@@ -214,7 +214,7 @@ const Personal = ({navigation}) => {
               <TouchableOpacity
                 style={styles.input_textInput}
                 onPress={() => setOpen(true)}>
-                <Text style={{color: '#ffffff'}}>
+                <Text style={{ color: '#ffffff' }}>
                   {moment(date).format('YYYY-MM-DD')}
                 </Text>
               </TouchableOpacity>
@@ -224,7 +224,7 @@ const Personal = ({navigation}) => {
                 open={open}
                 date={date}
                 mode="date"
-                theme="dark"
+                theme="light"
                 onConfirm={date => {
                   setOpen(false);
                 }}
@@ -246,7 +246,7 @@ const Personal = ({navigation}) => {
                   rules={{
                     required: true,
                   }}
-                  render={({field: {onChange, onBlur, value}}) => (
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
                       onBlur={onBlur}
                       onChangeText={onChange}
@@ -260,7 +260,7 @@ const Personal = ({navigation}) => {
                 />
               </View>
               {errors.first_name && (
-                <Text style={{color: 'red', marginLeft: 8, marginBottom: -15}}>
+                <Text style={{ color: 'red', marginLeft: 8, marginBottom: -15 }}>
                   This field is required !
                 </Text>
               )}
@@ -269,7 +269,7 @@ const Personal = ({navigation}) => {
                 <LinearGradient
                   style={styles.login_btn}
                   colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
-                  <Text style={{color: 'black'}}>Update</Text>
+                  <Text style={{ color: 'black' }}>Update</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </ScrollView>

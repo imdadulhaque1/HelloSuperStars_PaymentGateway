@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 
   row: {
     marginVertical: 2,
-    backgroundColor: '#343434',
+    backgroundColor: 'rgba(52, 52, 52, 0.4)',
     borderRadius: 10,
     marginVertical: 4,
   },

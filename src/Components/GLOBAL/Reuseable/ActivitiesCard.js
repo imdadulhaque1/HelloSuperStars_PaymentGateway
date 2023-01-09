@@ -1,32 +1,40 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
-import React, {useContext, useEffect, useState} from 'react';
-import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
-import {FlatGrid} from 'react-native-super-grid';
+import React, { useContext, useEffect, useState } from 'react';
+import {
+  Image,
+  Linking,
+  Text,
+  ToastAndroid,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { FlatGrid } from 'react-native-super-grid';
 
 // import AppUrl from '../../RestApi/AppUrl';
 import styles from './ActivitiesCardStyle';
-import {BackHandler} from 'react-native';
+import { BackHandler } from 'react-native';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
 import MenuNavigator from '../../../Screen/Menu/MenuNavigator';
 import PushNotification from 'react-native-push-notification';
 import axios from 'axios';
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/Entypo';
 import RegisPaymentModal from '../../MODAL/RegisPaymentModal';
 import HeaderComp from '../../HeaderComp';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import TitleHeader from '../../TitleHeader';
+import ActivitiesCardBody from './ActivitiesCardBody';
 
-const ActivitiesCard = ({route}) => {
-  const {childActivityEventList, childActivityEventType} = route.params;
+const ActivitiesCard = ({ route }) => {
+  const { childActivityEventList, childActivityEventType } = route.params;
 
   const [roomId, setRoomId] = useState();
   const navigation = useNavigation();
-  const {axiosConfig} = useContext(AuthContext);
+  const { axiosConfig } = useContext(AuthContext);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
 
   let title = '';
@@ -58,8 +66,7 @@ const ActivitiesCard = ({route}) => {
   }
 
   // const width = Dimensions.get('window').width;
-  const renderEventItem = ({item}) => {
-    console.log('itemsssssssssssss', item);
+  const renderEventItem = ({ item }) => {
     let event = {};
     let eventRegistration = {};
     let eventType = '';
@@ -89,6 +96,7 @@ const ActivitiesCard = ({route}) => {
           ? (paymentStatus = true)
           : (paymentStatus = false);
         fee = item?.learning_session?.fee;
+        //.learning_session', item.learning_session);
         break;
 
       case 'general':
@@ -103,6 +111,8 @@ const ActivitiesCard = ({route}) => {
           : (paymentStatus = false);
         event = item.meetup;
         fee = item?.meetup?.fee;
+        console.log('meetup is ...........', item?.meetup);
+        console.log('meetup reg value', item?.meetup_registration);
         break;
 
       case 'liveChat':
@@ -123,6 +133,11 @@ const ActivitiesCard = ({route}) => {
         event = item.qna;
         eventRegistration = item.qna_registration;
         fee = item?.qna_registration?.amount;
+        console.log('qna event------------------->>>>>>>>>>>>>', item.qna);
+        console.log(
+          'qna reg------------------->>>>>>>>>>>>>',
+          item.qna_registration,
+        );
         break;
 
       case 'marketplace':
@@ -179,7 +194,12 @@ const ActivitiesCard = ({route}) => {
     let EventDateWithStartTime = new Date(
       moment(ActualEventDate + ' ' + StartTime),
     );
+
+
+
+
     let CurrentDateWithTime = new Date();
+
 
     let days = parseInt(
       (EventDateWithStartTime - CurrentDateWithTime) / (1000 * 60 * 60 * 24),
@@ -192,10 +212,22 @@ const ActivitiesCard = ({route}) => {
         EventDateWithStartTime.getTime() - CurrentDateWithTime.getTime(),
       ) /
         (1000 * 60)) %
-        60,
+      60,
     );
 
+    let seconds = Math.floor(
+      (Math.abs(
+        EventDateWithStartTime.getTime() - CurrentDateWithTime.getTime(),
+      ) %
+        (1000 * 60)) /
+      1000,
+    );
+
+
+
+
     const handleJoinNow = () => {
+
       // console.log('jdshfgjs', event);
 
       if (childActivityEventType == 'liveChat') {
@@ -216,8 +248,12 @@ const ActivitiesCard = ({route}) => {
           });
         }
       } else if (childActivityEventType == 'learningSession') {
+
+
+
+        console.log('learning session');
         navigation.navigate('VideoSdk', {
-          meetingId: event?.room_id,
+          meetingId: 'a3en-kih1-ls2r',
           type: 'learningSession',
         });
       } else {
@@ -254,13 +290,43 @@ const ActivitiesCard = ({route}) => {
         })
         .catch(err => {
           console.log(err);
-          setError(err);
         });
     };
 
+    /**
+     * for qna timing calculation
+     */
+
+    const event_start_time =
+      moment(event?.event_date).format('LL') +
+      ' ' +
+      eventRegistration?.qna_start_time;
+    const event_end_time =
+      moment(event?.event_date).format('LL') +
+      ' ' +
+      eventRegistration?.qna_end_time;
+
+    const event_start = new Date(event_start_time).getTime();
+    const event_end = new Date(event_end_time).getTime();
+
+    /**
+     * for qna timing calculation
+     */
+
+    /**
+     * calculating Time
+     */
+    const event_start_time_all =
+      moment(event?.event_date).format('LL') + ' ' + event?.start_time;
+    const event_end_time_all =
+      moment(event?.event_date).format('LL') + ' ' + event?.end_time;
+
+    const event_start_all = new Date(event_start_time_all).getTime();
+    const event_end_all = new Date(event_end_time_all).getTime();
+
     return (
       <>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={styles.Container}>
             {event?.banner == null && eventType == '' ? (
               <>
@@ -343,8 +409,8 @@ const ActivitiesCard = ({route}) => {
                         {bidEnd < current_date && result_date > current_date
                           ? 'Acquired Application'
                           : result_date < current_date
-                          ? 'Show Result'
-                          : ''}
+                            ? 'Show Result'
+                            : ''}
                       </Text>
                     </View>
                   </View>
@@ -399,14 +465,14 @@ const ActivitiesCard = ({route}) => {
                 <>
                   {/* <Text style={{color: 'white'}}>I am date Box</Text> */}
                   {EventDateWithEndTime.getTime() <
-                  CurrentDateWithTime.getTime() ? (
+                    CurrentDateWithTime.getTime() ? (
                     <>{/* completed  */}</>
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                      CurrentDateWithTime.getTime() ? (
+                        CurrentDateWithTime.getTime() ? (
                         <>
-                          <View style={styles.DateColor}>
+                          {/* <View style={styles.DateColor}>
                             <Text style={styles.textDay}>{days}</Text>
                             <Text style={styles.textSec}>DAYS</Text>
                           </View>
@@ -420,19 +486,26 @@ const ActivitiesCard = ({route}) => {
                             <Text style={styles.textDay}>{minutes}</Text>
                             <Text style={styles.textSec}>MIN</Text>
                           </View>
+                          <View style={styles.DateColor}>
+                            <Text style={styles.textDay}>{seconds}</Text>
+                            <Text style={styles.textSec}>SEC</Text>
+                          </View> */}
                         </>
                       ) : (
                         <>
                           {EventDateWithStartTime.getTime() <
                             CurrentDateWithTime.getTime() ||
-                          EventDateWithEndTime.getTime() >
+                            EventDateWithEndTime.getTime() >
                             CurrentDateWithTime.getTime() ? (
                             <>
                               {paymentStatus && (
                                 <TouchableOpacity onPress={handleJoinNow}>
-                                  <Text style={styles.JoinNowColor}>
-                                    Join Now
-                                  </Text>
+                                  {event?.meetup_type == 'Offline' &&
+                                    eventType === 'meetup' ? null : (
+                                    <Text style={styles.JoinNowColor}>
+                                      Join Now
+                                    </Text>
+                                  )}
                                 </TouchableOpacity>
                               )}
                             </>
@@ -442,6 +515,199 @@ const ActivitiesCard = ({route}) => {
                         </>
                       )}
                     </>
+                  )}
+
+                  {eventType === 'qna' && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        zIndex: 10,
+                        top: 0,
+                        backgroundColor: '#ffaa00',
+                        right: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderTopRightRadius: 14,
+                        borderBottomLeftRadius: 20,
+                      }}>
+                      {event_start < new Date().getTime() &&
+                        event_end > new Date().getTime() ? (
+                        <TouchableOpacity onPress={handleJoinNow}>
+                          <Text style={styles.JoinTextQNA}>Running </Text>
+                        </TouchableOpacity>
+                      ) : event_start >= new Date().getTime() ? (
+                        eventRegistration.publish_status ? (
+                          <TouchableOpacity
+                            onPress={() => {
+                              ToastAndroid.show(
+                                'Please wait for your session',
+                                ToastAndroid.SHORT,
+                              );
+                            }}>
+                            <Text style={styles.JoinTextQNA}>Waiting </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
+                            <Text style={styles.JoinTextQNA}>
+                              Payment Pending
+                            </Text>
+                          </TouchableOpacity>
+                        )
+                      ) : (
+                        <TouchableOpacity
+                          onPress={() => {
+                            ToastAndroid.show(
+                              'Your Session expired',
+                              ToastAndroid.SHORT,
+                            );
+                          }}>
+                          <Text style={styles.JoinTextQNA}>Expired </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+
+                  {eventType === 'livechat' && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        zIndex: 12,
+                        top: 0,
+                        backgroundColor: '#ffaa00',
+                        right: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderTopRightRadius: 14,
+                        borderBottomLeftRadius: 20,
+                      }}>
+                      {EventDateWithStartTime >= new Date().getTime() ? (
+                        !paymentStatus ? (
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                width: 'auto',
+                                padding: 15,
+                                color: 'black',
+                                textAlign: 'center',
+                                paddingVertical: 3,
+                                zIndex: 12,
+                              }}>
+                              Payment Pending{' '}
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity>
+                            <Text style={styles.JoinTextQNA}>Waiting </Text>
+                          </TouchableOpacity>
+                        )
+                      ) : EventDateWithStartTime < new Date().getTime() &&
+                        EventDateWithEndTime > new Date().getTime() ? (
+                        !paymentStatus ? (
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
+                            <Icon name="warning" size={20} color="red" />
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                width: 'auto',
+                                padding: 15,
+                                color: 'black',
+                                textAlign: 'center',
+                                paddingVertical: 3,
+                                zIndex: 12,
+                              }}>
+                              Payment Pending{' '}
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity onPress={handleJoinNow}>
+                            <Text style={styles.JoinTextQNA}>Running...</Text>
+                          </TouchableOpacity>
+                        )
+                      ) : (
+                        <TouchableOpacity>
+                          <Text style={styles.JoinTextQNA}>Expired</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+
+                  {eventType === 'meetup' && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        zIndex: 12,
+                        top: 0,
+                        backgroundColor: '#ffaa00',
+                        right: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderTopRightRadius: 14,
+                        borderBottomLeftRadius: 20,
+                      }}>
+                      {EventDateWithStartTime >= new Date().getTime() ? (
+                        !paymentStatus ? (
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                width: 'auto',
+                                padding: 15,
+                                color: 'black',
+                                textAlign: 'center',
+                                paddingVertical: 3,
+                                zIndex: 12,
+                              }}>
+                              Payment {paymentStatus} Pending
+                            </Text>
+                          </TouchableOpacity>
+                        ) : event?.meetup_type === 'Offline' ? (
+                          <TouchableOpacity onPress={downlodeTicket}>
+                            <Text style={styles.JoinTextQNA}>
+                              Download Ticket{' '}
+                            </Text>
+                          </TouchableOpacity>
+                        ) : null
+                      ) : EventDateWithStartTime < new Date().getTime() &&
+                        EventDateWithEndTime > new Date().getTime() ? (
+                        !paymentStatus ? (
+                          <TouchableOpacity
+                            onPress={() => setIsShowPaymentComp(true)}>
+                            <Icon name="warning" size={20} color="red" />
+                            <Text
+                              style={{
+                                fontWeight: 'bold',
+                                width: 'auto',
+                                padding: 15,
+                                color: 'black',
+                                textAlign: 'center',
+                                paddingVertical: 3,
+                                zIndex: 12,
+                              }}>
+                              Payment Pending{' '}
+                            </Text>
+                          </TouchableOpacity>
+                        ) : event?.meetup_type === 'Offline' ? (
+                          <TouchableOpacity onPress={downlodeTicket}>
+                            <Text style={styles.JoinTextQNA}>
+                              Download Ticket{' '}
+                            </Text>
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity onPress={handleJoinNow}>
+                            <Text style={styles.JoinTextQNA}>Running...</Text>
+                          </TouchableOpacity>
+                        )
+                      ) : (
+                        <TouchableOpacity>
+                          <Text style={styles.JoinTextQNA}>Expired</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
                   )}
 
                   {event?.assignment === 1 && event?.status === 5 ? (
@@ -474,10 +740,10 @@ const ActivitiesCard = ({route}) => {
                     <View style={styles.Join}>
                       {EventDateWithStartTime.getTime() <
                         CurrentDateWithTime.getTime() ||
-                      EventDateWithEndTime.getTime() >
+                        EventDateWithEndTime.getTime() >
                         CurrentDateWithTime.getTime() ? (
                         EventDateWithEndTime.getTime() <
-                        CurrentDateWithTime.getTime() ? (
+                          CurrentDateWithTime.getTime() ? (
                           <View style={styles.Join}>
                             <TouchableOpacity>
                               <Text style={styles.JoinText}>
@@ -488,7 +754,7 @@ const ActivitiesCard = ({route}) => {
                         ) : EventDateWithStartTime.getTime() <
                           CurrentDateWithTime.getTime() ? (
                           <View style={styles.Join}>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={handleJoinNow}>
                               <Text style={styles.JoinText}>Running...</Text>
                             </TouchableOpacity>
                           </View>
@@ -531,16 +797,16 @@ const ActivitiesCard = ({route}) => {
                   ) : (
                     <>
                       {EventDateWithStartTime.getTime() >
-                      CurrentDateWithTime.getTime() ? (
+                        CurrentDateWithTime.getTime() ? (
                         <View style={styles.Join}>
                           {childActivityEventType == 'meetup' &&
-                          event?.meetup_type == 'Offline' ? (
+                            event?.meetup_type == 'Offline' ? (
                             <>
                               {paymentStatus ? (
                                 <TouchableOpacity
                                   onPress={() => downlodeTicket()}>
                                   <Text style={styles.JoinText}>
-                                    Download Ticket
+                                    {/* Download Ticket */}
                                   </Text>
                                 </TouchableOpacity>
                               ) : (
@@ -642,7 +908,7 @@ const ActivitiesCard = ({route}) => {
 
   return (
     <>
-      <View style={{flex: 1, backgroundColor: '#000'}}>
+      <View style={{ flex: 1, backgroundColor: '#000' }}>
         <SafeAreaView>
           <HeaderComp backFunc={() => navigation.goBack()} />
 
@@ -656,7 +922,15 @@ const ActivitiesCard = ({route}) => {
           <FlatGrid
             itemDimension={150}
             data={childActivityEventList}
-            renderItem={renderEventItem}
+            renderItem={({ item }) => (
+              <ActivitiesCardBody
+                item={item}
+                childActivityEventType={childActivityEventType}
+                setIsShowPaymentComp={setIsShowPaymentComp}
+                isShowPaymentComp={isShowPaymentComp}
+                navigation={navigation}
+              />
+            )}
           />
         </SafeAreaView>
       </View>

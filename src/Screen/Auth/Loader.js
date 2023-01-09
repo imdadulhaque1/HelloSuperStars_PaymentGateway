@@ -1,6 +1,6 @@
 //import liraries
 import React from 'react';
-import {Dimensions, ImageBackground, StyleSheet, View} from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import imagePath from '../../Constants/imagePath';
 
@@ -20,7 +20,7 @@ const Loader = () => {
           // iterationCount="infinite"
 
           source={imagePath.logo}
-          style={{height: 200, width: 200}}
+          style={{ height: 200, width: 200 }}
         />
       </View>
 
@@ -48,7 +48,7 @@ const Loader = () => {
 };
 
 // define your styles
-const {height} = Dimensions.get('screen');
+const { height } = Dimensions.get('screen');
 const height_logo = height * 0.28;
 
 const styles = StyleSheet.create({

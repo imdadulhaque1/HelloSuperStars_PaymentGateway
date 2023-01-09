@@ -271,12 +271,12 @@ export default function MeetingViewer({ videoOn }) {
               />
               :
               <>
-              <HeaderMeetingViewer
-              type={type}
-                setCurrentTabModes={setCurrentTabModes}
-                animeVal={animeVal}
-                exitMeeting={exitMeeting}
-              />
+                <HeaderMeetingViewer
+                  type={type}
+                  setCurrentTabModes={setCurrentTabModes}
+                  animeVal={animeVal}
+                  exitMeeting={exitMeeting}
+                />
 
 
               </>
@@ -423,7 +423,7 @@ export default function MeetingViewer({ videoOn }) {
   ) : (
     <LoaderScreen
       color={Colors.WHITE}
-      message="Waiting to join..."
+      message="Waiting for admin approval..."
       messageStyle={{ color: Colors.WHITE }}
     />
   );

@@ -52,6 +52,7 @@ const Qna = ({ route, navigation }) => {
 
         {isShowRegComp ? (
           <RegistrationComp
+            takeTime={takeTime}
             post={data.qna}
             event_type="qna"
             fee={feeCount}

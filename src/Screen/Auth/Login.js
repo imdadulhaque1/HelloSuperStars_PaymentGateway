@@ -1,7 +1,7 @@
 //import liraries
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -28,13 +28,18 @@ import navigationStrings from '../../Constants/navigationStrings';
 const Login = () => {
   const navigation = useNavigation();
   const windowWidth = Dimensions.get('window').width;
-  const { authContext } = useContext(AuthContext);
+  const { authContext, getActivity } = useContext(AuthContext);
   const [email, setEmail] = useState(null);
   const [pass, setPass] = useState(null);
   const [buffer, setBuffer] = useState(false);
   const [error, setError] = useState(null);
   const [showPass, setShowPass] = useState(true);
-  const [customCheck,setCustomCheck]=useState(false)
+  const [customCheck, setCustomCheck] = useState(false)
+
+
+  useEffect(() => {
+    getActivity()
+  }, [])
 
   const HandelLogin = () => {
     setBuffer(true);
@@ -48,7 +53,7 @@ const Login = () => {
       axios
         .post(AppUrl.UserLogin, data)
         .then(res => {
-          //console.log(res.data)
+          ////console.log(res.data)
           if (res.data.status === 200) {
             if (res.data.user.status == 0) {
               setBuffer(false);
@@ -161,18 +166,18 @@ const Login = () => {
               </TouchableOpacity>
             </View>
 
-            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10,flexDirection:'row',justifyContent:'space-between' }}>
-              
-            <TouchableOpacity onPress={() => setCustomCheck(!customCheck)}>
-                <Text style={{ color: '#ddd', fontSize: 13,letterSpacing:1 }}>
-                
-                <Ionicons name={customCheck?'checkbox-outline':'checkbox'} color={'#ffaa00'} size={15} />
-                Remember me</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
+
+              <TouchableOpacity onPress={() => setCustomCheck(!customCheck)}>
+                <Text style={{ color: '#ddd', fontSize: 12, letterSpacing: 1 }}>
+
+                  <Ionicons name={customCheck ? 'checkbox-outline' : 'checkbox'} color={'#ffaa00'} size={15} />
+                  Remember me</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.FORGETPASSWORD)}>
-                <Text style={{ color: '#ddd', fontSize: 13,letterSpacing:1 }}>Forgot Password?</Text>
+                <Text style={{ color: '#ddd', fontSize: 12, letterSpacing: 1 }}>Forgot Password?</Text>
               </TouchableOpacity>
-           
+
 
             </View>
 
@@ -184,14 +189,27 @@ const Login = () => {
                 <Text style={styles.input_title}>SIGN UP</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={HandelLogin}>
+
+              <TouchableOpacity
+                style={{ flex: 1 }}
+                onPress={HandelLogin}
+
+              >
+                <LinearGradient
+                  style={styles.sign_btn}
+                  colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
+                  <Text style={{ color: 'black' }}>LOGIN</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+
+              {/* <TouchableOpacity  onPress={HandelLogin}>
                 <LinearGradient
                   style={styles.login_btn}
                   colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}>
                   <Text style={{ color: 'black' }}>LOGIN</Text>
                 </LinearGradient>
-                {/* <Text style={styles.input_title}>LOGIN</Text> */}
-              </TouchableOpacity>
+             
+              </TouchableOpacity> */}
             </View>
           </Animatable.View>
         </ImageBackground>
@@ -276,7 +294,8 @@ const styles = StyleSheet.create({
   btn_container: {
     flexDirection: 'row',
     marginTop: 3,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    // backgroundColor:'pink'
 
   },
 
@@ -285,24 +304,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // borderColor: '#D4AF37',
     borderRadius: 50,
-    paddingHorizontal: 40,
+    paddingHorizontal: 50,
     paddingVertical: 10,
     borderRadius: 50,
     alignItems: 'center',
     marginTop: 30,
     color: 'black',
+
+
   },
 
   sign_btn: {
     borderWidth: 1,
     borderColor: '#ffaa00',
     borderRadius: 50,
-    paddingHorizontal: 40,
-    paddingVertical: 10,
+
     borderRadius: 50,
     alignItems: 'center',
     marginTop: 30,
-
+    marginHorizontal: 5,
+    flex: 1,
+    paddingVertical: 10,
     color: 'black',
   },
 });

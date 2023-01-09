@@ -79,11 +79,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   row1: {
-   marginVertical:10,
+    marginVertical: 10,
     width: '100%',
   },
   rowX: {
-   marginVertical:10,
+    marginVertical: 10,
     width: '100%',
   },
   AuctionT: {
@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
     paddingVertical: 8,
   },
   LinerBGA: {
@@ -690,9 +690,9 @@ const styles = StyleSheet.create({
   },
 
   MaiNAS: {
-    marginHorizontal: 8,
-    paddingVertical: 8,
-    paddingLeft: 12,
+    marginHorizontal: 6,
+    paddingVertical: 6,
+    paddingLeft: 10,
     borderRightWidth: 1,
     borderTopEndRadius: 15,
     borderTopLeftRadius: 15,
@@ -717,7 +717,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
   },
 
   Under: {
@@ -732,7 +732,7 @@ const styles = StyleSheet.create({
   Bds: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
     marginTop: 15,
   },
 
@@ -748,10 +748,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#222222',
   },
 
+  InstructionPrice: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
   InstructionBT: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 18,
   },
 
   MaiNAppL: {
@@ -816,13 +821,13 @@ const styles = StyleSheet.create({
   },
 
   ApplyBg: {
-    marginHorizontal: '25%',
+    marginHorizontal: '32%',
   },
 
   LinerBGAl: {
     borderRadius: 50,
     marginHorizontal: 2,
-    height: 45,
+    height: 40,
     marginTop: 5,
     marginBottom: 10,
   },

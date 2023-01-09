@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, ScrollView } from 'react-native';
 import CheckSlot from '../../Components/GLOBAL/CheckSlot/CheckSlot';
 import InformationComp from '../../Components/GLOBAL/InformationComp/InformationComp';
 import HeaderComp from '../../Components/HeaderComp';
@@ -13,7 +13,7 @@ import AppUrl from '../../RestApi/AppUrl.js';
 import styles from '../MeetUp/Styles.js';
 import Video from '../../Components/VIDEO/Video';
 
-const Livechat = ({route, navigation}) => {
+const Livechat = ({ route, navigation }) => {
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [isShowRegComp, setIsShowRegComp] = useState(false);
   const [buffer, setBuffer] = useState(false);
@@ -22,12 +22,14 @@ const Livechat = ({route, navigation}) => {
   const [endTime, setEndTime] = useState();
   const [takeTime, setTakeTime] = useState('1');
   const [parentData, setParentData] = useState({});
-  const {data} = route.params;
-  useEffect(() => {}, [takeTime]);
+  const { data } = route.params;
+  useEffect(() => {
+    console.log('feeCount', feeCount);
+  }, [takeTime, feeCount]);
   return (
     <SafeAreaView style={styles.container}>
       {buffer ? <LoaderComp /> : <></>}
-      <HeaderComp backFunc={()=>navigation.goBack()} />
+      <HeaderComp backFunc={() => navigation.goBack()} />
       <ScrollView>
         <Video
           image={`${AppUrl.MediaBaseUrl + data.livechat.banner}`}
@@ -41,6 +43,7 @@ const Livechat = ({route, navigation}) => {
 
         {isShowRegComp ? (
           <RegistrationComp
+            takeTime={takeTime}
             post={data.livechat}
             event_type="livechat"
             fee={feeCount}

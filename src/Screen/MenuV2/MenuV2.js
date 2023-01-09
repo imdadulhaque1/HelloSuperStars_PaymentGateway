@@ -1,21 +1,29 @@
-import { Image, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
-import HeaderComp from '../../Components/HeaderComp'
-import { ScrollView } from 'react-native-gesture-handler'
-import styles from './Styles'
-import imagePath from '../../Constants/imagePath'
+import {
+  Image,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import HeaderComp from '../../Components/HeaderComp';
+import {ScrollView} from 'react-native-gesture-handler';
+import styles from './Styles';
+import imagePath from '../../Constants/imagePath';
 import noImage from '../../Assets/Images/defult_image_profile.png';
-import MenuCategorySkeleton from '../../Components/Skeleton/MenuCardSkeleton/MenuCategorySkeleton'
-import MenuCardSkeleton from '../../Components/Skeleton/MenuCardSkeleton/MenuCardSkeleton'
-import MenuFilter from '../Menu/Content/MenuFilter'
-import AppUrl from '../../RestApi/AppUrl'
-import { useNavigation } from '@react-navigation/native'
-import { AuthContext } from '../../Constants/context'
-import { useAxiosGet } from '../../CustomHooks/useAxiosGet'
-import axios from 'axios'
-import StarCarousel from '../Menu/Content/StarCarousel'
-import LinearGradient from 'react-native-linear-gradient'
-import navigationStrings from '../../Constants/navigationStrings'
+import MenuCategorySkeleton from '../../Components/Skeleton/MenuCardSkeleton/MenuCategorySkeleton';
+import MenuCardSkeleton from '../../Components/Skeleton/MenuCardSkeleton/MenuCardSkeleton';
+import MenuFilter from '../Menu/Content/MenuFilter';
+import AppUrl from '../../RestApi/AppUrl';
+import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../../Constants/context';
+import {useAxiosGet} from '../../CustomHooks/useAxiosGet';
+import axios from 'axios';
+import StarCarousel from '../Menu/Content/StarCarousel';
+import LinearGradient from 'react-native-linear-gradient';
+import navigationStrings from '../../Constants/navigationStrings';
 import DropDown from '../../Components/DropDown/DropDown';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -67,7 +75,7 @@ let menuData = [
     routeName: 'faq',
   },
 ];
-const MenuV2 = ({ navigation }) => {
+const MenuV2 = ({navigation}) => {
   const Navigation = useNavigation();
 
   const [menuChange, setMenuChange] = useState(0);
@@ -84,12 +92,12 @@ const MenuV2 = ({ navigation }) => {
     getActivity,
     updateNotification,
   } = useContext(AuthContext);
-  const { axiosConfig, posts, setPosts } = useContext(AuthContext);
+  const {axiosConfig, posts, setPosts} = useContext(AuthContext);
   const [loder, setLoder] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [allCategoty, setAllCategory] = useState(null);
   const [childActivityEventList, setChildActivityEventList] = useState({});
-  const { resData, buffer, HandelGetData } = useAxiosGet(AppUrl.allStarList);
+  const {resData, buffer, HandelGetData} = useAxiosGet(AppUrl.allStarList);
 
   const [followerArrayId, setFollowerArrayId] = useState([]);
   const [childActivityEventType, setChildActivityEventType] = useState('');
@@ -101,11 +109,6 @@ const MenuV2 = ({ navigation }) => {
     qna: '',
   });
 
-
-
-
-
-  ;
   const onRefresh = () => {
     setLoder(true);
     setRefreshing(true);
@@ -125,13 +128,11 @@ const MenuV2 = ({ navigation }) => {
     getAllUpCommingEvents();
   }, []);
 
-
   useEffect(() => {
     setLoder(false);
     setActivityLength(activities.activity_length);
     setMenuActivitList(activities);
   }, [activities]);
-
 
   const getAllUpCommingEvents = () => {
     setLoder(true);
@@ -166,7 +167,7 @@ const MenuV2 = ({ navigation }) => {
           } else {
             item.isSelected = false;
           }
-          return { ...item };
+          return {...item};
         });
 
         setAllCategory(categoryArry);
@@ -179,12 +180,11 @@ const MenuV2 = ({ navigation }) => {
   const makeCatrgoryArry = data => {
     let categoryArry = data.map((item, index) => {
       item.isSelected = false;
-      return { ...item };
+      return {...item};
     });
 
     setAllCategory(categoryArry);
   };
-
 
   const selectHandaler = valu => {
     setSelectCatBuffer(true);
@@ -193,7 +193,7 @@ const MenuV2 = ({ navigation }) => {
       if (valu == index) {
         item.isSelected = !item.isSelected;
       }
-      return { ...item };
+      return {...item};
     });
 
     setAllCategory(categoryArry);
@@ -204,7 +204,6 @@ const MenuV2 = ({ navigation }) => {
         selectedCategory.push(valu.id);
       }
     });
-
 
     let formData = {
       category: JSON.stringify(selectedCategory),
@@ -230,27 +229,11 @@ const MenuV2 = ({ navigation }) => {
         console.log(err);
         Toast.show('problem', Toast.durations.SHORT);
       });
-
   };
-
 
   useEffect(() => {
     setFollowerArrayId(resData.followingStarCategory?.split(','));
   }, [resData]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //terms and condition function
   const onSelect = item => {
@@ -281,106 +264,84 @@ const MenuV2 = ({ navigation }) => {
     }
   };
 
-
-
-
-
   return (
     <View style={styles.container}>
       <SafeAreaView>
         <HeaderComp backFunc={() => navigation.goBack()} />
         <ScrollView>
           {/*=========== user profile section===========  */}
-          <View
-            style={styles.profileView}>
-            <View
-              style={styles.subProfileView}>
+          <View style={styles.profileView}>
+            <View style={styles.subProfileView}>
               <Image
                 source={
                   useInfo?.image !== null
                     ? {
-                      uri: `${AppUrl.MediaBaseUrl + useInfo?.image}`,
-                    }
+                        uri: `${AppUrl.MediaBaseUrl + useInfo?.image}`,
+                      }
                     : noImage
                 }
-
                 style={styles.profileImg}
               />
             </View>
             <TouchableOpacity
               onPress={() => Navigation.navigate(navigationStrings.USERPROFILE)}
               style={styles.profileName}>
-              <View style={{ marginLeft: 7 }}>
-                <Text style={{ color: 'white', fontSize: 15 }}>
-                  {useInfo?.first_name}
+              <View style={{marginLeft: 7}}>
+                <Text style={{color: 'white', fontSize: 15}}>
+                  {useInfo?.first_name}{' '}
+                  {useInfo?.last_name ? useInfo?.last_name : ''}
                 </Text>
-                <Text style={{ color: '#C8D3D8', fontSize: 12 }}>See your profile</Text>
+                <Text style={{color: '#C8D3D8', fontSize: 12}}>
+                  See your profile
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
 
-
-
           {/*=========== user profile section===========  */}
-
 
           {/*=========== banner Section start ========== */}
 
           <ImageBackground
-            imageStyle={{ borderRadius: 6 }}
+            imageStyle={{borderRadius: 6}}
             source={imagePath.MenuCover}
-            style={{ width: '100%', alignItems: 'center', paddingVertical: 20, marginBottom: 10, }}>
-            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              paddingVertical: 20,
+              marginBottom: 10,
+            }}>
+            <View style={{alignItems: 'center', flexDirection: 'row'}}>
               <TouchableOpacity
-                onPress={() => navigation.navigate(navigationStrings.MENUACTIVITES, {
-
-
-                  menuActivitList
-
-
-                })}
-                style={
-
-                  styles.mainRow
+                onPress={() =>
+                  navigation.navigate(navigationStrings.MENUACTIVITES, {
+                    menuActivitList,
+                  })
                 }
-              >
-                <View style={{ alignItems: 'center', marginTop: 5 }}>
+                style={styles.mainRow}>
+                <View style={{alignItems: 'center', marginTop: 5}}>
                   <Image source={imagePath.menuIconActivity} />
                 </View>
                 <View>
-                  <Text
-                    style={
-
-                      styles.fonts
-                    }>
-                    ACTIVITES
-                  </Text>
+                  <Text style={styles.fonts}>ACTIVITIES</Text>
                   <Text style={styles.fonts2}>{activityLength} activities</Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate(navigationStrings.MENUFOLLOWERS, {
-                  setFollowerArrayId,
-                  resData,
-                  buffer,
-
-                })}
-                style={
-                  styles.mainRow
+                onPress={() =>
+                  navigation.navigate(navigationStrings.MENUFOLLOWERS, {
+                    setFollowerArrayId,
+                    resData,
+                    buffer,
+                  })
                 }
-              >
-                <View style={{ alignItems: 'center', marginTop: 5 }}>
+                style={styles.mainRow}>
+                <View style={{alignItems: 'center', marginTop: 5}}>
                   <Image source={imagePath.menuIconStar} />
                 </View>
                 <View>
-                  <Text
-                    style={
-
-                      styles.fonts
-                    }>
-                    FOLLOWERS
-                  </Text>
+                  <Text style={styles.fonts}>FOLLOWERS</Text>
                   <Text style={styles.fonts2}>
                     {followerArrayId?.length} Following
                   </Text>
@@ -389,8 +350,7 @@ const MenuV2 = ({ navigation }) => {
 
               {/* <TouchableOpacity
                 style={styles.mainRow}
-                onPress={() => Navigation.navigate(navigationStrings.WALLET)}
-              >
+                onPress={() => Navigation.navigate(navigationStrings.WALLET)}>
                 <View style={{ alignItems: 'center', marginVertical: 3 }}>
                   <Image source={imagePath.Wallet1} />
                 </View>
@@ -406,19 +366,18 @@ const MenuV2 = ({ navigation }) => {
 
           {/*=========== banner Section start ========== */}
 
-
-
           {/*====== Skeleton start here============ */}
 
-          {loder ?
+          {loder ? (
             [0, 1, 2, 3].map(item => {
               if (item === 0) {
                 return <MenuCategorySkeleton key={item} />;
               } else {
                 return <MenuCardSkeleton key={item} />;
               }
-            }) : <>
-
+            })
+          ) : (
+            <>
               <View style={styles.menuCrosalItem}>
                 <MenuFilter
                   loader={selectCatBuffer}
@@ -427,34 +386,26 @@ const MenuV2 = ({ navigation }) => {
                 />
               </View>
 
-
-
-              <View style={{ paddingBottom: '15%' }}>
+              <View style={{paddingBottom: '15%'}}>
                 {/* Learning Seassion Carusel Iteam start */}
                 {upCommingEvents.learningSessions.length > 0 && (
                   <View style={styles.menuCrosalItem}>
                     <View>
-                      <Text style={styles.titelText}>
-                        Learning Seassion
-                      </Text>
+                      <Text style={styles.titelText}>Learning Session</Text>
                     </View>
                     <View style={styles.carouselContainer_gray}>
-                      <View style={{ width: '90%' }}>
+                      <View style={{width: '90%'}}>
                         <StarCarousel
                           eventData={upCommingEvents.learningSessions}
+                          eventType={'LearningSession'}
                         />
                       </View>
-                      <View style={{ width: '10%' }}>
+                      <View style={{width: '10%'}}>
                         <LinearGradient
-                          colors={[
-                            '#F1A817',
-                            '#F5E67D',
-                            '#FCB706',
-                            '#DFC65C',
-                          ]}
-                          start={{ x: 0, y: 1 }}
-                          end={{ x: 1, y: 0 }}
-                          style={{ borderRadius: 5 }}>
+                          colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          style={{borderRadius: 5}}>
                           <TouchableOpacity
                             style={{
                               justifyContent: 'center',
@@ -469,9 +420,11 @@ const MenuV2 = ({ navigation }) => {
                                 },
                               )
                             }>
-
-
-                            <MaterialIcons name='arrow-forward-ios' color={'black'} size={20} />
+                            <MaterialIcons
+                              name="arrow-forward-ios"
+                              color={'black'}
+                              size={20}
+                            />
                           </TouchableOpacity>
                         </LinearGradient>
                       </View>
@@ -488,22 +441,18 @@ const MenuV2 = ({ navigation }) => {
                       <Text style={styles.titelText}>Live Chat</Text>
                     </View>
                     <View style={styles.carouselContainer_gray}>
-                      <View style={{ width: '90%' }}>
+                      <View style={{width: '90%'}}>
                         <StarCarousel
                           eventData={upCommingEvents.liveChats}
+                          eventType={'livechat'}
                         />
                       </View>
-                      <View style={{ width: '10%' }}>
+                      <View style={{width: '10%'}}>
                         <LinearGradient
-                          colors={[
-                            '#F1A817',
-                            '#F5E67D',
-                            '#FCB706',
-                            '#DFC65C',
-                          ]}
-                          start={{ x: 0, y: 1 }}
-                          end={{ x: 1, y: 0 }}
-                          style={{ borderRadius: 5 }}>
+                          colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          style={{borderRadius: 5}}>
                           <TouchableOpacity
                             style={{
                               justifyContent: 'center',
@@ -518,8 +467,11 @@ const MenuV2 = ({ navigation }) => {
                                 },
                               )
                             }>
-
-                            <MaterialIcons name='arrow-forward-ios' color={'black'} size={20} />
+                            <MaterialIcons
+                              name="arrow-forward-ios"
+                              color={'black'}
+                              size={20}
+                            />
                           </TouchableOpacity>
                         </LinearGradient>
                       </View>
@@ -535,22 +487,18 @@ const MenuV2 = ({ navigation }) => {
                       <Text style={styles.titelText}>Auditions</Text>
                     </View>
                     <View style={styles.carouselContainer_gray}>
-                      <View style={{ width: '90%' }}>
+                      <View style={{width: '90%'}}>
                         <StarCarousel
                           eventData={upCommingEvents.auditions}
+                          eventType={'audition'}
                         />
                       </View>
-                      <View style={{ width: '10%' }}>
+                      <View style={{width: '10%'}}>
                         <LinearGradient
-                          colors={[
-                            '#F1A817',
-                            '#F5E67D',
-                            '#FCB706',
-                            '#DFC65C',
-                          ]}
-                          start={{ x: 0, y: 1 }}
-                          end={{ x: 1, y: 0 }}
-                          style={{ borderRadius: 5 }}>
+                          colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          style={{borderRadius: 5}}>
                           <TouchableOpacity
                             style={{
                               justifyContent: 'center',
@@ -565,8 +513,11 @@ const MenuV2 = ({ navigation }) => {
                                 },
                               )
                             }>
-
-                            <MaterialIcons name='arrow-forward-ios' color={'black'} size={20} />
+                            <MaterialIcons
+                              name="arrow-forward-ios"
+                              color={'black'}
+                              size={20}
+                            />
                           </TouchableOpacity>
                         </LinearGradient>
                       </View>
@@ -583,20 +534,18 @@ const MenuV2 = ({ navigation }) => {
                       <Text style={styles.titelText}>Meet up Events</Text>
                     </View>
                     <View style={styles.carouselContainer_gray}>
-                      <View style={{ width: '90%' }}>
-                        <StarCarousel eventData={upCommingEvents.meetups} />
+                      <View style={{width: '90%'}}>
+                        <StarCarousel
+                          eventData={upCommingEvents.meetups}
+                          eventType={'meetup'}
+                        />
                       </View>
-                      <View style={{ width: '10%' }}>
+                      <View style={{width: '10%'}}>
                         <LinearGradient
-                          colors={[
-                            '#F1A817',
-                            '#F5E67D',
-                            '#FCB706',
-                            '#DFC65C',
-                          ]}
-                          start={{ x: 0, y: 1 }}
-                          end={{ x: 1, y: 0 }}
-                          style={{ borderRadius: 5, }}>
+                          colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          style={{borderRadius: 5}}>
                           <TouchableOpacity
                             style={{
                               justifyContent: 'center',
@@ -611,8 +560,11 @@ const MenuV2 = ({ navigation }) => {
                                 },
                               )
                             }>
-
-                            <MaterialIcons name='arrow-forward-ios' color={'black'} size={20} />
+                            <MaterialIcons
+                              name="arrow-forward-ios"
+                              color={'black'}
+                              size={20}
+                            />
                           </TouchableOpacity>
                         </LinearGradient>
                       </View>
@@ -625,25 +577,21 @@ const MenuV2 = ({ navigation }) => {
                 {upCommingEvents.qna.length > 0 && (
                   <View style={styles.menuCrosalItem}>
                     <View>
-                      <Text style={styles.titelText}>
-                        Question & Answer
-                      </Text>
+                      <Text style={styles.titelText}>Question & Answer</Text>
                     </View>
                     <View style={styles.carouselContainer_gray}>
-                      <View style={{ width: '90%' }}>
-                        <StarCarousel eventData={upCommingEvents.qna} />
+                      <View style={{width: '90%'}}>
+                        <StarCarousel
+                          eventData={upCommingEvents.qna}
+                          eventType={'qna'}
+                        />
                       </View>
-                      <View style={{ width: '10%' }}>
+                      <View style={{width: '10%'}}>
                         <LinearGradient
-                          colors={[
-                            '#F1A817',
-                            '#F5E67D',
-                            '#FCB706',
-                            '#DFC65C',
-                          ]}
-                          start={{ x: 0, y: 1 }}
-                          end={{ x: 1, y: 0 }}
-                          style={{ borderRadius: 5 }}>
+                          colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
+                          start={{x: 0, y: 1}}
+                          end={{x: 1, y: 0}}
+                          style={{borderRadius: 5}}>
                           <TouchableOpacity
                             style={{
                               justifyContent: 'center',
@@ -658,16 +606,17 @@ const MenuV2 = ({ navigation }) => {
                                 },
                               )
                             }>
-
-                            <MaterialIcons name='arrow-forward-ios' color={'black'} size={20} />
+                            <MaterialIcons
+                              name="arrow-forward-ios"
+                              color={'black'}
+                              size={20}
+                            />
                           </TouchableOpacity>
                         </LinearGradient>
                       </View>
                     </View>
                   </View>
                 )}
-
-
 
                 <View>
                   <DropDown
@@ -680,7 +629,9 @@ const MenuV2 = ({ navigation }) => {
 
                 <TouchableOpacity
                   style={styles.menuTab}
-                  onPress={() => Navigation.navigate(navigationStrings.SETTINGS)}>
+                  onPress={() =>
+                    Navigation.navigate(navigationStrings.SETTINGS)
+                  }>
                   <View style={styles.menuSubTab}>
                     <Text style>
                       <MaterialIcons
@@ -692,16 +643,17 @@ const MenuV2 = ({ navigation }) => {
                   </View>
 
                   <View style={styles.menuSubTab}>
-                    <Text style={{ fontSize: 15, color: '#ffaa00' }}>SETTINGS</Text>
+                    <Text style={{fontSize: 15, color: '#ffaa00'}}>
+                      SETTINGS
+                    </Text>
                   </View>
                 </TouchableOpacity>
 
-
                 <LinearGradient
                   colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
-                  start={{ x: 1, y: 0 }}
-                  end={{ x: 0, y: 0 }}
-                  style={{ marginVertical: 8, borderRadius: 10 }}>
+                  start={{x: 1, y: 0}}
+                  end={{x: 0, y: 0}}
+                  style={{marginVertical: 8, borderRadius: 10}}>
                   <TouchableOpacity
                     style={{
                       flexDirection: 'row',
@@ -715,31 +667,16 @@ const MenuV2 = ({ navigation }) => {
                       color={'black'}
                       size={20}
                     />
-                    <Text style={{ color: 'black' }}>LOGOUT</Text>
+                    <Text style={{color: 'black'}}>LOGOUT</Text>
                   </TouchableOpacity>
                 </LinearGradient>
-
-
               </View>
-
-
-
-
-
-
             </>
-          }
-
-
-
-
+          )}
         </ScrollView>
-
       </SafeAreaView>
     </View>
+  );
+};
 
-  )
-}
-
-export default MenuV2
-
+export default MenuV2;

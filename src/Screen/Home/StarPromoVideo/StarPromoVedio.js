@@ -6,16 +6,21 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import VideoPlayer from 'react-native-video-player';
 import { AuthContext } from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
+import { videoData } from './dummyVideoData';
+import VisibilitySensor from '@svanboxel/visibility-sensor-react-native'
 import styles from './Styles';
+import Video from 'react-native-video';
 
 const ENTRIES1 = [
   {
@@ -75,23 +80,30 @@ const StarPromoVedio = props => {
   const windowWidth = Dimensions.get('window').width;
   const { width: screenWidth } = Dimensions.get('window');
   const [promoVideos, setPromoVideos] = useState([]);
-  const goForward = () => {
-    carouselRef.current.snapToNext();
-  };
-
-  const Navigation = useNavigation();
+  const [currIndex, setCurrIndex] = useState(0);
+  const [visibleView,setVisibleView]=useState()
+  const videoRef = useRef(null);
+  const onBuffer = (e) => {
+    console.log('buffering video promo', e);
+  }
+  const onError = (e) => {
+    console.log('error raisied', e)
+  }
+const Navigation = useNavigation();
 
   useEffect(() => {
     setEntries(ENTRIES1);
     getAllPost();
   }, []);
 
-  // get promo video
   const getAllPost = () => {
     axios
       .get(AppUrl.GetPromoVideos, axiosConfig)
       .then(res => {
         if (res.data.status === 200) {
+
+
+
           setPromoVideos(res.data.promoVideos);
         }
       })
@@ -101,67 +113,166 @@ const StarPromoVedio = props => {
       });
   };
 
-  const handelShowPromo = index => {
-    return Navigation.navigate(navigationStrings.PROMOSHOW, {
-      index: index,
-      data: promoVideos,
-    });
+  const handelShowPromo = (id,index) => {
+
+
+
+const filterVideo=promoVideos.filter((item,index)=>{
+  return item.id == id
+})
+
+
+
+    // return Navigation.navigate(navigationStrings.PROMOSHOW, {
+    //   index: index,
+
+    //   filterVideo,
+    //   data:promoVideos
+    // });
+
+return Navigation.navigate('StoryPromo',{
+  index,
+  filterVideo
+})
+
+
   };
 
+  const changeIndex = ({index}) => {
+    setCurrIndex(index)
+
+// if (index==0){
+//   setCurrIndex(0)
+// }
+// else if(index==1){
+//   setCurrIndex(1)
+// }
+
+// else{
+//   setCurrIndex(index-1)
+// }
+
+  }
+
+ function onViewableItemsChanged ({ viewableItems, changed }) {
+    // setViewable(viewableItems);
+ 
+  }
+  function handleImageVisibility(visible){
+setVisibleView(visible)
+  }
+  //   return (
+  //     <TouchableOpacity
+  //       onPress={() => handelShowPromo(index)}
+  //       style={{ paddingHorizontal: 5 }}>
+  //       <LinearGradient
+  //         colors={['#FFAD00', '#000000']}
+  //         start={{ x: 0, y: 1 }}
+  //         end={{ x: 1, y: 0 }}
+  //         style={styles.item}>
+  //         <Image
+  //           source={{ uri: `${AppUrl.MediaBaseUrl + item.thumbnail}` }}
+  //           // source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvqQp7Mnj-5Sl3GujKwmjwK6iMzZTjqnP1CA&usqp=CAU'}}
+  //           containerStyle={styles.imageContainer}
+  //           style={styles.image}
+  //         />
+  //         <ImageBackground
+  //           source={imagePath.ProImageBackground}
+  //           style={styles.profileImage}>
+  //           <Image
+  //             source={{ uri: `${AppUrl.MediaBaseUrl + item.star?.image}` }}
+  //             // source={{uri: `https://dailyeventnews.com/wp-content/uploads/2020/10/Screenshot_1.png`}}
+  //             style={{ height: 35, width: 35, borderRadius: 50 }}
+  //           />
+  //         </ImageBackground>
+  //       </LinearGradient>
+  //     </TouchableOpacity>
+  //   );
+  // };
+
+
+  //==============>> testing<<<<======== 
   const renderItem = ({ item, index }, parallaxProps) => {
+
     return (
+      <VisibilitySensor onChange={handleImageVisibility}>
       <TouchableOpacity
-        onPress={() => handelShowPromo(index)}
+        onPress={() => {
+          handelShowPromo(item.id,index)
+       
+          // alert(index)
+        }}
         style={{ paddingHorizontal: 5 }}>
-        <LinearGradient
-          colors={['#FFAD00', '#000000']}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 1, y: 0 }}
+
+
+        <ImageBackground
+         source={{ uri:`${AppUrl.MediaBaseUrl + item.thumbnail}` }}
           style={styles.item}>
-          <Image
-            source={{ uri: `${AppUrl.MediaBaseUrl + item.thumbnail}` }}
-            // source={{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvqQp7Mnj-5Sl3GujKwmjwK6iMzZTjqnP1CA&usqp=CAU'}}
-            containerStyle={styles.imageContainer}
-            style={styles.image}
+
+          <Video
+            source={{ uri: `${AppUrl.MediaBaseUrl + item.video_url}`}}
+            poster={`${AppUrl.MediaBaseUrl + item.thumbnail}`}
+            posterResizeMode='cover'
+            onBuffer={onBuffer}
+            onError={onError}
+            ref={videoRef}
+            resizeMode='stretch'
+            repeat
+            paused={currIndex !== index || !visibleView}
+            // paused={false}
+            onChangeIndex={changeIndex}
+            // style={styles.backgroundColor}
+            muted={false}
+            style={{ height: '100%' }}
+        
           />
+
+
+
           <ImageBackground
             source={imagePath.ProImageBackground}
             style={styles.profileImage}>
             <Image
-              source={{ uri: `${AppUrl.MediaBaseUrl + item.star?.image}` }}
-              // source={{uri: `https://dailyeventnews.com/wp-content/uploads/2020/10/Screenshot_1.png`}}
+              source={{ uri:`${AppUrl.MediaBaseUrl + item.star?.image}` }}
               style={{ height: 35, width: 35, borderRadius: 50 }}
             />
           </ImageBackground>
-        </LinearGradient>
+
+
+        </ImageBackground>
+
       </TouchableOpacity>
+</VisibilitySensor>
     );
   };
 
   return (
     <View
       style={
-        windowWidth > 600 ? styles.containerWidthScreen : styles.container
+        {
+          width: '100%',
+          backgroundColor: '#343434',
+          paddingVertical: 10,
+          paddingHorizontal: 5,
+          borderRadius: 10,
+          marginHorizontal: 0,
+          marginBottom: 9,
+        }
       }>
-      {/* <Carousel
-                autoplay={true}
-                // loop={true}
-                ref={carouselRef}
-                sliderWidth={windowWidth > 600 ? screenWidth : screenWidth - 15}
-                sliderHeight={screenWidth}
-                itemWidth={125}
-                data={promoVideos}
-                renderItem={renderItem}
-                // hasParallaxImages={false}
-                // autoplayInterval={3000} 
-                lockScrollWhileSnapping
-            /> */}
       <SwiperFlatList
+      onViewableItemsChanged={onViewableItemsChanged }
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 50
+        }}
+        vertical={false}
         autoplay
-        autoplayDelay={5}
+        autoplayDelay={10}
         autoplayLoop
+        keyExtractor={(item, index) => index.toString()}
+        // data={promoVideos}
         data={promoVideos}
         renderItem={renderItem}
+        onChangeIndex={changeIndex}
       />
     </View>
   );

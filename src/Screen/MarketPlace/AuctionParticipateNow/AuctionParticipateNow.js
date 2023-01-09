@@ -1,8 +1,8 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import moment from 'moment';
-import React, { useContext, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React, {useContext, useEffect, useState} from 'react';
+import {Controller, useForm} from 'react-hook-form';
 import {
   Image,
   ImageBackground,
@@ -18,13 +18,13 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import CountDown from 'react-native-countdown-component';
 import RenderHtml from 'react-native-render-html';
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import noImage from '../../../Assets/Images/no-image.png';
 import HeaderComp from '../../../Components/HeaderComp';
 import AlertModal from '../../../Components/MODAL/AlertModal';
 import BidCongratulationModal from '../../../Components/MODAL/BidCongratulationModal';
 import ProductProcessModal from '../../../Components/MODAL/ProductProcessModal';
-import { AuthContext } from '../../../Constants/context';
+import {AuthContext} from '../../../Constants/context';
 import imagePath from '../../../Constants/imagePath';
 import AppUrl from '../../../RestApi/AppUrl';
 import LoaderComp from '../../LoaderComp/LoaderComp';
@@ -32,13 +32,15 @@ import styles from '../AuctionProductCard/AuctionProductCardStyle';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AuctionAcquireModel from '../../../Components/MODAL/AuctionAcquireModel';
 import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
+import AuctionAcquireMsgModal from './AuctionAcquireMsgModal';
 // import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 // import RegisPaymentModal from '../../../Components/MODAL/RegisPaymentModal';
 
-const AuctionParticipateNow = ({ route }) => {
+const AuctionParticipateNow = ({route}) => {
   const navigation = useNavigation();
-  const { socketData, axiosConfig } = useContext(AuthContext);
-  const { product } = route.params;
+  const {socketData, axiosConfig} = useContext(AuthContext);
+  const {product} = route.params;
+  console.log('The product is', product);
   const [isShowPaymentComp, setIsShowPaymentComp] = useState(false);
   const [resultTime, setResultTime] = useState(false);
   const [isShowResult, setIsShowResult] = useState(false);
@@ -48,13 +50,13 @@ const AuctionParticipateNow = ({ route }) => {
   const [instruction, setInstruction] = useState([]);
   const [auctionApply, setAuctionApply] = useState();
   const [showPass, setShowPass] = useState(true);
-  const { width } = useWindowDimensions();
-  const { currencyMulti, currencyCount, currency } = useContext(AuthContext);
+  const {width} = useWindowDimensions();
+  const {currencyMulti, currencyCount, currency} = useContext(AuthContext);
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
   const source = {
     html: `<div style='color:#e6e6e6'>${product ? product?.details : ''}</div>`,
@@ -91,6 +93,7 @@ const AuctionParticipateNow = ({ route }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [processModal, setProcessModal] = useState(false);
+  const [showAcquire, setShowAcquire] = useState(false);
 
   const [day, setDay] = useState('');
   const [hour, setHour] = useState('');
@@ -98,36 +101,15 @@ const AuctionParticipateNow = ({ route }) => {
   const [second, setSecond] = useState('');
   const [nowDate, setNowDate] = useState(new Date().getTime());
   const [isEnded, setIsEnded] = useState(null);
+  const [isStarted, setIsStarted] = useState(null);
   const countDownDate = new Date(product?.bid_to).getTime();
   const resultPublishDate = new Date(product?.result_date).getTime();
 
-  // setInterval(() => {
-  //   const now = new Date().getTime();
-  //   const distance = countDownDate - now;
-  //   const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  //   setDay(days);
-  //   var hours = Math.floor(
-  //     (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  //   );
-  //   setHour(hours);
-  //   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  //   setMinute(minutes);
-  //   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-  //   setSecond(seconds);
-  // }, 1000);
-
   const remainingTime = async time => {
-    // console.log('time', time);
     const startTime = await new Date(time).getTime();
 
     const currentTime = await new Date().getTime();
-    // console.log('startTime', startTime);
-    // console.log('currentTime', currentTime);
     if (startTime >= currentTime) {
-      // console.log(
-      //   '-------------------------------remaining Time----------------------------------',
-      //   (startTime - currentTime) / 1000,
-      // );
       return (startTime - currentTime) / 1000;
     }
     return 0;
@@ -136,19 +118,15 @@ const AuctionParticipateNow = ({ route }) => {
   const [countDownTime, setCountDownTime] = useState(null);
   const calculateRemainingTime = async time => {
     const now = await moment.utc();
-    console.log(time);
     var end = await moment(time);
     var hours = end.diff(now, 'seconds');
-    console.log('calculateRemainingTime for count', hours);
     setCountDownTime(hours);
   };
 
   const isComplete = async time => {
     const now = await moment.utc();
-    console.log(time);
     var end = await moment(time);
     var hours = now.diff(end, 'seconds');
-    console.log('time diff', hours);
     if (hours < 0) {
       setIsEnded(false);
       return false;
@@ -158,13 +136,23 @@ const AuctionParticipateNow = ({ route }) => {
     }
   };
 
+  const checkStarted = async time => {
+    const now = await moment.utc();
+    var end = await moment(time);
+    var hours = now.diff(end, 'seconds');
+    if (hours < 0) {
+      setIsStarted(false);
+    } else {
+      setIsStarted(true);
+    }
+  };
+
   const [maxBid, setMaxBid] = useState([]);
   const getMaxBid = () => {
     axios
       .get(AppUrl.userMaxBid + product.id, axiosConfig)
       .then(res => {
         if (res.data.status === 200) {
-          console.log('max bit', res.data);
           setMaxBid(res.data.maxBid);
         }
       })
@@ -179,43 +167,60 @@ const AuctionParticipateNow = ({ route }) => {
     const now = await moment.utc();
 
     var end = await moment(time);
-    console.log('current time', now);
-    console.log('result time', end);
     var dif = now.diff(end, 'seconds');
-    console.log(' diff result', dif);
     if (dif < 0) {
-      console.log('result dekhabe na false showResult', dif);
+      console.log('result dekhabe na');
       setShowResult(false);
     } else {
-      console.log('result dekhabe true showResult', dif);
+      console.log('result dekhabe ');
       setShowResult(true);
     }
   };
+  const [showAcquireBtn, setShowAcquireBtn] = useState(null);
+  const checkTiming = async (time, to) => {
+    const now = await moment.utc();
+    var end = await moment(time);
+    var endTo = await moment(time);
+    var dif = now.diff(end, 'seconds');
+    var dif2 = now.diff(endTo, 'seconds');
+    if (dif > 0) {
+      if (dif2 < 0) {
+        setShowAcquireBtn(false);
+      }
+    } else {
+      setShowAcquireBtn(true);
+    }
+    // nowDate < resultPublishDate
+  };
   useEffect(() => {
-    isComplete(product.bid_to);
-    calculateRemainingTime(product.bid_to);
+    checkStarted(product?.bid_from);
+    isComplete(product?.bid_to);
+    calculateRemainingTime(product?.bid_to);
     getMaxBid();
     resultView(product?.result_date);
+    checkApplied();
+    checkTiming(product?.result_date, product?.bid_to);
   }, []);
+  const checkApplied = () => {};
 
-  const randerProductImageFlatListItem = ({ index }) => {
+  const randerProductImageFlatListItem = ({index}) => {
     return (
       <Image
-        style={{ height: 200, width: width - 20 }}
+        style={{height: 200, width: width - 20}}
         source={
           product?.product_image == null
             ? imagePath.Foot
             : {
-              uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
-            }
+                uri: `${AppUrl.MediaBaseUrl + product?.product_image}`,
+              }
         }
         key={index}
       />
     );
   };
-  const randerLiveBidFlatListItem = ({ item, index }) => {
+  const randerLiveBidFlatListItem = ({item, index}) => {
     return (
-      <View style={{ marginRight: 8 }}>
+      <View style={{marginRight: 8}}>
         <View style={styles.LiveBCarB}>
           <View style={styles.PriceLive}>
             <Image
@@ -223,14 +228,16 @@ const AuctionParticipateNow = ({ route }) => {
                 item?.user?.image == null
                   ? noImage
                   : {
-                    uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
-                  }
+                      uri: `${AppUrl.MediaBaseUrl + item?.user?.image}`,
+                    }
               }
               style={styles.BidUser}
             />
           </View>
           <View style={styles.PriceLiveDate}>
-            <Text style={styles.PriceBD}>{currencyCount(item?.amount) + " " + currency.symbol}</Text>
+            <Text style={styles.PriceBD}>
+              {currencyCount(item?.amount) + ' ' + currency.symbol}
+            </Text>
             <Text style={styles.BDname}>
               {item?.user?.first_name + ' ' + item?.user?.last_name}
             </Text>
@@ -296,6 +303,7 @@ const AuctionParticipateNow = ({ route }) => {
       .get(AppUrl.AuctionMyApply + `${product?.id}`, axiosConfig)
       .then(res => {
         if (res.data.status === 200) {
+          console.log('setAuctionApply', res.data);
           setAuctionApply(res.data.auctionApply);
           setWinner(res.data.winner);
         }
@@ -323,22 +331,20 @@ const AuctionParticipateNow = ({ route }) => {
   };
 
   const onSubmit = data => {
-    if (data.amount < currencyCount(product?.base_price)) {
+    if (Number(data.amount) < Number(currencyCount(product?.base_price))) {
       setModalObj({
         modalType: 'warning',
         buttonTitle: 'Ok',
         message:
-          'Opps...  price should more then ' + currencyCount(product?.base_price) + ' !',
+          'Opps...  price should more then ' +
+          currencyCount(product?.base_price) +
+          ' !',
       });
       setModal(true);
     } else {
-      // setData('Applybid');
-
-
-
       setBuffer(true);
       let aditionalData = {
-        amount: Number(data.amount / currency.currency_value).toFixed(0),
+        amount: Number(data?.amount) / Number(currency.currency_value),
         password: data.password,
         auction_id: product?.id,
       };
@@ -348,11 +354,9 @@ const AuctionParticipateNow = ({ route }) => {
         .then(res => {
           if (res.data.status === 200) {
             reset(data);
-            socketData.emit('joinBiddingRoom', { room: product?.id });
+            socketData.emit('joinBiddingRoom', {room: product?.id});
             socketData.emit('sendLiveBidding', product?.id);
-            socketData.on('getLiveBidding', sdata => {
-              // console.log("data from socket", sdata);
-            });
+            socketData.on('getLiveBidding', sdata => {});
             bidingHistory();
             getLiveBidding();
             ToastAndroid.show('Bidding Success!!!', ToastAndroid.SHORT);
@@ -386,10 +390,9 @@ const AuctionParticipateNow = ({ route }) => {
   };
 
   useEffect(() => {
-    socketData.emit('joinBiddingRoom', { room: product?.id });
+    socketData.emit('joinBiddingRoom', {room: product?.id});
     socketData.emit('sendLiveBidding', product?.id);
-    socketData.on('getLiveBidding', sdata => {
-      // console.log("data from socket", sdata);
+    socketData.on('getLiveBidding', () => {
       getLiveBidding();
     });
     bidingHistory();
@@ -399,7 +402,7 @@ const AuctionParticipateNow = ({ route }) => {
   }, [product?.id]);
 
   return (
-    <SafeAreaView horizontal style={{ backgroundColor: 'blue' }}>
+    <SafeAreaView horizontal style={{backgroundColor: 'blue'}}>
       <AlertModal
         modalObj={modalObj}
         modal={modal}
@@ -407,18 +410,18 @@ const AuctionParticipateNow = ({ route }) => {
         buttoPress={modalOkBtn}
       />
       <HeaderComp backFunc={() => navigation.goBack()} />
-      <View style={{ height: '100%' }}>
+      <View style={{height: '100%'}}>
         <ScrollView style={styles.container}>
           <SafeAreaView>
             {buffer ? (
               <LoaderComp />
             ) : (
               <>
-                <View style={{ marginHorizontal: 8 }}>
+                <View style={{marginHorizontal: 8}}>
                   <View style={styles.rowX}>
                     <LinearGradient
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
                       colors={[
                         '#FFAD00',
                         '#FFD273',
@@ -427,7 +430,7 @@ const AuctionParticipateNow = ({ route }) => {
                         '#E7A725',
                         '#FFAD00',
                       ]}
-                      style={{ borderRadius: 50 }}>
+                      style={{borderRadius: 50}}>
                       <Text style={styles.AuctionT}>Auction</Text>
                     </LinearGradient>
                   </View>
@@ -436,14 +439,13 @@ const AuctionParticipateNow = ({ route }) => {
                     <Text
                       style={styles.PText}
                       onPress={() => {
-                        console.log('wait');
                         remainingTime(product?.bid_to);
                       }}>
                       Bidding End Time
                     </Text>
                     <LinearGradient
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
                       colors={[
                         '#FFAD00',
                         '#FFD273',
@@ -461,7 +463,7 @@ const AuctionParticipateNow = ({ route }) => {
                       <CountDown
                         // until={totalSecond}
                         until={countDownTime}
-                        onFinish={() => { }}
+                        onFinish={() => {}}
                         // onPress={() => alert('hello')}
                         digitStyle={{
                           backgroundColor: 'black',
@@ -469,7 +471,7 @@ const AuctionParticipateNow = ({ route }) => {
                           borderColor: '#FFAD00',
                           borderRadius: 20,
                         }}
-                        digitTxtStyle={{ color: '#FFAD00' }}
+                        digitTxtStyle={{color: '#FFAD00'}}
                         timeLabelStyle={{
                           color: 'black',
                           fontWeight: 'bold',
@@ -488,20 +490,11 @@ const AuctionParticipateNow = ({ route }) => {
                       renderItem={randerProductImageFlatListItem}
                     />
                     <Text style={styles.FootH}>{product?.title}</Text>
-                    <Text style={styles.FootSt}>
-                      Super Star {product?.star?.first_name}{' '}
-                      {product?.star?.last_name} {','}{' '}
-                      {product?.star?.category?.name}
-                    </Text>
-                    <Text style={styles.FootSt}>
-                      Auction timeline{' '}
-                      {moment(product?.created_at).format('DD MMMM')}
-                      {' to '}
-                      {moment(product?.bid_to).format('DD MMMM')}
-                    </Text>
-                    <View style={{ width: '100%' }}>
+
+                    <View style={{width: '100%'}}>
                       <RenderHtml contentWidth={width} source={source} />
                     </View>
+
                     <View style={styles.BtnBox}>
                       <View style={styles.BtnBoxA}>
                         <View style={styles.PriceTag}>
@@ -513,10 +506,12 @@ const AuctionParticipateNow = ({ route }) => {
                         <View style={styles.PriceDollar}>
                           <Text style={styles.PriceDollarText}>
                             {' '}
-                            Minimum Bid Price
+                            Base Price
                           </Text>
                           <Text style={styles.PriceDollarTextB}>
-                            {currencyCount(product.base_price) + " " + currency.symbol}
+                            {currencyCount(product?.base_price) +
+                              ' ' +
+                              currency.symbol}
                           </Text>
                         </View>
                       </View>
@@ -536,9 +531,89 @@ const AuctionParticipateNow = ({ route }) => {
                         </View>
                       </View>
                     </View>
+
+                    {/* <View style={styles.BtnBox}>
+                      <View style={styles.BtnBoxA}>
+                        <View style={styles.PriceTag}>
+                          <Image
+                            source={imagePath.ImgTimeC}
+                            style={styles.PriceTagImg}
+                          />
+                        </View>
+                        <View style={styles.PriceDollar}>
+                          <Text style={styles.PriceDollarText}>
+                            {' '}
+                            Bidding Deadline
+                          </Text>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontSize: 14,
+                              fontWeight: 'bold',
+                            }}>
+                            {moment(product?.created_at).format('DD MMMM YYYY')}
+                            {' - '}
+                            {moment(product?.bid_to).format('DD MMMM YYYY')}
+                          </Text>
+                        </View>
+                      </View>
+                    </View> */}
                   </View>
 
                   <View style={styles.MaiN}>
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      Superstar
+                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginVertical: 10,
+                      }}>
+                      <View style={{}}>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          Name:
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          Category:
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          Start Date:
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          End Date:
+                        </Text>
+                      </View>
+                      <View>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          {product?.star?.first_name}
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          {product?.star?.category?.name}
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          {moment(product?.bid_from).format('DD MMMM YYYY')}
+                        </Text>
+                        <Text style={{color: '#e6e6e6', fontSize: 15}}>
+                          {moment(product?.bid_to).format('DD MMMM YYYY')}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  <View
+                    style={{
+                      marginBottom: 40,
+                      padding: 12,
+                      borderRadius: 10,
+                      backgroundColor: '#222222',
+                    }}>
                     <Text style={styles.LiveBidding}>Live Bidding</Text>
                     <View style={styles.LiveBCar}>
                       <SwiperFlatList
@@ -550,12 +625,75 @@ const AuctionParticipateNow = ({ route }) => {
                       />
                     </View>
                   </View>
+                  {isEnded && (
+                    <View>
+                      {/* Page 82| Start */}
+                      {/* <View style={styles.MaiNApp}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            paddingVertical: 25,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Text style={styles.BDname}>
+                            Result publishing on{' '}
+                            {moment(product?.result_date).format('LL')}
+                          </Text>
+                        </View>
+                      </View> */}
+                      {isEnded && !showResult && (
+                        <View style={{paddingBottom: 110}}>
+                          {/* Page 82| Start */}
+                          <View style={styles.MaiNApp}>
+                            <View style={styles.Applied}>
+                              <TouchableOpacity
+                                disabled={auctionApply ? false : true}
+                                onPress={() => {
+                                  if (!showResult) {
+                                    return;
+                                  } else if (auctionApply) {
+                                    setShowAcquire(true);
+                                  }
+                                }}>
+                                <LinearGradient
+                                  start={{x: 0, y: 0}}
+                                  end={{x: 1, y: 0}}
+                                  colors={
+                                    auctionApply
+                                      ? [
+                                          '#FFAD00',
+                                          '#FFD273',
+                                          '#E19A04',
+                                          '#FACF75',
+                                          '#E7A725',
+                                          '#FFAD00',
+                                        ]
+                                      : ['#AD850C', '#AD850C']
+                                  }
+                                  style={styles.LinerBGA}>
+                                  <Text
+                                    style={
+                                      showAcquireBtn
+                                        ? styles.ApplyTextReWhite
+                                        : styles.ApplyTextRe
+                                    }>
+                                    Acquire Application
+                                  </Text>
+                                </LinearGradient>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  )}
 
                   {!isEnded ? (
-                    <View style={{ paddingBottom: 110 }}>
+                    <View style={{paddingBottom: 110}}>
                       <View style={styles.MaiN}>
                         <Text style={styles.LiveBidding}>Bid Now</Text>
-                        <View style={{ marginHorizontal: 12, marginTop: 8 }}>
+                        <View style={{marginHorizontal: 12, marginTop: 8}}>
                           <Text style={styles.LiveBiddingP}>
                             Price Your Bid
                           </Text>
@@ -564,7 +702,7 @@ const AuctionParticipateNow = ({ route }) => {
                             rules={{
                               required: true,
                             }}
-                            render={({ field: { onChange, onBlur, value } }) => (
+                            render={({field: {onChange, onBlur, value}}) => (
                               <TextInput
                                 onBlur={onBlur}
                                 onChangeText={onChange}
@@ -593,7 +731,7 @@ const AuctionParticipateNow = ({ route }) => {
                             rules={{
                               required: true,
                             }}
-                            render={({ field: { onChange, onBlur, value } }) => (
+                            render={({field: {onChange, onBlur, value}}) => (
                               <>
                                 <TextInput
                                   onBlur={onBlur}
@@ -643,18 +781,27 @@ const AuctionParticipateNow = ({ route }) => {
                               This field is required !
                             </Text>
                           )}
-                          <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+
+                          <TouchableOpacity
+                            disable={isStarted ? false : true}
+                            onPress={
+                              isStarted ? handleSubmit(onSubmit) : () => {}
+                            }>
                             <LinearGradient
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 0 }}
-                              colors={[
-                                '#FFAD00',
-                                '#FFD273',
-                                '#E19A04',
-                                '#FACF75',
-                                '#E7A725',
-                                '#FFAD00',
-                              ]}
+                              start={{x: 0, y: 0}}
+                              end={{x: 1, y: 0}}
+                              colors={
+                                isStarted
+                                  ? [
+                                      '#FFAD00',
+                                      '#FFD273',
+                                      '#E19A04',
+                                      '#FACF75',
+                                      '#E7A725',
+                                      '#FFAD00',
+                                    ]
+                                  : ['#AD850C', '#AD850C']
+                              }
                               style={{
                                 borderRadius: 50,
                                 marginHorizontal: 10,
@@ -672,7 +819,22 @@ const AuctionParticipateNow = ({ route }) => {
                                   source={imagePath.BidNow}
                                   style={styles.BidBtn}
                                 />
-                                <Text style={styles.BidNow}>Bid Now</Text>
+                                <Text
+                                  style={
+                                    isStarted
+                                      ? styles.BidNow
+                                      : {
+                                          fontSize: 15,
+                                          color: 'black',
+                                          paddingTop: 0,
+                                          paddingBottom: 3,
+                                          textAlign: 'center',
+                                          fontWeight: 'bold',
+                                          marginLeft: 8,
+                                        }
+                                  }>
+                                  {isStarted ? 'Bid Now' : 'Starting Soon'}{' '}
+                                </Text>
                               </View>
                             </LinearGradient>
                           </TouchableOpacity>
@@ -715,7 +877,9 @@ const AuctionParticipateNow = ({ route }) => {
                               <View style={styles.BidHBgA}>
                                 <Text style={styles.BidTextHiss}>
                                   {/* {currencyCount(singleHistory?.amount + " " + currency.symbol)} */}
-                                  {currencyCount(singleHistory.amount) + " " + currency.symbol}
+                                  {currencyCount(singleHistory.amount) +
+                                    ' ' +
+                                    currency.symbol}
                                   {/* Tk {Number(singleHistory.amount)} */}
                                 </Text>
                               </View>
@@ -723,151 +887,136 @@ const AuctionParticipateNow = ({ route }) => {
                           ))}
                       </View>
                     </View>
-                  ) : auctionApply?.applied_status == 0 ? (
-                    <View style={{ paddingBottom: 110 }}>
-                      {/* Page 82| Start */}
-                      <View style={styles.MaiNApp}>
-                        <View style={styles.Applied}>
-                          <TouchableOpacity
-                            onPress={() => setIsShowPaymentComp(true)}>
-                            <LinearGradient
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 0 }}
-                              colors={[
-                                '#FFAD00',
-                                '#FFD273',
-                                '#E19A04',
-                                '#FACF75',
-                                '#E7A725',
-                                '#FFAD00',
-                              ]}
-                              style={styles.LinerBGA}>
-                              <Text
-                                style={
-                                  nowDate < resultPublishDate
-                                    ? styles.ApplyTextReWhite
-                                    : styles.ApplyTextRe
-                                }>
-                                Acquire Application
-                              </Text>
-                            </LinearGradient>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </View>
                   ) : (
                     <>
-                      {auctionApply?.auction?.id == product?.id ? (
-                        <>
-                          {isShowResult === true ? (
-                            <View style={{ paddingBottom: 110 }}>
-                              {/* Page 82| Start */}
-                              <View style={styles.MaiNApp}>
-                                <View style={styles.Applied}>
-                                  <Text style={styles.ApplyText}>Result</Text>
-                                </View>
-                                <View style={styles.WinnerE}>
-                                  {winner != null ? (
-                                    <>
-                                      <ImageBackground
-                                        source={imagePath.BidResult}
-                                        // resizeMode="cover"
-                                        style={
-                                          width > 500
-                                            ? styles.ReImgTab
-                                            : styles.ReImg
-                                        }>
-                                        <View>
-                                          <Image
-                                            // source={imagePath.UserWinner}
-                                            source={
-                                              winner?.user?.image !== null
-                                                ? {
-                                                  uri: `${AppUrl.MediaBaseUrl +
+                      <>
+                        {isShowResult === true ? (
+                          <View style={{paddingBottom: 120}}>
+                            {/* Page 82| Start */}
+                            <View style={styles.MaiNApp}>
+                              <View style={styles.Applied}>
+                                <Text style={styles.ApplyText}>
+                                  Result Information
+                                </Text>
+                              </View>
+                              <View style={styles.WinnerE}>
+                                {winner != null ? (
+                                  <>
+                                    <ImageBackground
+                                      source={imagePath.BidResult}
+                                      // resizeMode="cover"
+                                      style={
+                                        width > 500
+                                          ? styles.ReImgTab
+                                          : styles.ReImg
+                                      }>
+                                      <View>
+                                        <Image
+                                          // source={imagePath.UserWinner}
+                                          source={
+                                            winner?.user?.image !== null
+                                              ? {
+                                                  uri: `${
+                                                    AppUrl.MediaBaseUrl +
                                                     winner?.user?.image
-                                                    }`,
+                                                  }`,
                                                 }
-                                                : noImage
-                                            }
-                                            style={
-                                              width > 500
-                                                ? styles.UserImgsTab
-                                                : styles.UserImgs
-                                            }
-                                          />
-                                        </View>
-                                        <View
+                                              : noImage
+                                          }
                                           style={
                                             width > 500
-                                              ? styles.UserWinnerTab
-                                              : styles.UserWinner
-                                          }>
-                                          <Text style={styles.UserTse}>
-                                            {winner?.user?.first_name}{' '}
-                                            {winner?.user?.last_name}
-                                          </Text>
-                                          <Text style={styles.UserTse1}>
-                                            Maximum Bit Price TK{' '}
-                                            {Number(winner?.amount)}
-                                          </Text>
-                                        </View>
-                                      </ImageBackground>
-                                    </>
-                                  ) : (
-                                    <></>
-                                  )}
-
-                                  <View
-                                    style={{
-                                      width: '100%',
-                                      backgroundColor: 'black',
-                                      borderRadius: 15,
-                                      justifyContent: 'center',
-                                      alignItems: 'center',
-                                    }}>
-                                    {Number(winner?.win_status) === 1 ? (
-                                      <>
-                                        <Text style={styles.ApplyTextReA}>
-                                          Note: Contratulations you are the
-                                          winner !
+                                              ? styles.UserImgsTab
+                                              : styles.UserImgs
+                                          }
+                                        />
+                                      </View>
+                                      <View
+                                        style={
+                                          width > 500
+                                            ? styles.UserWinnerTab
+                                            : styles.UserWinner
+                                        }>
+                                        <Text style={styles.UserTse}>
+                                          {winner?.user?.first_name}{' '}
+                                          {winner?.user?.last_name}
                                         </Text>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <Text style={styles.ApplyTextReA}>
-                                          Note: Best Of Luck for Next Time.You
-                                          get refund your bid amount in 09-12-22
+                                        <Text style={styles.UserTse1}>
+                                          Maximum Bit Price {currency.symbol}{' '}
+                                          {currencyCount(winner?.amount)}
                                         </Text>
-                                      </>
-                                    )}
-                                  </View>
-                                </View>
-                              </View>
+                                      </View>
+                                    </ImageBackground>
+                                  </>
+                                ) : (
+                                  <></>
+                                )}
 
-                              {/* Page 82| End         */}
-                            </View>
-                          ) : (
-                            <View style={{ marginBottom: 100 }}>
-                              {/* Page 82| Start */}
-                              <View style={styles.MaiNApp}>
-                                <View style={styles.Applied}>
-                                  <Text style={styles.ApplyText}>
-                                    Applied For Acquiring Product
-                                  </Text>
-                                </View>
                                 <View
                                   style={{
-                                    flexDirection: 'row',
-                                    paddingVertical: 25,
+                                    width: '100%',
+                                    backgroundColor: 'black',
+                                    borderRadius: 15,
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                   }}>
-                                  <Text style={styles.BDname}>
-                                    Result will be publish on{' '}
-                                    {moment(product?.result_date).format('LL')}
-                                  </Text>
+                                  {Number(winner?.win_status) === 1 ? (
+                                    <>
+                                      <Text style={styles.ApplyTextReA}>
+                                        Note: Congratulations you are the winner
+                                        !
+                                      </Text>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Text style={styles.ApplyTextReA}>
+                                        Note: Best Of Luck for Next Time.
+                                      </Text>
+                                    </>
+                                  )}
                                 </View>
-                                {/* <View
+                              </View>
+                            </View>
+
+                            {/* Page 82| End         */}
+                          </View>
+                        ) : (
+                          <View style={{marginBottom: 100}}>
+                            {/* Page 82| Start */}
+                            <View style={styles.MaiNApp}>
+                              <View style={styles.Applied}>
+                                <Text style={styles.ApplyText}>
+                                  Applied For Acquiring Product
+                                </Text>
+                              </View>
+                              {!showResult && (
+                                <>
+                                  <View
+                                    style={{
+                                      flexDirection: 'row',
+                                      paddingVertical: 25,
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}>
+                                    <Text style={styles.BDname}>
+                                      Result will be publish on{' '}
+                                      {moment(product?.result_date).format(
+                                        'LL',
+                                      )}
+                                    </Text>
+                                  </View>
+                                  <View
+                                    style={{
+                                      flexDirection: 'row',
+                                      paddingVertical: 25,
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}>
+                                    <Image source={imagePath.BidApply} />
+                                  </View>
+                                </>
+                              )}
+
+                              {/* <View
                                   style={{
                                     flexDirection: 'row',
                                     paddingVertical: 1,
@@ -878,27 +1027,18 @@ const AuctionParticipateNow = ({ route }) => {
                                     Please Wait And Complete Further Process
                                   </Text>
                                 </View> */}
-                                <View
-                                  style={{
-                                    flexDirection: 'row',
-                                    paddingVertical: 25,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                  }}>
-                                  <Image source={imagePath.BidApply} />
-                                </View>
-                              </View>
+                            </View>
 
-                              <TouchableOpacity
-                                disabled={showResult ? false : true}
-                                onPress={() => setIsShowResult(true)}>
-                                <LinearGradient
-                                  start={{ x: 0, y: 0 }}
-                                  end={{ x: 1, y: 0 }}
-                                  colors={
-                                    !showResult
-                                      ? ['#343333', '#343333']
-                                      : [
+                            <TouchableOpacity
+                              disabled={showResult ? false : true}
+                              onPress={() => setIsShowResult(true)}>
+                              <LinearGradient
+                                start={{x: 0, y: 0}}
+                                end={{x: 1, y: 0}}
+                                colors={
+                                  !showResult
+                                    ? ['#343333', '#343333']
+                                    : [
                                         '#FFAD00',
                                         '#FFD273',
                                         '#E19A04',
@@ -906,77 +1046,27 @@ const AuctionParticipateNow = ({ route }) => {
                                         '#E7A725',
                                         '#FFAD00',
                                       ]
-                                  }
-                                  style={styles.LinerBGA}>
-                                  <Text
-                                    style={
-                                      !showResult
-                                        ? styles.ApplyTextReWhite
-                                        : styles.ApplyTextRe
-                                    }>
-                                    Result
-                                  </Text>
-                                </LinearGradient>
-                              </TouchableOpacity>
-                              {/* Page 81| End         */}
-                            </View>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <View style={styles.MaiN}>
-                            <View style={{ flexDirection: 'row' }}>
-                              <View style={{ width: '50%' }}>
-                                <TouchableOpacity onPress={handleApplyButton}>
-                                  <LinearGradient
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 0 }}
-                                    colors={[
-                                      '#FFAD00',
-                                      '#FFD273',
-                                      '#E19A04',
-                                      '#FACF75',
-                                      '#E7A725',
-                                      '#FFAD00',
-                                    ]}
-                                    style={styles.LinerBG}>
-                                    <View style={styles.AppBtn}>
-                                      <Text style={styles.Apply}>Apply</Text>
-                                    </View>
-                                  </LinearGradient>
-                                </TouchableOpacity>
-                              </View>
-
-                              <View style={{ width: '50%' }}>
-                                <TouchableOpacity
-                                  onPress={() => navigation.navigate('Home')}>
-                                  <LinearGradient
-                                    start={{ x: 0, y: 0 }}
-                                    end={{ x: 1, y: 0 }}
-                                    colors={[
-                                      '#FFAD00',
-                                      '#FFD273',
-                                      '#E19A04',
-                                      '#FACF75',
-                                      '#E7A725',
-                                      '#FFAD00',
-                                    ]}
-                                    style={styles.LinerBG}>
-                                    <View style={styles.AppBtn}>
-                                      <Text style={styles.Apply}>Dismiss</Text>
-                                    </View>
-                                  </LinearGradient>
-                                </TouchableOpacity>
-                              </View>
-                            </View>
+                                }
+                                style={styles.LinerBGA}>
+                                <Text
+                                  style={
+                                    !showResult
+                                      ? styles.ApplyTextReWhite
+                                      : styles.ApplyTextRe
+                                  }>
+                                  Result
+                                </Text>
+                              </LinearGradient>
+                            </TouchableOpacity>
+                            {/* Page 81| End         */}
                           </View>
-                        </>
-                      )}
+                        )}
+                      </>
                     </>
                   )}
 
                   {data === 'Congratsbid' ? (
-                    <View style={{ height: 200 }}>
+                    <View style={{height: 200}}>
                       {/* Page 82| Start */}
                       <View style={styles.MaiNApp}>
                         <View style={styles.Applied}>
@@ -1023,7 +1113,7 @@ const AuctionParticipateNow = ({ route }) => {
                               alignItems: 'center',
                             }}>
                             <Text style={styles.ApplyTextReA}>
-                              Note: You get refund your bid amount in 09-12-22
+                              Best of luck for next time
                             </Text>
                           </View>
                         </View>
@@ -1057,6 +1147,13 @@ const AuctionParticipateNow = ({ route }) => {
                   setLockModal={setLockModal}
                   auctionId={product?.id}
                 /> */}
+
+                <AuctionAcquireMsgModal
+                  showAcquire={showAcquire}
+                  setShowAcquire={setShowAcquire}
+                  productId={product?.id}
+                  setIsShowPaymentComp={setIsShowPaymentComp}
+                />
 
                 <BidCongratulationModal
                   showModal={showModal}

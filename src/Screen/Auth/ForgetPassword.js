@@ -35,7 +35,7 @@ const ForgetPassword = ({ navigation }) => {
 
                     if (res.data.status == 200) {
                         navigation.navigate(navigationStrings.CREATEPASSWORD, { email: email });
-                        console.log(res.data);
+                        //console.log(res.data);
                     } else {
 
                         Toast.show('user not found!', Toast.durations.SHORT);

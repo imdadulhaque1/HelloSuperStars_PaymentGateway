@@ -1,8 +1,8 @@
 import axios from 'axios';
 import * as React from 'react';
-import {Image, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
-import {AuthContext} from '../../../Constants/context';
+import { AuthContext } from '../../../Constants/context';
 import AppUrl from '../../../RestApi/AppUrl';
 import LinearGradient from 'react-native-linear-gradient';
 import imagePath from '../../../Constants/imagePath';
@@ -13,13 +13,14 @@ import styles from './styles';
 import showcaseNavigator from './showcaseNavigator';
 import MarketplaceProductCard from './MarketplaceProductCard';
 import HeaderComp from '../../../Components/HeaderComp';
-function MarketPlaceShowcase({route,navigation}) {
-const {star}=route.params;
+import LoaderComp from '../../../Components/LoaderComp';
+function MarketPlaceShowcase({ route, navigation }) {
+  const { star } = route.params;
 
   const [buffer, setBuffer] = React.useState(false);
   const [Data, SetData] = React.useState([]);
 
-  const {axiosConfig} = React.useContext(AuthContext);
+  const { axiosConfig } = React.useContext(AuthContext);
   React.useEffect(() => {
     setBuffer(true);
     axios
@@ -28,7 +29,7 @@ const {star}=route.params;
         if (res.data.status == 200) {
           SetData(res.data.starMarketplace);
           console.log(star?.id);
-          console.log(res.data.starMarketplace);
+          //console.log(res.data.starMarketplace);
         }
         setBuffer(false);
       })
@@ -39,77 +40,70 @@ const {star}=route.params;
   }, [star]);
   return (
     <>
-      {buffer ? (
-        <></>
-      ) : (
-        <>
-        <HeaderComp backFunc={()=>navigation.goBack()} />
-          <View style={styles.container}>
+      <>
+        <HeaderComp backFunc={() => navigation.goBack()} />
+        <View style={styles.container}>
+          {buffer && <LoaderComp />}
+          <SafeAreaView>
+            <View style={styles.row1}>
+              <LinearGradient
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={[
+                  '#FFAD00',
+                  '#FFD273',
+                  '#E19A04',
+                  '#FACF75',
+                  '#E7A725',
+                  '#FFAD00',
+                ]}
+                style={{ borderRadius: 15 }}>
+                <Text style={styles.AuctionT}>MarketPlace</Text>
+              </LinearGradient>
+            </View>
 
-          
-            <SafeAreaView>
-              <View style={styles.row1}>
-                <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 1, y: 0}}
-                  colors={[
-                    '#FFAD00',
-                    '#FFD273',
-                    '#E19A04',
-                    '#FACF75',
-                    '#E7A725',
-                    '#FFAD00',
-                  ]}
-                  style={{borderRadius: 15}}>
-                  <Text style={styles.AuctionT}>MarketPlace</Text>
-                </LinearGradient>
-              </View>
-
-              <ScrollView>
-                {Data.length > 0 ? (
-                  Data.map(item => {
-                    return (
-                      <MarketplaceProductCard
-                      
-
-                        name={item.title}
-                        productImg={item.image}
-                        price={item.unit_price}
-                        ownerImg={item.superstar.image}
-                        owerName={item.superstar.first_name}
-                        product={item}
-                        key={item.id}
-                        buttonText="Buy Now"
+            <ScrollView>
+              {Data.length > 0 ? (
+                Data.map(item => {
+                  return (
+                    <MarketplaceProductCard
+                      name={item.title}
+                      productImg={item.image}
+                      price={item.unit_price}
+                      ownerImg={item.superstar.image}
+                      owerName={item.superstar.first_name}
+                      product={item}
+                      key={item.id}
+                      buttonText="Buy Now"
+                    />
+                  );
+                })
+              ) : (
+                <View style={{ height: 200, justifyContent: 'center' }}>
+                  <View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Image
+                        source={imagePath.lazyDog}
+                        style={{ height: 100, width: 100 }}
                       />
-                    );
-                  })
-                ) : (
-                  <View style={{height: 200, justifyContent: 'center'}}>
-                    <View>
-                      <View
-                        style={{
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                        }}>
-                        <Image
-                          source={imagePath.lazyDog}
-                          style={{height: 100, width: 100}}
-                        />
-                      </View>
-
-                      <Text style={{color: 'white', textAlign: 'center'}}>
-                        Sorry No Data Available !
-                      </Text>
                     </View>
+
+                    <Text style={{ color: 'white', textAlign: 'center' }}>
+                      Sorry No Data Available !
+                    </Text>
                   </View>
-                )}
-              </ScrollView>
-            </SafeAreaView>
-          </View>
-          {/* <BuyNowShowcase /> */}
-          {/* {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>} */}
-        </>
-      )}
+                </View>
+              )}
+            </ScrollView>
+          </SafeAreaView>
+        </View>
+        {/* <BuyNowShowcase /> */}
+        {/* {view == showcaseNavigator.BUYNOW ? <BuyNowShowcase /> : <></>} */}
+      </>
     </>
   );
 }

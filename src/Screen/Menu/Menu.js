@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Image,
   ImageBackground,
@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import LinearGradient from 'react-native-linear-gradient';
 // import {LinearTextGradient} from 'react-native-text-gradient';
@@ -23,7 +23,7 @@ import ActivitiesCard from '../../Components/GLOBAL/Reuseable/ActivitiesCard';
 import AuctionActivityCard from '../../Components/GLOBAL/Reuseable/AuctionActivityCard';
 import ActivityListSkeleton from '../../Components/Skeleton/ActivityListSkeleton/ActivityListSkeleton';
 import MenuCardSkeleton from '../../Components/Skeleton/MenuCardSkeleton/MenuCardSkeleton';
-import {AuthContext} from '../../Constants/context';
+import { AuthContext } from '../../Constants/context';
 import imagePath from '../../Constants/imagePath';
 import navigationStrings from '../../Constants/navigationStrings';
 import AppUrl from '../../RestApi/AppUrl';
@@ -35,7 +35,7 @@ import MenuFollowers from './Content/MenuFollowers';
 import StarCarousel from './Content/StarCarousel';
 import MenuNavigator from './MenuNavigator';
 import styles from './styles';
-import {useAxiosGet} from '../../CustomHooks/useAxiosGet';
+import { useAxiosGet } from '../../CustomHooks/useAxiosGet';
 import DropDown from '../../Components/DropDown/DropDown';
 
 // thats for privacy policy drop down don't remove
@@ -149,12 +149,12 @@ const Menu = () => {
     getActivity,
     updateNotification,
   } = useContext(AuthContext);
-  const {axiosConfig, posts, setPosts} = useContext(AuthContext);
+  const { axiosConfig, posts, setPosts } = useContext(AuthContext);
   const [loder, setLoder] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [allCategoty, setAllCategory] = useState(null);
 
-  const {resData, buffer, HandelGetData} = useAxiosGet(AppUrl.allStarList);
+  const { resData, buffer, HandelGetData } = useAxiosGet(AppUrl.allStarList);
 
   const [followerArrayId, setFollowerArrayId] = useState([]);
   const [upCommingEvents, setUpCommingEvents] = useState({
@@ -243,7 +243,7 @@ const Menu = () => {
       .then(res => {
         setLoder(false);
         makeCatrgoryArry(res.data.category);
-        // console.log(res.data.selectedCategory)
+        // //console.log(res.data.selectedCategory)
         //old selscted category
         let categoryArry = res.data.category.map((item, index) => {
           if (res.data.selectedCategory.includes(item.id)) {
@@ -251,7 +251,7 @@ const Menu = () => {
           } else {
             item.isSelected = false;
           }
-          return {...item};
+          return { ...item };
         });
 
         setAllCategory(categoryArry);
@@ -266,7 +266,7 @@ const Menu = () => {
   const makeCatrgoryArry = data => {
     let categoryArry = data.map((item, index) => {
       item.isSelected = false;
-      return {...item};
+      return { ...item };
     });
 
     setAllCategory(categoryArry);
@@ -282,7 +282,7 @@ const Menu = () => {
       if (valu == index) {
         item.isSelected = !item.isSelected;
       }
-      return {...item};
+      return { ...item };
     });
 
     setAllCategory(categoryArry);
@@ -416,8 +416,8 @@ const Menu = () => {
               source={
                 useInfo?.image !== null
                   ? {
-                      uri: `${AppUrl.MediaBaseUrl + useInfo?.image}`,
-                    }
+                    uri: `${AppUrl.MediaBaseUrl + useInfo?.image}`,
+                  }
                   : noImage
               }
               // source={{
@@ -441,21 +441,21 @@ const Menu = () => {
               justifyContent: 'space-between',
               width: '75%',
             }}>
-            <View style={{marginLeft: 7}}>
-              <Text style={{color: 'white', fontSize: 18}}>
+            <View style={{ marginLeft: 7 }}>
+              <Text style={{ color: 'white', fontSize: 18 }}>
                 {useInfo?.first_name}
               </Text>
-              <Text style={{color: 'gray'}}>See your profile</Text>
+              <Text style={{ color: 'gray' }}>See your profile</Text>
             </View>
 
-         
+
           </TouchableOpacity>
         </View>
 
         <ImageBackground
           source={imagePath.MenuCover}
-          style={{width: '100%', alignItems: 'center', paddingVertical: 20}}>
-          <View style={{alignItems: 'center', flexDirection: 'row'}}>
+          style={{ width: '100%', alignItems: 'center', paddingVertical: 20 }}>
+          <View style={{ alignItems: 'center', flexDirection: 'row' }}>
             <TouchableOpacity
               style={
                 menuNavigator == MenuNavigator.MENUACTIVITIES
@@ -466,13 +466,13 @@ const Menu = () => {
                 activityLength > 0
                   ? handleChange
                   : () => {
-                      Toast.show(
-                        "Pleace wait or you don't have any activity",
-                        Toast.durations.SHORT,
-                      );
-                    }
+                    Toast.show(
+                      "Pleace wait or you don't have any activity",
+                      Toast.durations.SHORT,
+                    );
+                  }
               }>
-              <View style={{alignItems: 'center', marginTop: 5}}>
+              <View style={{ alignItems: 'center', marginTop: 5 }}>
                 <Image source={imagePath.menuIconActivity} />
               </View>
               <View>
@@ -495,7 +495,7 @@ const Menu = () => {
                   : styles.mainRow
               }
               onPress={handleFollower}>
-              <View style={{alignItems: 'center', marginTop: 5}}>
+              <View style={{ alignItems: 'center', marginTop: 5 }}>
                 <Image source={imagePath.menuIconStar} />
               </View>
               <View>
@@ -513,11 +513,11 @@ const Menu = () => {
               </View>
             </TouchableOpacity>
 
-       
+
             <TouchableOpacity
               style={styles.mainRow}
               onPress={() => Navigation.navigate(navigationStrings.WALLET)}>
-              <View style={{alignItems: 'center', marginTop: 5}}>
+              <View style={{ alignItems: 'center', marginTop: 5 }}>
                 <Image source={imagePath.Wallet1} />
               </View>
               <View>
@@ -530,10 +530,10 @@ const Menu = () => {
           </View>
         </ImageBackground>
 
-    
+
         {menuNavigator == MenuNavigator.MENUHOME ? (
           <>
-            <ScrollView style={{backgroundColor: 'black'}}>
+            <ScrollView style={{ backgroundColor: 'black' }}>
               {loder === true ? (
                 [0, 1, 2, 3].map(item => {
                   if (item === 0) {
@@ -552,7 +552,7 @@ const Menu = () => {
                     />
                   </View>
 
-                  <View style={{paddingBottom: 5}}>
+                  <View style={{ paddingBottom: 5 }}>
                     {/* Learning Seassion Carusel Iteam start */}
                     {upCommingEvents.learningSessions.length > 0 && (
                       <View style={styles.menuCrosalItem}>
@@ -562,12 +562,12 @@ const Menu = () => {
                           </Text>
                         </View>
                         <View style={styles.carouselContainer_gray}>
-                          <View style={{width: '85%'}}>
+                          <View style={{ width: '85%' }}>
                             <StarCarousel
                               eventData={upCommingEvents.learningSessions}
                             />
                           </View>
-                          <View style={{width: '15%'}}>
+                          <View style={{ width: '15%' }}>
                             <LinearGradient
                               colors={[
                                 '#F1A817',
@@ -575,9 +575,9 @@ const Menu = () => {
                                 '#FCB706',
                                 '#DFC65C',
                               ]}
-                              start={{x: 0, y: 1}}
-                              end={{x: 1, y: 0}}
-                              style={{borderRadius: 5}}>
+                              start={{ x: 0, y: 1 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ borderRadius: 5 }}>
                               <TouchableOpacity
                                 style={{
                                   justifyContent: 'center',
@@ -593,11 +593,11 @@ const Menu = () => {
                                   )
                                 }>
                                 <Text
-                                  style={{color: 'black', fontWeight: 'bold'}}>
+                                  style={{ color: 'black', fontWeight: 'bold' }}>
                                   View
                                 </Text>
                                 <Text
-                                  style={{color: 'black', fontWeight: 'bold'}}>
+                                  style={{ color: 'black', fontWeight: 'bold' }}>
                                   All
                                 </Text>
                               </TouchableOpacity>
@@ -616,12 +616,12 @@ const Menu = () => {
                           <Text style={styles.titelText}>Live Chat</Text>
                         </View>
                         <View style={styles.carouselContainer_gray}>
-                          <View style={{width: '85%'}}>
+                          <View style={{ width: '85%' }}>
                             <StarCarousel
                               eventData={upCommingEvents.liveChats}
                             />
                           </View>
-                          <View style={{width: '15%'}}>
+                          <View style={{ width: '15%' }}>
                             <LinearGradient
                               colors={[
                                 '#F1A817',
@@ -629,9 +629,9 @@ const Menu = () => {
                                 '#FCB706',
                                 '#DFC65C',
                               ]}
-                              start={{x: 0, y: 1}}
-                              end={{x: 1, y: 0}}
-                              style={{borderRadius: 5}}>
+                              start={{ x: 0, y: 1 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ borderRadius: 5 }}>
                               <TouchableOpacity
                                 style={{
                                   justifyContent: 'center',
@@ -647,11 +647,11 @@ const Menu = () => {
                                   )
                                 }>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   View
                                 </Text>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   All
                                 </Text>
                               </TouchableOpacity>
@@ -669,12 +669,12 @@ const Menu = () => {
                           <Text style={styles.titelText}>Auditions</Text>
                         </View>
                         <View style={styles.carouselContainer_gray}>
-                          <View style={{width: '85%'}}>
+                          <View style={{ width: '85%' }}>
                             <StarCarousel
                               eventData={upCommingEvents.auditions}
                             />
                           </View>
-                          <View style={{width: '15%'}}>
+                          <View style={{ width: '15%' }}>
                             <LinearGradient
                               colors={[
                                 '#F1A817',
@@ -682,9 +682,9 @@ const Menu = () => {
                                 '#FCB706',
                                 '#DFC65C',
                               ]}
-                              start={{x: 0, y: 1}}
-                              end={{x: 1, y: 0}}
-                              style={{borderRadius: 5}}>
+                              start={{ x: 0, y: 1 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ borderRadius: 5 }}>
                               <TouchableOpacity
                                 style={{
                                   justifyContent: 'center',
@@ -700,11 +700,11 @@ const Menu = () => {
                                   )
                                 }>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   View
                                 </Text>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   All
                                 </Text>
                               </TouchableOpacity>
@@ -723,10 +723,10 @@ const Menu = () => {
                           <Text style={styles.titelText}>Meet up Events</Text>
                         </View>
                         <View style={styles.carouselContainer_gray}>
-                          <View style={{width: '85%'}}>
+                          <View style={{ width: '85%' }}>
                             <StarCarousel eventData={upCommingEvents.meetups} />
                           </View>
-                          <View style={{width: '15%'}}>
+                          <View style={{ width: '15%' }}>
                             <LinearGradient
                               colors={[
                                 '#F1A817',
@@ -734,9 +734,9 @@ const Menu = () => {
                                 '#FCB706',
                                 '#DFC65C',
                               ]}
-                              start={{x: 0, y: 1}}
-                              end={{x: 1, y: 0}}
-                              style={{borderRadius: 5}}>
+                              start={{ x: 0, y: 1 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ borderRadius: 5 }}>
                               <TouchableOpacity
                                 style={{
                                   justifyContent: 'center',
@@ -752,11 +752,11 @@ const Menu = () => {
                                   )
                                 }>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   View
                                 </Text>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   All
                                 </Text>
                               </TouchableOpacity>
@@ -776,10 +776,10 @@ const Menu = () => {
                           </Text>
                         </View>
                         <View style={styles.carouselContainer_gray}>
-                          <View style={{width: '85%'}}>
+                          <View style={{ width: '85%' }}>
                             <StarCarousel eventData={upCommingEvents.qna} />
                           </View>
-                          <View style={{width: '15%'}}>
+                          <View style={{ width: '15%' }}>
                             <LinearGradient
                               colors={[
                                 '#F1A817',
@@ -787,9 +787,9 @@ const Menu = () => {
                                 '#FCB706',
                                 '#DFC65C',
                               ]}
-                              start={{x: 0, y: 1}}
-                              end={{x: 1, y: 0}}
-                              style={{borderRadius: 5}}>
+                              start={{ x: 0, y: 1 }}
+                              end={{ x: 1, y: 0 }}
+                              style={{ borderRadius: 5 }}>
                               <TouchableOpacity
                                 style={{
                                   justifyContent: 'center',
@@ -805,11 +805,11 @@ const Menu = () => {
                                   )
                                 }>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   View
                                 </Text>
                                 <Text
-                                  style={{fontWeight: 'bold', color: 'black'}}>
+                                  style={{ fontWeight: 'bold', color: 'black' }}>
                                   All
                                 </Text>
                               </TouchableOpacity>
@@ -847,15 +847,15 @@ const Menu = () => {
                 </View>
 
                 <View style={styles.menuSubTab}>
-                  <Text style={{fontSize: 15, color: '#ffaa00'}}>Settings</Text>
+                  <Text style={{ fontSize: 15, color: '#ffaa00' }}>Settings</Text>
                 </View>
               </TouchableOpacity>
 
               <LinearGradient
                 colors={['#F1A817', '#F5E67D', '#FCB706', '#DFC65C']}
-                start={{x: 1, y: 0}}
-                end={{x: 0, y: 0}}
-                style={{marginVertical: 30}}>
+                start={{ x: 1, y: 0 }}
+                end={{ x: 0, y: 0 }}
+                style={{ marginVertical: 30 }}>
                 <TouchableOpacity
                   style={{
                     flexDirection: 'row',
@@ -869,7 +869,7 @@ const Menu = () => {
                     color={'black'}
                     size={20}
                   />
-                  <Text style={{color: 'black'}}>LOGOUT</Text>
+                  <Text style={{ color: 'black' }}>LOGOUT</Text>
                 </TouchableOpacity>
               </LinearGradient>
             </ScrollView>
@@ -932,7 +932,7 @@ const Menu = () => {
             )}
           </>
         ) : // <ActivityEventList childActivityEventList={childActivityEventList} childActivityEventType={childActivityEventType} />
-        null}
+          null}
         {menuNavigator == MenuNavigator.MENUFOLLOWERS ? (
           <MenuFollowers
             setFollowerArrayId={setFollowerArrayId}

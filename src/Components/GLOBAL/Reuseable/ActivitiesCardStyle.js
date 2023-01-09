@@ -152,6 +152,14 @@ const ActivitiesCardStyle = StyleSheet.create({
     borderBottomLeftRadius: 14,
   },
 
+  JoinTextQNA: {
+    fontWeight: 'bold',
+    width: 'auto',
+    padding: 15,
+    color: 'black',
+    textAlign: 'center',
+    paddingVertical: 3,
+  },
   JoinText: {
     fontWeight: 'bold',
     width: 'auto',

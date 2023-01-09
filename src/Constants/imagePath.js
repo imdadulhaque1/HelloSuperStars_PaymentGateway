@@ -9,11 +9,8 @@ export default {
 
   pocketPay: require('../Assets/Icons/pocket-pay.png'),
 
-
-
   // loadingGold: require('../Assets/Icons/loading/loading1.gif'),
   //payment icons
-
 
   loveReact5: require('../Assets/Icons/5-Love-React.gif'),
   loveReact10: require('../Assets/Icons/10-Love-React.gif'),
@@ -136,6 +133,7 @@ export default {
   LiveChatImage: require('../Assets/Images/sakibLiveVedio.png'),
 
   //  @TODO: Greetings
+  greetings_image: require('../Assets/Images/greetings_image.jpeg'),
   greetingStar: require('../Assets/Images/image36.png'),
   greetingsBanner: require('../Assets/Images/Group925.png'),
   greetingsRectangle: require('../Assets/Images/Rectangle677.png'),
@@ -322,7 +320,15 @@ export default {
 
   // menuBanner2: require('../Assets/Images/goldBanner.png'),
 
+  forgetPasswordImg: require('../Assets/Images/forgetPassword.png'),
+  confirmPasswordImg: require('../Assets/Images/ConfirmPass.png'),
 
-  forgetPasswordImg:require('../Assets/Images/forgetPassword.png'),
-  confirmPasswordImg:require('../Assets/Images/ConfirmPass.png'),
+  forgetPasswordImg: require('../Assets/Images/forgetPassword.png'),
+  confirmPasswordImg: require('../Assets/Images/ConfirmPass.png'),
+
+  //video play icon
+
+  videoPlayIcon: require('../Assets/Icons/videoIcon.jpg'),
+
+  waveAudio: require('../Assets/Icons/loading/waveFinal.gif'),
 };

@@ -9,6 +9,7 @@ import {
   ImageBackground,
   Share,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -27,6 +28,7 @@ import {AuthContext} from '../../../../Constants/context';
 
 import LockPaymentModal from '../../../MODAL/LockPaymentModal';
 import styles from './styles';
+import VideoPlayerComp from '../../../VIDEO/VideoPlayerComp';
 
 const UserProPost = ({post, callform = null}) => {
   const vedioRef = useRef(null);
@@ -150,7 +152,8 @@ const UserProPost = ({post, callform = null}) => {
       postContent = post?.fangroup;
       break;
     case 'marketplace':
-      postContent = post?.market_place;
+      postContent = post?.market_place_order?.marketplace;
+      console.log('marketplace value there', post?.market_place);
       break;
     case 'auction':
       postContent = post?.auction;
@@ -235,7 +238,7 @@ const UserProPost = ({post, callform = null}) => {
         // dismissed
       }
     } catch (error) {
-      alert(error.message);
+      ToastAndroid.show(error.message, ToastAndroid.SHORT);
     }
   };
 
@@ -419,6 +422,16 @@ const UserProPost = ({post, callform = null}) => {
                       }`,
                     }}
                   />
+                ) : post?.greeting_registration?.greeting?.star?.image ? (
+                  <Image
+                    style={styles.starCardImg}
+                    source={{
+                      uri: `${
+                        AppUrl.MediaBaseUrl +
+                        post?.greeting_registration?.greeting?.star?.image
+                      }`,
+                    }}
+                  />
                 ) : (
                   <Image
                     style={styles.starCardImg}
@@ -432,10 +445,15 @@ const UserProPost = ({post, callform = null}) => {
                 <Text style={styles.cardText}>
                   {postContent?.star?.first_name
                     ? postContent?.star?.first_name
-                    : postContent?.superstar?.first_name}{' '}
+                    : postContent?.star?.first_name
+                    ? postContent?.superstar?.first_name
+                    : post?.greeting_registration?.greeting?.star
+                        ?.first_name}{' '}
                   {postContent?.star?.last_name
                     ? postContent?.star?.last_name
-                    : postContent?.superstar?.last_name}
+                    : postContent?.star?.last_name
+                    ? postContent?.superstar?.last_name
+                    : post?.greeting_registration?.greeting?.star?.last_name}
                 </Text>
                 <Text style={styles.time}>
                   {' '}
@@ -448,12 +466,12 @@ const UserProPost = ({post, callform = null}) => {
 
         {post.type !== 'audition' ? (
           <View style={styles.CardContent}>
-            <View
+            {/* <View
               style={
                 contentHeight && textLength > 300 ? styles.lessText : ''
-              }></View>
+              }></View> */}
 
-            {textLength > 300 ? (
+            {/* {textLength > 300 ? (
               <TouchableOpacity
                 onPress={() => setContentHeight(!contentHeight)}>
                 <Text style={{color: '#FFAD00', marginTop: 5}}>
@@ -462,7 +480,7 @@ const UserProPost = ({post, callform = null}) => {
               </TouchableOpacity>
             ) : (
               <></>
-            )}
+            )} */}
 
             <Text style={styles.cardContentText}></Text>
 
@@ -578,8 +596,13 @@ const UserProPost = ({post, callform = null}) => {
                   )}
                 </View>
               ) : post?.type == 'greeting' ? (
-                <View style={{width: 380, height: 250}}>
-                  <Video
+                <View style={{width: 380, height: 250, marginLeft: 10}}>
+                  <VideoPlayerComp
+                    url={`${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`}
+                    thumbnail={`${AppUrl.MediaBaseUrl}${post?.greeting_registration?.greeting?.banner}`}
+                  />
+
+                  {/* <Video
                     source={{
                       uri: `${AppUrl.MediaBaseUrl}${post?.greeting_registration?.video}`,
                     }}
@@ -595,13 +618,14 @@ const UserProPost = ({post, callform = null}) => {
                     paused={false}
                     repeat={true}
                     height={250}
+                    // poster={}
                     resizeMode={'stretch'}
                     style={{
                       height: 250,
                       width: 380,
                       position: 'absolute',
                     }}
-                  />
+                  /> */}
                 </View>
               ) : (
                 // <VideoPlayer

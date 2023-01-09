@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -8,8 +8,10 @@ import styles from './styles';
 import AppUrl from '../../../RestApi/AppUrl';
 import BuyNowShowcase from './BuyNowShowcase';
 import navigationStrings from '../../../Constants/navigationStrings';
-import { MarketPlaceStackScreen } from '../../../Navigation/MarketPlaceStack/MarketPlaceStackScreen';
+import {MarketPlaceStackScreen} from '../../../Navigation/MarketPlaceStack/MarketPlaceStackScreen';
+import {AuthContext} from '../../../Constants/context';
 const MarketplaceProductCard = props => {
+  const {currencyCount, currency} = useContext(AuthContext);
   const {product} = props;
   const Navigation = useNavigation();
   // const [view, SetView] = useState(props.setView);
@@ -18,10 +20,11 @@ const MarketplaceProductCard = props => {
     //   product: product,
     // });
 
+    console.log(currency);
 
     Navigation.navigate(navigationStrings.MARKETPLACE, {
       screen: navigationStrings.BUYMARKETPLACEPRODUCT,
-      params: { product: product },
+      params: {product: product},
     });
   };
   return (
@@ -50,9 +53,12 @@ const MarketplaceProductCard = props => {
                 source={{uri: `${AppUrl.MediaBaseUrl + props.productImg}`}}
               />
 
+              {/* {currencyCount(fee) + currency.symbol} */}
               <View style={styles.PriceRow}>
                 <View>
-                  <Text style={styles.Price}>{props.price}</Text>
+                  <Text style={styles.Price}>
+                    {currencyCount(props.price) + ' ' + currency.symbol}
+                  </Text>
                 </View>
                 <View>
                   <Text style={styles.PriceBest}>Best Price</Text>

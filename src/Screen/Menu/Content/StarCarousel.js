@@ -13,18 +13,47 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import navigationStrings from '../../../Constants/navigationStrings';
 import AppUrl from '../../../RestApi/AppUrl';
-
+import {useNavigation} from '@react-navigation/native';
 const {width: screenWidth} = Dimensions.get('window');
 
-const StarCarousel = ({eventData}) => {
+const StarCarousel = ({eventData, eventType = null}) => {
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
-
+  const Navigation = useNavigation();
   const crosalItem = ({item, index}) => {
+    // redirect
+    function handlePress() {
+      if (eventType == 'meetup') {
+        return Navigation.navigate(navigationStrings.MEETUP, {
+          data: {meetup: item},
+        });
+      }
+      if (eventType == 'LearningSession') {
+        return Navigation.navigate(navigationStrings.LEARNINGSESSION, {
+          data: {learning_session: item},
+        });
+      }
+      if (eventType == 'qna') {
+        return Navigation.navigate(navigationStrings.QNA, {
+          data: {qna: item},
+        });
+      }
+      if (eventType == 'livechat') {
+        return Navigation.navigate(navigationStrings.LIVECHAT, {
+          data: {livechat: item},
+        });
+      }
+      if (eventType == 'audition') {
+        return Navigation.navigate(navigationStrings.AUDITIONREGISTER, {
+          data: {audition: item},
+        });
+      }
+    }
     return (
       <View key={index} style={{marginHorizontal: 4}}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handlePress}>
           <View style={styles.item}>
             <Image
               source={{uri: `${AppUrl.MediaBaseUrl + item.banner}`}}
@@ -61,8 +90,6 @@ const StarCarousel = ({eventData}) => {
       </View>
     );
   };
-
-  useEffect(() => {}, []);
 
   return (
     <SwiperFlatList

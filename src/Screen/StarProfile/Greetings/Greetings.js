@@ -37,6 +37,7 @@ const Greetings = ({setProfileNavigate, star_id}) => {
   const [startMinDate, setStartMinDate] = useState(new Date());
   const [isStarGiveGreeting, setIsStarGiveGreeting] = useState(false);
   const [purposeList, setPurposeList] = useState([]);
+  const [submitted, setSubmitted] = useState(null);
 
   const [GreetingInfo, setGreetingInfo] = useState({});
   const [star, setStar] = useState({});
@@ -44,7 +45,7 @@ const Greetings = ({setProfileNavigate, star_id}) => {
 
   const [status, setStatus] = useState({
     action: true,
-    msg: '',
+    msg: 'Pending',
   });
 
   const [inputData, setInputData] = useState({
@@ -145,8 +146,10 @@ const Greetings = ({setProfileNavigate, star_id}) => {
   };
 
   function handleApply() {
+    setSubmitted(true);
+    console.log(inputData);
     if (!greeting) {
-      if (inputData?.purpose != '' && inputData?.purpose !== null) {
+      if (inputData?.purpose) {
         setBuffer(true);
         axios
           .post(AppUrl.GreetingRegistration, inputData, axiosConfig)
@@ -162,31 +165,16 @@ const Greetings = ({setProfileNavigate, star_id}) => {
             console.log(err);
           });
       } else {
-        setModalObj({
-          modalType: 'warning',
-          buttonTitle: 'Ok',
-          message: 'Please select a purpose first',
-        });
-        setModal(true);
       }
     } else {
     }
   }
   function handleRetryOrDelete() {
-    if (greeting && greeting.notification_at !== null) {
+    if (greeting && !greeting.notification_at) {
       setModalObj({
-        modalType: 'success',
-        buttonTitle: 'Register Now',
-        message:
-          star.first_name + ' ' + star.last_name + ' responsed for greeting',
-      });
-      setModal(true);
-    } else if (greeting && greeting.notification_at == null) {
-      setModalObj({
-        modalType: 'warning',
+        modalType: 'warningGreetings',
         buttonTitle: 'Delete',
-        message:
-          star.first_name + ' ' + star.last_name + " doesn't responsed yet",
+        message: 'You Greetings will be deleted',
       });
       setModal(true);
     } else {
@@ -210,7 +198,7 @@ const Greetings = ({setProfileNavigate, star_id}) => {
             if (res.data?.status === 200) {
               GreetingsRegStatus();
               setModalObj({
-                modalType: 'success',
+                modalType: 'successGreetings',
                 buttonTitle: 'Ok',
                 message: 'Your Greetings Delete Successfully',
               });
@@ -281,6 +269,27 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                     )}
                   </View>
                 </View>
+                <View
+                  style={{
+                    backgroundColor: '#282828',
+                    margin: 10,
+                    borderRadius: 5,
+                    fontSize: 20,
+                    height: 40,
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Text
+                    style={{
+                      color: '#FFAD00',
+                      fontSize: 18,
+                      textAlign: 'center',
+                    }}>
+                    {GreetingInfo?.title}
+                  </Text>
+                  <UnderlineImage />
+                </View>
                 {/* Instruction */}
                 <InstructionComp
                   title="Greetings Instructions"
@@ -306,7 +315,7 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             fontSize: 15,
                             marginBottom: 12,
                           }}>
-                          Greet receiving date and time
+                          Greetings receiving date and time
                         </Text>
                         <View>
                           <TouchableOpacity onPress={() => setOpen(true)}>
@@ -319,13 +328,13 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                                 borderColor: 'gray',
                                 textAlign: 'center',
                                 color: 'gray',
-                                paddingTop: 10,
+                                paddingTop: 15,
                               }}>
                               {moment(
                                 greeting?.request_time != null
                                   ? new Date(moment(greeting?.request_time))
                                   : startTime,
-                              ).format('YYYY-MM-DD h:mm:ss A')}
+                              ).format('D MMM YYYY h:mm:ss A')}
                             </Text>
                           </TouchableOpacity>
 
@@ -333,6 +342,7 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             modal
                             minimumDate={startMinDate}
                             open={open}
+                            theme="light"
                             date={
                               greeting?.request_time != null
                                 ? new Date(moment(greeting?.request_time))
@@ -363,10 +373,20 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             color: 'white',
                             fontSize: 15,
                             marginBottom: 12,
+                            marginTop: 15,
                           }}>
                           Greeting Purpose
                         </Text>
-                        <View style={styles.input}>
+                        <View
+                          style={{
+                            justifyContent: 'center',
+                            height: 50,
+                            borderWidth: 1,
+                            borderRadius: 10,
+                            borderColor: 'gray',
+                            textAlign: 'center',
+                            color: 'gray',
+                          }}>
                           <Picker
                             itemStyle={{
                               justifyContent: 'center',
@@ -394,12 +414,17 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             onValueChange={(itemValue, itemIndex) =>
                               setInputData({
                                 ...inputData,
-                                purpose: itemValue,
+                                purpose: itemValue ? itemValue : null,
                                 greetings_id: GreetingInfo
                                   ? GreetingInfo.id
                                   : '',
                               })
                             }>
+                            <Picker.Item
+                              key={1}
+                              label={'Choose One'}
+                              value={''}
+                            />
                             {purposeList.map(purposeList => {
                               return (
                                 <Picker.Item
@@ -411,6 +436,19 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                             })}
                           </Picker>
                         </View>
+                        {submitted && !inputData.purpose && (
+                          <View>
+                            <Text
+                              style={{
+                                color: '#df3e54',
+                                margin: 5,
+                                fontSize: 14,
+                                textAlign: 'center',
+                              }}>
+                              Please Select Purpose
+                            </Text>
+                          </View>
+                        )}
                       </View>
                     </View>
 
@@ -418,6 +456,8 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                       style={{
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flex: 1,
+                        flexDirection: 'row',
                       }}>
                       <Pressable
                         onPress={() => handleApply()}
@@ -435,6 +475,27 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                           {greeting ? 'Already Applied !' : 'Apply'}
                         </Text>
                       </Pressable>
+                      {greeting && (
+                        <Pressable
+                          onPress={() => handleRetryOrDelete()}
+                          style={[
+                            {
+                              backgroundColor: greeting ? '#df3e54' : '#ff0',
+                              borderRadius: 10,
+                            },
+                            styles.button,
+                          ]}>
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: 'white',
+                              textAlign: 'center',
+                              padding: 8,
+                            }}>
+                            {greeting && 'Delete'}
+                          </Text>
+                        </Pressable>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -446,62 +507,26 @@ const Greetings = ({setProfileNavigate, star_id}) => {
                     <View style={{margin: 13, borderRadius: 15}}>
                       <View style={{flexDirection: 'row'}}>
                         <View style={{flex: 1, paddingLeft: 10}}>
-                          <Text style={styles.text}>Applied on</Text>
-                          <Text style={styles.text}>Target date</Text>
-                          <Text style={styles.text}>Status</Text>
+                          <Text style={styles.text}>Applied on:</Text>
+                          <Text style={styles.text}>Target date:</Text>
+                          <Text style={styles.text}>Status:</Text>
                         </View>
 
-                        <View style={{flex: 2, alignItems: 'center'}}>
+                        <View style={{flex: 2, alignItems: 'space-between'}}>
                           <Text style={styles.text}>
-                            {moment(greeting.created_at).format(
-                              'YYYY-MM-DD h:mm:ss A',
-                            )}
+                            {moment(greeting.created_at).format('D MMMM, YYYY')}
                           </Text>
                           <Text style={styles.text}>
                             {moment(greeting.request_time).format(
-                              'YYYY-MM-DD h:mm:ss A',
+                              'D MMMM YYYY',
                             )}
                           </Text>
                           <Text style={styles.text}>{status.msg}</Text>
                         </View>
                       </View>
 
-                      <View style={{flexDirection: 'row', marginTop: 10}}>
-                        {/* <Pressable style={{
-                        backgroundColor: '#29E13B',
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: 10,
-                      }}
-                        onPress={() => handleRetryOrDelete()}>
-                        <Text>
-                          <Ionicons name={'reload'} /> Retry
-                        </Text>
-                      </Pressable>
-                      <Pressable
-                        onPress={() => handleRetryOrDelete()}
-                        style={[
-                          {
-                            backgroundColor: '#FFAD00',
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginLeft: 10,
-                            borderRadius: 10,
-                          },
-                        ]}>
-                        <Text
-                          style={{
-                            paddingLeft: 15,
-                            paddingRight: 15,
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                          }}>
-                          <FontAwesome5 name={'trash-alt'} /> Delete
-                        </Text>
-                      </Pressable> */}
-                      </View>
+                      <View
+                        style={{flexDirection: 'row', marginTop: 10}}></View>
                     </View>
                   </View>
                 ) : null}

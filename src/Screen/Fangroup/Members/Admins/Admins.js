@@ -46,7 +46,7 @@ const Admins = ({ fangroup }) => {
                 <Image source={fangroup.my_admin.image === null ? imagePath.noImage : { uri: AppUrl.MediaBaseUrl + fangroup.my_admin.image }} style={{ height: 40, width: 40, borderRadius: 50, marginRight: 6 }} />
               </View>
               <View style={{ justifyContent: 'center' }}>
-                <Text style={styles.fontStyle}>{fangroup.my_admin.first_name + " " + fangroup.my_admin.last_name}</Text>
+                <Text style={styles.fontStyle}>{fangroup.my_admin.first_name + " " + fangroup.my_admin?.last_name}</Text>
               </View>
             </View>
             <View style={styles.normalRow}>
@@ -54,7 +54,7 @@ const Admins = ({ fangroup }) => {
                 <Image source={fangroup.another_admin.image === null ? imagePath.noImage : { uri: AppUrl.MediaBaseUrl + fangroup.another_admin.image }} style={{ height: 40, width: 40, borderRadius: 50, marginRight: 6 }} />
               </View>
               <View style={{ justifyContent: 'center' }}>
-                <Text style={styles.fontStyle}>{fangroup.another_admin.first_name + " " + fangroup.another_admin.last_name}</Text>
+                <Text style={styles.fontStyle}>{fangroup.another_admin.first_name + " " + fangroup.another_admin?.last_name}</Text>
               </View>
             </View>
           </View>

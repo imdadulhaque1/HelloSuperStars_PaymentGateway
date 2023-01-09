@@ -1,10 +1,10 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   greetingsBody: {
     backgroundColor: '#343434',
     flex: 1,
-    paddingBottom: 300
+    paddingBottom: 50,
   },
   greetingsBanner: {
     margin: 10,
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 5,
     fontSize: 20,
-    height: 210,
+    height: 300,
   },
   greetingsRequestHeader: {
     textAlign: 'center',

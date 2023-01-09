@@ -10,9 +10,10 @@ import {AuthContext} from '../../Constants/context';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
 import navigationStrings from '../../Constants/navigationStrings';
+import imagePath from '../../Constants/imagePath';
 
 export default function NotificationContent({data, index}) {
-  console.log('data----', data);
+  // console.log('data----', data);
   const [product, setProduct] = useState(null);
   const {axiosConfig, totalNotification, setTotalNotification, greetingInfo} =
     useContext(AuthContext);
@@ -83,7 +84,17 @@ export default function NotificationContent({data, index}) {
       onPress={() => {
         handlePress(data);
       }}>
-      <View style={styles.row}>
+      <View
+        style={
+          data.view_status === 0
+            ? {
+                marginVertical: 2,
+                backgroundColor: 'rgba(99, 99, 99, 0.7)',
+                borderRadius: 10,
+                marginVertical: 4,
+              }
+            : styles.row
+        }>
         <View style={styles.content}>
           <View style={styles.ContentItems}>
             {data.view_status === 0 ? (
@@ -101,9 +112,7 @@ export default function NotificationContent({data, index}) {
                         ? {uri: AppUrl.MediaBaseUrl + product?.banner}
                         : greetingInfo?.banner &&
                           data.notification_text.type === 'Greetings'
-                        ? {
-                            uri: AppUrl.MediaBaseUrl + greetingInfo?.banner,
-                          }
+                        ? imagePath.greetings_image
                         : ApprovedImg
                     }
                   />
@@ -117,9 +126,7 @@ export default function NotificationContent({data, index}) {
                         ? {uri: AppUrl.MediaBaseUrl + product?.banner}
                         : greetingInfo?.banner &&
                           data.notification_text.type === 'Greetings'
-                        ? {
-                            uri: AppUrl.MediaBaseUrl + greetingInfo?.banner,
-                          }
+                        ? imagePath.greetings_image
                         : ApprovedImg
                     }
                   />
@@ -137,11 +144,12 @@ export default function NotificationContent({data, index}) {
             </View>
           </View>
           <View style={{justifyContent: 'center'}}>
-            <Text style={styles.contentText2}>
+            <Text
+              style={{fontSize: 12, color: 'gray', width: 250, marginLeft: 10}}>
               {moment(data.created_at).format('hh:mm A')}
             </Text>
             <Text style={styles.contentText3}>
-              {moment(data.created_at).format('LL')}
+              {moment(data.created_at).format('D MMMM, YYYY')}
             </Text>
           </View>
         </View>

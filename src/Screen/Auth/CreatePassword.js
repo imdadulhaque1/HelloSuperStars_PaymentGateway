@@ -49,7 +49,7 @@ const CreatePassword = ({ navigation, route }) => {
                         setBuffer(false);
 
                         if (res.data.status == 200) {
-                            console.log(res.data);
+                            //console.log(res.data);
                             Toast.show(res.data?.message, Toast.durations.SHORT);
                             navigation.navigate('Login')
                         } else {
@@ -154,7 +154,7 @@ const CreatePassword = ({ navigation, route }) => {
         </>
 
 
-  
+
     )
 }
 
