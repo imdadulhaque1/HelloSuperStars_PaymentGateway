@@ -112,6 +112,7 @@ export default {
   SECURITYINFO: 'Securityinfo',
   REPORTINFO: 'ReportInfo',
   DELETEWARNING: 'DeleteWarnign',
+  CONTACTUS: 'ContactUs',
 
   //MenuV2
   MENUV2: 'MenuV2',
@@ -127,5 +128,5 @@ export default {
   AUCTIONTAB: 'AuctionTab',
   PARTICIPATE: 'Participate',
   MARKETPLACESHOWCASE: 'Marketplaceshowcase',
-  SOUVENIR: 'Souvenir'
+  SOUVENIR: 'Souvenir',
 };

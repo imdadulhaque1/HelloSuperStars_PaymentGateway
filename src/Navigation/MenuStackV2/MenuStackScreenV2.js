@@ -43,6 +43,7 @@ import SouvenirOrderStatus from '../../Components/GLOBAL/Reuseable/SouvenirOrder
 import DeleteWarning from '../../Screen/Menu/Settings/DeleteWarning';
 import AuctionParticipateNow from '../../Screen/MarketPlace/AuctionParticipateNow/AuctionParticipateNow';
 import OrderStatus from '../../Components/GLOBAL/Reuseable/OrderStatus';
+import ContactUs from '../../Screen/Menu/Settings/ContactUs';
 
 const MenuStackV2 = createNativeStackNavigator();
 const MenuStackScreenV2 = () => {
@@ -129,6 +130,11 @@ const MenuStackScreenV2 = () => {
       <MenuStackV2.Screen
         name={navigationStrings.REPORTINFO}
         component={ReportInfo}
+      />
+
+      <MenuStackV2.Screen
+        name={navigationStrings.CONTACTUS}
+        component={ContactUs}
       />
 
       <MenuStackV2.Screen
